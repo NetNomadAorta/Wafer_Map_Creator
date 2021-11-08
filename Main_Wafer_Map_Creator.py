@@ -109,7 +109,7 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
     stitchImageClone = stitchImage.copy()
     
     # Adding list and arrray entry
-    dieNames = ["Row_Col_#"]
+    dieNames = ["Row_#.Col_#"]
     dieCoordinates = np.zeros([1, 4], np.int32)
     
     # loop over the sliding window
@@ -171,7 +171,7 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
                 cZ = ""
             
             if sameCol == False: 
-                dieNames.append("Row_{}{}-Col_{}{}".format(rZ, rowNum, cZ, colNum) )
+                dieNames.append("Row_{}{}.Col_{}{}".format(rZ, rowNum, cZ, colNum) )
                 dieCoordinates = np.append(dieCoordinates, [[x1, y1, x2, y2]], axis=0)
             elif sameCol == True and matchedCL > prev_matchedCL:
                 dieCoordinates[len(dieCoordinates)-1] = np.append(dieCoordinates, [[x1, y1, x2, y2]], axis=0)
@@ -204,7 +204,7 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         midY = round((y1 + y2)/2)
         
         # Places green boxes over wafer map using each die's coordinate
-        cv2.rectangle(waferMap, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        cv2.rectangle(waferMap, (x1, y1), (x2, y2), (255, 255, 255), 3)
         
         # Replaces dieNames list column number with correct value
         colNumber = str(round((x1-minX)/goldenImage.shape[1]+1) )
