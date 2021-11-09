@@ -57,16 +57,18 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
         slotName = slotPath[len(lotPath)+1:]
         if "Coordinates.npy" in slotName \
         or "dieNames.npy" in slotName \
-        or "Wafer_Map.jpg" in slotName:
+        or "Wafer_Map.jpg" in slotName \
+        or "Wafer_Map_with_Failing_Dies.jpg" in os.listdir(slotPath):
             continue
         
         # Within each slot, cycle through each class
-        for classIndex, classPath in enumerate(glob.glob(slotPath +"/*")):
+        for classIndex, classPath in enumerate(glob.glob(slotPath + "/*")):
             # Skips directory if first class (non-defect) folder or if it 
             # includes the wafer map with failing dies image (if this program 
             # already created one from a previous run)
             if classIndex == 0 \
             or os.listdir(slotPath)[classIndex] == "Wafer_Map_with_Failing_Dies.jpg":
+                # ABOVE LAST LINE AFTER OR STATEMENT MIGHT BE REDUNDANT. Should I remove?
                 continue
             
             # Looks at die names in previously created wafer map and sees
