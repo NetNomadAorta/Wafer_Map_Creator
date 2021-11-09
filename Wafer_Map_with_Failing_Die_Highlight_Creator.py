@@ -36,35 +36,46 @@ start_time = time.time()
 # Clears some of the screen for asthetics
 print("\n\n\n\n\n\n\n\n\n\n\n\n\n")
 
+# Cycles through each lot folder
 for lotPath in glob.glob(PREDICTED_DIR + "*"):
-    
+    # If wafer map is not found in lot folder, then skip creating wafer map
+    # with failing dies image
     slotLists = os.listdir(lotPath)
     if "Coordinates.npy" not in slotLists \
     and "dieNames.npy" not in slotLists \
     and "Wafer_Map.jpg" not in slotLists:
         continue
+    
     dieNames = np.load(lotPath + "/dieNames.npy")
     dieCoordinates = np.load(lotPath + "/Coordinates.npy")
     waferMap = cv2.imread(lotPath + "/Wafer_Map.jpg")
     
+    # Cycles through each slot folder within the lot folder
     for slotPath in glob.glob(lotPath + "/*"):
+        
+        # If current slotPath is looking at a non-slot folder, then skip
         slotName = slotPath[len(lotPath)+1:]
         if "Coordinates.npy" in slotName \
         or "dieNames.npy" in slotName \
         or "Wafer_Map.jpg" in slotName:
             continue
-        classIndex = 0
-        for classPath in glob.glob(slotPath +"/*"):
-            if classIndex == 0:
-                classIndex += 1
+        
+        # Within each slot, cycle through each class
+        for classIndex, classPath in enumerate(glob.glob(slotPath +"/*")):
+            # Skips directory if first class (non-defect) folder or if it 
+            # includes the wafer map with failing dies image (if this program 
+            # already created one from a previous run)
+            if classIndex == 0 \
+            or os.listdir(slotPath)[classIndex] == "Wafer_Map_with_Failing_Dies.jpg":
                 continue
             
+            # Looks at die names in previously created wafer map and sees
+            # if this slot has the same die names within its defect folders.
+            # If so, then create the new wafer map with red ovals in die 
+            # location within the wafer map image, and save this image.
             for dieNameIndex, dieName in enumerate(dieNames):
                 for imageName in os.listdir(classPath):
                     if dieName in imageName:
-                        print(dieName)
-                        print(dieCoordinates[dieNameIndex])
-                        
                         x1 = dieCoordinates[dieNameIndex][0]
                         y1 = dieCoordinates[dieNameIndex][1]
                         x2 = dieCoordinates[dieNameIndex][2]
