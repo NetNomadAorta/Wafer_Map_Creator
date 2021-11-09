@@ -8,11 +8,13 @@ import time
 import numpy as np
 
 # User Parameters/Constants to Set
-MATCH_CL = 0.50 # Minimum confidence level (CL) required to match golden-image to scanned image
+MATCH_CL = 0.80 # Minimum confidence level (CL) required to match golden-image to scanned image
 STICHED_IMAGES_DIRECTORY = "./Images/000-Stitched_Images/"
 GOLDEN_IMAGES_DIRECTORY = "./Images/001-Golden_Images/"
 WAFER_MAP_DIRECTORY = "./Images/002-Wafer_Map/"
 SLEEP_TIME = 0.0 # Time to sleep in seconds between each window step
+TOGGLE_DELETE_WAFER_MAP = False
+TOGGLE_SHOW_WINDOW_IMAGE = True
 
 
 def time_convert(sec):
@@ -72,13 +74,23 @@ start_time = time.time()
 print("\n\n\n\n\n\n\n\n\n\n\n\n\n")
 
 # Deletes contents in cropped- and split-image folders
-deleteDirContents(WAFER_MAP_DIRECTORY)
+if TOGGLE_DELETE_WAFER_MAP == True:
+    deleteDirContents(WAFER_MAP_DIRECTORY)
 
 lenStitchDir = len(STICHED_IMAGES_DIRECTORY)
 
 
 # Runs through each slot file within the main file within stitched-image folder
 for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"): 
+    print("Working on", stitchFolderPath[len(STICHED_IMAGES_DIRECTORY):])
+    
+    # If wafermap already exist (and delete wafer map directory didn't happen)
+    # then skip creating a wafer map for this stitch-image folder path
+    doesWaferMapExist = os.path.isdir(WAFER_MAP_DIRECTORY + \
+                                      stitchFolderPath[len(STICHED_IMAGES_DIRECTORY):])
+    if doesWaferMapExist == True:
+        print(" ", stitchFolderPath[len(STICHED_IMAGES_DIRECTORY):], "exists already. Skipping.")
+        continue
     
     stitchImagePath = glob.glob(stitchFolderPath + "/*")[0]
     goldenFolderPath = GOLDEN_IMAGES_DIRECTORY + stitchFolderPath[lenStitchDir:]
@@ -119,12 +131,13 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
             continue
         
         # Draw rectangle over sliding window for debugging and easier visual
-        # displayImage = stitchImage.copy()
-        # cv2.rectangle(displayImage, (x, y), (x + winW, y + winH), (255, 0, 180), 10)
-        # displayImageResize = cv2.resize(displayImage, (1000, round(stitchImage.shape[0] / stitchImage.shape[1] * 1000)))
-        # cv2.imshow("Stitched Image", displayImageResize) # TOGGLE TO SHOW OR NOT
-        cv2.waitKey(1)
-        time.sleep(SLEEP_TIME) # sleep time in ms after each window step
+        if TOGGLE_SHOW_WINDOW_IMAGE == True:
+            displayImage = stitchImage.copy()
+            cv2.rectangle(displayImage, (x, y), (x + winW, y + winH), (255, 0, 180), 15)
+            displayImageResize = cv2.resize(displayImage, (1000, round(stitchImage.shape[0] / stitchImage.shape[1] * 1000)))
+            cv2.imshow("Stitched Image", displayImageResize) # TOGGLE TO SHOW OR NOT
+            cv2.waitKey(1)
+            time.sleep(SLEEP_TIME) # sleep time in ms after each window step
         
         # Scans window for matched image
         # ==================================================================================
