@@ -14,7 +14,7 @@ GOLDEN_IMAGES_DIRECTORY = "./Images/001-Golden_Images/"
 WAFER_MAP_DIRECTORY = "./Images/002-Wafer_Map/"
 SLEEP_TIME = 0.0 # Time to sleep in seconds between each window step
 TOGGLE_DELETE_WAFER_MAP = False
-TOGGLE_SHOW_WINDOW_IMAGE = True
+TOGGLE_SHOW_WINDOW_IMAGE = False
 
 
 def time_convert(sec):
