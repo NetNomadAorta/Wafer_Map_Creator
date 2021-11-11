@@ -96,7 +96,7 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
                                     0, 
                                     360, 
                                     (0, 0, 255),
-                                    3)
+                                    round(waferMap.shape[0] * 0.0009))
                         
                         break
             

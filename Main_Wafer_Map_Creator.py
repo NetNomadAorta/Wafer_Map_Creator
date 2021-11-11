@@ -14,7 +14,7 @@ GOLDEN_IMAGES_DIRECTORY = "./Images/001-Golden_Images/"
 WAFER_MAP_DIRECTORY = "./Images/002-Wafer_Map/"
 SLEEP_TIME = 0.0 # Time to sleep in seconds between each window step
 TOGGLE_DELETE_WAFER_MAP = False
-TOGGLE_SHOW_WINDOW_IMAGE = False
+TOGGLE_SHOW_WINDOW_IMAGE = False # Set equal to "True" and it will show a graphical image of where it's at
 
 
 def time_convert(sec):
@@ -116,9 +116,6 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
     rowNum = 0
     colNum = 0
     prev_matchedCL = 0
-
-    # TESTING BELOW FOR SAVING FULL IMAGE WITH BAD DIE BOXES
-    stitchImageClone = stitchImage.copy()
     
     # Adding list and arrray entry
     dieNames = ["Row_#.Col_#"]
@@ -133,7 +130,8 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         # Draw rectangle over sliding window for debugging and easier visual
         if TOGGLE_SHOW_WINDOW_IMAGE == True:
             displayImage = stitchImage.copy()
-            cv2.rectangle(displayImage, (x, y), (x + winW, y + winH), (255, 0, 180), 15)
+            cv2.rectangle(displayImage, (x, y), (x + winW, y + winH), 
+                          (255, 0, 180), round(stitchImage.shape[0]*0.0027))
             displayImageResize = cv2.resize(displayImage, (1000, round(stitchImage.shape[0] / stitchImage.shape[1] * 1000)))
             cv2.imshow("Stitched Image", displayImageResize) # TOGGLE TO SHOW OR NOT
             cv2.waitKey(1)
@@ -217,7 +215,8 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         midY = round((y1 + y2)/2)
         
         # Places green boxes over wafer map using each die's coordinate
-        cv2.rectangle(waferMap, (x1, y1), (x2, y2), (255, 255, 255), 3)
+        cv2.rectangle(waferMap, (x1, y1), (x2, y2), (255, 255, 255), 
+                      round(stitchImage.shape[0]*0.0006))
         
         # Replaces dieNames list column number with correct value
         colNumber = str(round((x1-minX)/goldenImage.shape[1]+1) )
@@ -228,9 +227,9 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         
         # Writes row and column number text in wafer map
         font                   = cv2.FONT_HERSHEY_SIMPLEX
-        bottomLeftCornerOfText = (x1 + 10, midY)
-        fontScale              = 0.75
-        fontColor              = (255, 0, 0)
+        bottomLeftCornerOfText = (x1 + round(winW * 0.055), midY)
+        fontScale              = round(winW*0.0023, 2)
+        fontColor              = (255, 100, 100)
         lineType               = 2
         
         cv2.putText(waferMap, dieNames[i], 
@@ -242,11 +241,6 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
     
     cv2.imwrite(WAFER_MAP_DIRECTORY + stitchFolderPath[lenStitchDir:] \
                 + "/Wafer_Map.jpg", waferMap)
-    
-    # # Draw rectangle over sliding window for debugging and easier visual
-    # displayImageResize = cv2.resize(waferMap, (1000, round(waferMap.shape[0] / waferMap.shape[1] * 1000)))
-    # cv2.imshow("Stitched Image", displayImageResize) # TOGGLE TO SHOW OR NOT
-    # cv2.waitKey(1)
     
     # Saving die names and coordinates as npy file
     np.save(WAFER_MAP_DIRECTORY + stitchFolderPath[lenStitchDir:] \
