@@ -185,7 +185,7 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
                 dieNames.append("Row_{}{}.Col_{}{}".format(rZ, rowNum, cZ, colNum) )
                 dieCoordinates = np.append(dieCoordinates, [[x1, y1, x2, y2]], axis=0)
             elif sameCol == True and matchedCL > prev_matchedCL:
-                dieCoordinates[len(dieCoordinates)-1] = np.append(dieCoordinates, [[x1, y1, x2, y2]], axis=0)
+                dieCoordinates[len(dieCoordinates)-1] = np.array([x1, y1, x2, y2], ndmin=2)
             
             prev_y1 = y1
             prev_x1 = x1
