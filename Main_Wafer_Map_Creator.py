@@ -8,7 +8,7 @@ import time
 import numpy as np
 
 # User Parameters/Constants to Set
-MATCH_CL = 0.80 # Minimum confidence level (CL) required to match golden-image to scanned image
+MATCH_CL = 0.50 # Minimum confidence level (CL) required to match golden-image to scanned image
 STICHED_IMAGES_DIRECTORY = "./Images/000-Stitched_Images/"
 GOLDEN_IMAGES_DIRECTORY = "./Images/001-Golden_Images/"
 WAFER_MAP_DIRECTORY = "./Images/002-Wafer_Map/"
@@ -230,6 +230,7 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         bottomLeftCornerOfText = (x1 + round(winW * 0.055), midY)
         fontScale              = round(winW*0.0023, 2)
         fontColor              = (255, 100, 100)
+        thickness              = 2
         lineType               = 2
         
         cv2.putText(waferMap, dieNames[i], 
@@ -237,6 +238,7 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
                     font, 
                     fontScale,
                     fontColor,
+                    thickness,
                     lineType)
     
     cv2.imwrite(WAFER_MAP_DIRECTORY + stitchFolderPath[lenStitchDir:] \

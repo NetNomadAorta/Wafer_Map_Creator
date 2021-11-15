@@ -61,6 +61,9 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
         or "Wafer_Map_with_Failing_Dies.jpg" in os.listdir(slotPath):
             continue
         
+        # Start count for failing dies
+        numFailingDies = 0
+        
         # Within each slot, cycle through each class
         for classIndex, classPath in enumerate(glob.glob(slotPath + "/*")):
             # Skips directory if first class (non-defect) folder or if it 
@@ -97,11 +100,49 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
                                     360, 
                                     (0, 0, 255),
                                     round(waferMap.shape[0] * 0.0009))
+                        numFailingDies += 1
                         
                         break
             
             classIndex += 1
-            
+        
+        # Writes slot name on top left
+        font                   = cv2.FONT_HERSHEY_SIMPLEX
+        bottomLeftCornerOfText = (round(waferMap.shape[1]*1/30), 
+                                  round(waferMap.shape[0]*1/30))
+        fontScale              = round(0.04*lengthX, 2)
+        fontColor              = (255, 255, 255)
+        thickness              = 8
+        lineType               = 2
+        
+        cv2.putText(waferMap, 
+                    "Slot Name: " + str(slotName), 
+                    bottomLeftCornerOfText, 
+                    font, 
+                    fontScale,
+                    fontColor,
+                    thickness,
+                    lineType)
+        
+        
+        # Writes how many failing defects on bottom right
+        font                   = cv2.FONT_HERSHEY_SIMPLEX
+        bottomLeftCornerOfText = (round(waferMap.shape[1]*15/20), 
+                                  round(waferMap.shape[0]*19/20))
+        fontScale              = round(0.025*lengthX, 2)
+        fontColor              = (0, 0, 255)
+        thickness              = 7
+        lineType               = 2
+        
+        cv2.putText(waferMap, 
+                    "Number of Failing Dies: " + str(numFailingDies), 
+                    bottomLeftCornerOfText, 
+                    font, 
+                    fontScale,
+                    fontColor,
+                    thickness,
+                    lineType)
+        
         cv2.imwrite(slotPath + "/Wafer_Map_with_Failing_Dies.jpg", waferMap)
 
 
