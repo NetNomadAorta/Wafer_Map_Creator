@@ -8,7 +8,7 @@ import time
 import numpy as np
 
 # User Parameters/Constants to Set
-MATCH_CL = 0.50 # Minimum confidence level (CL) required to match golden-image to scanned image
+MATCH_CL = 0.80 # Minimum confidence level (CL) required to match golden-image to scanned image
 STICHED_IMAGES_DIRECTORY = "./Images/000-Stitched_Images/"
 GOLDEN_IMAGES_DIRECTORY = "./Images/001-Golden_Images/"
 WAFER_MAP_DIRECTORY = "./Images/002-Wafer_Map/"
