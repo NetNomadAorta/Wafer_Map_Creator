@@ -6,9 +6,11 @@ import imutils
 import cv2
 import time
 import numpy as np
+import math
 
 # User Parameters/Constants to Set
 MATCH_CL = 0.80 # Minimum confidence level (CL) required to match golden-image to scanned image
+DIE_SPACING = 1.05 # Scale of die to die plus spacing between die
 STICHED_IMAGES_DIRECTORY = "./Images/000-Stitched_Images/"
 GOLDEN_IMAGES_DIRECTORY = "./Images/001-Golden_Images/"
 WAFER_MAP_DIRECTORY = "./Images/002-Wafer_Map/"
@@ -219,9 +221,13 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
                       round(stitchImage.shape[0]*0.0006))
         
         # Replaces dieNames list column number with correct value
-        colNumber = str(round((x1-minX)/goldenImage.shape[1]+1) )
+        colNumber = str(math.floor((x1-minX)/(goldenImage.shape[1]*DIE_SPACING)+1) )
         if int(colNumber) < 10:
             colNumber = "0" + colNumber
+        if colNum == 8:
+            print("\n\n\n EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+            print(colNum)
+            break
         dieNames[i] = dieNames[i].replace("Col_" + dieNames[i][-2:], 
                                           "Col_" + str(colNumber))
         

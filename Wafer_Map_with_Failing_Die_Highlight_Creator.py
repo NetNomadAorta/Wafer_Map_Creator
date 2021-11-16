@@ -110,9 +110,9 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
         font                   = cv2.FONT_HERSHEY_SIMPLEX
         bottomLeftCornerOfText = (round(waferMap.shape[1]*1/30), 
                                   round(waferMap.shape[0]*1/30))
-        fontScale              = round(0.04*lengthX, 2)
+        fontScale              = round(0.0008*waferMap.shape[1], 2)
         fontColor              = (255, 255, 255)
-        thickness              = 8
+        thickness              = round(0.0015*waferMap.shape[1])
         lineType               = 2
         
         cv2.putText(waferMap, 
@@ -129,9 +129,9 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
         font                   = cv2.FONT_HERSHEY_SIMPLEX
         bottomLeftCornerOfText = (round(waferMap.shape[1]*15/20), 
                                   round(waferMap.shape[0]*19/20))
-        fontScale              = round(0.025*lengthX, 2)
+        fontScale              = round(0.0005*waferMap.shape[1], 2)
         fontColor              = (0, 0, 255)
-        thickness              = 7
+        thickness              = round(0.0013*waferMap.shape[1])
         lineType               = 2
         
         cv2.putText(waferMap, 
