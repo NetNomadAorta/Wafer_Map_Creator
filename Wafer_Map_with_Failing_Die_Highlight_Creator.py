@@ -48,10 +48,11 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
     
     dieNames = np.load(lotPath + "/dieNames.npy")
     dieCoordinates = np.load(lotPath + "/Coordinates.npy")
-    waferMap = cv2.imread(lotPath + "/Wafer_Map.jpg")
     
     # Cycles through each slot folder within the lot folder
     for slotPath in glob.glob(lotPath + "/*"):
+        
+        waferMap = cv2.imread(lotPath + "/Wafer_Map.jpg")
         
         # If current slotPath is looking at a non-slot folder, then skip
         slotName = slotPath[len(lotPath)+1:]
