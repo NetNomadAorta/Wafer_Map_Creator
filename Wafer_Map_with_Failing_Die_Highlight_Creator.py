@@ -8,7 +8,7 @@ import time
 import numpy as np
 
 # User Parameters/Constants to Set
-PREDICTED_DIR = "R:/000-AOI_Tool_Output/"
+PREDICTED_DIR = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/"
 
 
 def time_convert(sec):
@@ -109,9 +109,9 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
         
         # Writes slot name on top left
         font                   = cv2.FONT_HERSHEY_SIMPLEX
-        bottomLeftCornerOfText = (round(waferMap.shape[1]*1/30), 
-                                  round(waferMap.shape[0]*1/30))
-        fontScale              = round(0.0008*waferMap.shape[1], 2)
+        bottomLeftCornerOfText = (round(waferMap.shape[1]*1/80), 
+                                  round(waferMap.shape[0]*1/35))
+        fontScale              = round(0.0007*waferMap.shape[1], 2)
         fontColor              = (255, 255, 255)
         thickness              = round(0.0015*waferMap.shape[1])
         lineType               = 2
