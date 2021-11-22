@@ -49,6 +49,10 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
     dieNames = np.load(lotPath + "/dieNames.npy")
     dieCoordinates = np.load(lotPath + "/Coordinates.npy")
     
+    # Removes Thumbs.db in lot path if found
+    if os.path.isfile(lotPath + "/Thumbs.db"):
+        os.remove(lotPath + "/Thumbs.db")
+    
     # Cycles through each slot folder within the lot folder
     for slotPath in glob.glob(lotPath + "/*"):
         
@@ -62,6 +66,10 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
         or "Wafer_Map_with_Failing_Dies.jpg" in os.listdir(slotPath):
             continue
         
+        # Removes Thumbs.db in slot path if found
+        if os.path.isfile(slotPath + "/Thumbs.db"):
+            os.remove(slotPath + "/Thumbs.db")
+        
         # Start count for failing dies
         numFailingDies = 0
         
@@ -74,6 +82,10 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
             or os.listdir(slotPath)[classIndex] == "Wafer_Map_with_Failing_Dies.jpg":
                 # ABOVE LAST LINE AFTER OR STATEMENT MIGHT BE REDUNDANT. Should I remove?
                 continue
+            
+            # Removes Thumbs.db in class path if found
+            if os.path.isfile(classPath + "/Thumbs.db"):
+                os.remove(classPath + "/Thumbs.db")
             
             # Looks at die names in previously created wafer map and sees
             # if this slot has the same die names within its defect folders.
@@ -128,11 +140,11 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
         
         # Writes how many failing defects on bottom right
         font                   = cv2.FONT_HERSHEY_SIMPLEX
-        bottomLeftCornerOfText = (round(waferMap.shape[1]*15/20), 
-                                  round(waferMap.shape[0]*19/20))
-        fontScale              = round(0.0005*waferMap.shape[1], 2)
+        bottomLeftCornerOfText = (round(waferMap.shape[1]*22/30), 
+                                  round(waferMap.shape[0]*79/80))
+        fontScale              = round(0.00055*waferMap.shape[1], 2)
         fontColor              = (0, 0, 255)
-        thickness              = round(0.0013*waferMap.shape[1])
+        thickness              = round(0.0014*waferMap.shape[1])
         lineType               = 2
         
         cv2.putText(waferMap, 
