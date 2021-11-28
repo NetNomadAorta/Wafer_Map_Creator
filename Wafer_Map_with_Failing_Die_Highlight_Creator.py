@@ -221,7 +221,7 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
         
         if isInletLot:
             bottomLeftCornerOfText = (round(waferMap.shape[1]*23/30), 
-                          round(waferMap.shape[0]*75/80))
+                          round(waferMap.shape[0]*77/80))
             
             cv2.putText(tempWaferMap, 
                         "Failing Dies of Inlet: " + str(numFailingDies), 
@@ -232,7 +232,7 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
                         thickness,
                         lineType
                         )
-        elif compareMap:
+        if compareMap:
             cv2.putText(waferMap, 
                         "Failing Dies of Outlet: " + str(numFailingDies), 
                         bottomLeftCornerOfText, 
