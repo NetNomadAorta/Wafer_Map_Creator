@@ -134,20 +134,20 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
                         x2 = dieCoordinates[dieNameIndex][2]
                         y2 = dieCoordinates[dieNameIndex][3]
                         
-                        midX = round( (x1 + x2)/2)
-                        midY = round( (y1 + y2)/2)
+                        midX    = round( (x1 + x2)/2)
+                        midY    = round( (y1 + y2)/2)
                         
                         lengthX = round( (x2 - x1)/2)
                         lengthY = round( (y2 - y1)/2)
                         
                         # Places red ovals over wafer map using bad die's coordinate
-                        center = (midX, midY)
-                        axes = (lengthX, lengthY)
-                        angle = 0
-                        startAngle = 0
-                        endAngle = 360
-                        color = (0, 0, 255)
-                        thickness = round(waferMap.shape[0] * 0.0009)
+                        center      = (midX, midY)
+                        axes        = (lengthX, lengthY)
+                        angle       = 0
+                        startAngle  = 0
+                        endAngle    = 360
+                        color       = (0, 0, 255)
+                        thickness   = round(waferMap.shape[0] * 0.0009)
                         
                         cv2.ellipse(waferMap, center, 
                                     axes, 
