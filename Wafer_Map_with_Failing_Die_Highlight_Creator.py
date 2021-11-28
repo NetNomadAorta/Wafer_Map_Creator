@@ -87,8 +87,8 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
             waferMap = cv2.imread(lotPath + "/Wafer_Map.jpg")
             tempWaferMap = waferMap.copy()
         elif compareMap:
-            waferMap = cv2.imread(inletLotPath + "/Temp_Wafer_Map_to_Compare.jpg")
             inletSlotPath = slotPath.replace("-Out", "-In")
+            waferMap = cv2.imread(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg")
         else:
             waferMap = cv2.imread(lotPath + "/Wafer_Map.jpg")
         
@@ -161,7 +161,7 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
                         if isInletLot:
                             # Places green/orange ovals over wafer map using bad die's coordinate
                             # # This is used for "*-Out" file to overlay
-                            color = (0, 255, 100)
+                            color = (0, 200, 150)
                             
                             cv2.ellipse(tempWaferMap, center, 
                                         axes, 
@@ -212,25 +212,15 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
         
         # Writes how many failing defects on bottom right
         font                   = cv2.FONT_HERSHEY_SIMPLEX
-        bottomLeftCornerOfText = (round(waferMap.shape[1]*22/30), 
+        bottomLeftCornerOfText = (round(waferMap.shape[1]*23/30), 
                                   round(waferMap.shape[0]*79/80))
         fontScale              = round(0.00055*waferMap.shape[1], 2)
         fontColor              = (0, 0, 255)
         thickness              = round(0.0014*waferMap.shape[1])
         lineType               = 2
         
-        cv2.putText(waferMap, 
-                    "Failing Dies: " + str(numFailingDies), 
-                    bottomLeftCornerOfText, 
-                    font, 
-                    fontScale,
-                    fontColor,
-                    thickness,
-                    lineType
-                    )
-        
         if isInletLot:
-            bottomLeftCornerOfText = (round(waferMap.shape[1]*22/30), 
+            bottomLeftCornerOfText = (round(waferMap.shape[1]*23/30), 
                           round(waferMap.shape[0]*75/80))
             
             cv2.putText(tempWaferMap, 
