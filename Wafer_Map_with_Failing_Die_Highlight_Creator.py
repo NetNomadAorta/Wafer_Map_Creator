@@ -21,7 +21,7 @@ import numpy as np
 
 # User Parameters/Constants to Set
 PREDICTED_DIR = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/"
-COMPARE_OVERLAY = True # Will compare "*-in" and "*-out" wafer maps and output in "*-out" folder
+COMPARE_OVERLAY = True # Will compare "*-In" and "*-Out" wafer maps and output in "*-Out" folder
 
 
 def time_convert(sec):
@@ -55,11 +55,11 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
     # Sets parameter to enable comparing in and out files
     isInletLot = False
     compareMap = False
-    if "-in" in lotPath:
+    if "-In" in lotPath:
         isInletLot = True
-    if "-out" in lotPath and COMPARE_OVERLAY == True:
+    if "-Out" in lotPath and COMPARE_OVERLAY == True:
         compareMap = True
-        inletLotPath = lotPath.replace("-out", "-in")
+        inletLotPath = lotPath.replace("-Out", "-In")
     
     # If wafer map is not found in lot folder, then skip creating wafer map
     # with failing dies image
@@ -88,7 +88,7 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
             tempWaferMap = waferMap.copy()
         elif compareMap:
             waferMap = cv2.imread(inletLotPath + "/Temp_Wafer_Map_to_Compare.jpg")
-            inletSlotPath = slotPath.replace("-out", "-in")
+            inletSlotPath = slotPath.replace("-Out", "-In")
         else:
             waferMap = cv2.imread(lotPath + "/Wafer_Map.jpg")
         
@@ -160,7 +160,7 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
                         
                         if isInletLot:
                             # Places green/orange ovals over wafer map using bad die's coordinate
-                            # # This is used for "*-out" file to overlay
+                            # # This is used for "*-Out" file to overlay
                             color = (0, 255, 100)
                             
                             cv2.ellipse(tempWaferMap, center, 
