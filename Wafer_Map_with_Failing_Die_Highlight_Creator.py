@@ -1,3 +1,15 @@
+"""
+This python script uses the wafer map and coordinates created in 
+ "Main_Wafer_Map_Creator.py" to create a wafer map with red ovals around each
+ die location in the wafer map that are failing. 
+It does this by looking at existing images, with row and column numbers 
+ included in the images' name, that are found in the non-defect folder from the
+ "Automated_AOI.py" output.
+If an inlet and outlet folder exist and COMPARE_OVERLAY is true, then this will
+ create an output wafer map with green/ovals around dies that are no longer 
+ failing from the inlet folder
+"""
+
 # Import the necessary packages
 import os
 import shutil
@@ -9,6 +21,7 @@ import numpy as np
 
 # User Parameters/Constants to Set
 PREDICTED_DIR = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/"
+COMPARE_OVERLAY = True # Will compare "*-in" and "*-out" wafer maps and output in "*-out" folder
 
 
 def time_convert(sec):
@@ -38,6 +51,16 @@ print("\n\n\n\n\n\n\n\n\n\n\n\n\n")
 
 # Cycles through each lot folder
 for lotPath in glob.glob(PREDICTED_DIR + "*"):
+    
+    # Sets parameter to enable comparing in and out files
+    isInletLot = False
+    compareMap = False
+    if "-in" in lotPath:
+        isInletLot = True
+    if "-out" in lotPath and COMPARE_OVERLAY == True:
+        compareMap = True
+        inletLotPath = lotPath.replace("-out", "-in")
+    
     # If wafer map is not found in lot folder, then skip creating wafer map
     # with failing dies image
     slotLists = os.listdir(lotPath)
@@ -46,8 +69,12 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
     and "Wafer_Map.jpg" not in slotLists:
         continue
     
-    dieNames = np.load(lotPath + "/dieNames.npy")
-    dieCoordinates = np.load(lotPath + "/Coordinates.npy")
+    if compareMap:
+        dieNames = np.load(inletLotPath + "/dieNames.npy")
+        dieCoordinates = np.load(inletLotPath + "/Coordinates.npy")
+    else:
+        dieNames = np.load(lotPath + "/dieNames.npy")
+        dieCoordinates = np.load(lotPath + "/Coordinates.npy")
     
     # Removes Thumbs.db in lot path if found
     if os.path.isfile(lotPath + "/Thumbs.db"):
@@ -56,7 +83,14 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
     # Cycles through each slot folder within the lot folder
     for slotPath in glob.glob(lotPath + "/*"):
         
-        waferMap = cv2.imread(lotPath + "/Wafer_Map.jpg")
+        if isInletLot:
+            waferMap = cv2.imread(lotPath + "/Wafer_Map.jpg")
+            tempWaferMap = waferMap.copy()
+        elif compareMap:
+            waferMap = cv2.imread(inletLotPath + "/Temp_Wafer_Map_to_Compare.jpg")
+            inletSlotPath = slotPath.replace("-out", "-in")
+        else:
+            waferMap = cv2.imread(lotPath + "/Wafer_Map.jpg")
         
         # If current slotPath is looking at a non-slot folder, then skip
         slotName = slotPath[len(lotPath)+1:]
@@ -79,7 +113,8 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
             # includes the wafer map with failing dies image (if this program 
             # already created one from a previous run)
             if classIndex == 0 \
-            or os.listdir(slotPath)[classIndex] == "Wafer_Map_with_Failing_Dies.jpg":
+            or os.listdir(slotPath)[classIndex] == "Wafer_Map_with_Failing_Dies.jpg"\
+            or os.listdir(slotPath)[classIndex] == "Temp_Wafer_Map_to_Compare.jpg":
                 # ABOVE LAST LINE AFTER OR STATEMENT MIGHT BE REDUNDANT. Should I remove?
                 continue
             
@@ -106,13 +141,37 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
                         lengthY = round( (y2 - y1)/2)
                         
                         # Places red ovals over wafer map using bad die's coordinate
-                        cv2.ellipse(waferMap, (midX, midY), 
-                                    (lengthX, lengthY), 
-                                    0, 
-                                    0, 
-                                    360, 
-                                    (0, 0, 255),
-                                    round(waferMap.shape[0] * 0.0009))
+                        center = (midX, midY)
+                        axes = (lengthX, lengthY)
+                        angle = 0
+                        startAngle = 0
+                        endAngle = 360
+                        color = (0, 0, 255)
+                        thickness = round(waferMap.shape[0] * 0.0009)
+                        
+                        cv2.ellipse(waferMap, center, 
+                                    axes, 
+                                    angle, 
+                                    startAngle, 
+                                    endAngle, 
+                                    color,
+                                    thickness
+                                    )
+                        
+                        if isInletLot:
+                            # Places green/orange ovals over wafer map using bad die's coordinate
+                            # # This is used for "*-out" file to overlay
+                            color = (0, 255, 100)
+                            
+                            cv2.ellipse(tempWaferMap, center, 
+                                        axes, 
+                                        angle, 
+                                        startAngle, 
+                                        endAngle, 
+                                        color,
+                                        thickness
+                                        )
+                        
                         numFailingDies += 1
                         
                         break
@@ -135,7 +194,20 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
                     fontScale,
                     fontColor,
                     thickness,
-                    lineType)
+                    lineType
+                    )
+        
+        # Also writes name in temporary wafer map if available
+        if isInletLot:
+            cv2.putText(tempWaferMap, 
+                        "Slot Name: " + str(slotName), 
+                        bottomLeftCornerOfText, 
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness,
+                        lineType
+                        )
         
         
         # Writes how many failing defects on bottom right
@@ -148,16 +220,55 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
         lineType               = 2
         
         cv2.putText(waferMap, 
-                    "Number of Failing Dies: " + str(numFailingDies), 
+                    "Failing Dies: " + str(numFailingDies), 
                     bottomLeftCornerOfText, 
                     font, 
                     fontScale,
                     fontColor,
                     thickness,
-                    lineType)
+                    lineType
+                    )
         
+        if isInletLot:
+            bottomLeftCornerOfText = (round(waferMap.shape[1]*22/30), 
+                          round(waferMap.shape[0]*75/80))
+            
+            cv2.putText(tempWaferMap, 
+                        "Failing Dies of Inlet: " + str(numFailingDies), 
+                        bottomLeftCornerOfText, 
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness,
+                        lineType
+                        )
+        elif compareMap:
+            cv2.putText(waferMap, 
+                        "Failing Dies of Outlet: " + str(numFailingDies), 
+                        bottomLeftCornerOfText, 
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness,
+                        lineType
+                        )
+        else:
+            cv2.putText(waferMap, 
+                        "Failing Dies: " + str(numFailingDies), 
+                        bottomLeftCornerOfText, 
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness,
+                        lineType
+                        )
+        
+        # Saves Wafer Map and deletes Temp Wafer Map if needed
         cv2.imwrite(slotPath + "/Wafer_Map_with_Failing_Dies.jpg", waferMap)
-
+        if isInletLot:
+            cv2.imwrite(slotPath + "/Temp_Wafer_Map_to_Compare.jpg", tempWaferMap)
+        if compareMap:
+            os.remove(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg")
 
 
 
