@@ -70,8 +70,13 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
         continue
     
     if compareMap:
-        dieNames = np.load(inletLotPath + "/dieNames.npy")
-        dieCoordinates = np.load(inletLotPath + "/Coordinates.npy")
+        if os.path.isfile(inletLotPath + "/dieNames.npy") \
+        and os.path.isfile(inletLotPath + "/Coordinates.npy"):
+            dieNames = np.load(inletLotPath + "/dieNames.npy")
+            dieCoordinates = np.load(inletLotPath + "/Coordinates.npy")
+        else:
+            dieNames = np.load(lotPath + "/dieNames.npy")
+            dieCoordinates = np.load(lotPath + "/Coordinates.npy")
     else:
         dieNames = np.load(lotPath + "/dieNames.npy")
         dieCoordinates = np.load(lotPath + "/Coordinates.npy")
@@ -88,7 +93,10 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
             tempWaferMap = waferMap.copy()
         elif compareMap:
             inletSlotPath = slotPath.replace("-Out", "-In")
-            waferMap = cv2.imread(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg")
+            if os.path.isfile(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg"):
+                waferMap = cv2.imread(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg")
+            else:
+                waferMap = cv2.imread(lotPath + "/Wafer_Map.jpg")
         else:
             waferMap = cv2.imread(lotPath + "/Wafer_Map.jpg")
         
@@ -258,7 +266,8 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
         if isInletLot:
             cv2.imwrite(slotPath + "/Temp_Wafer_Map_to_Compare.jpg", tempWaferMap)
         if compareMap:
-            os.remove(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg")
+            if os.path.isfile(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg"):
+                os.remove(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg")
 
 
 
