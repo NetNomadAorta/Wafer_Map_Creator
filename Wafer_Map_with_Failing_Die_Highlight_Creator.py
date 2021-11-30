@@ -125,7 +125,6 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
             or os.listdir(slotPath)[classIndex] == "Temp_Wafer_Map_to_Compare.jpg":
                 # ABOVE LAST LINE AFTER OR STATEMENT MIGHT BE REDUNDANT. Should I remove?
                 continue
-            
             # Removes Thumbs.db in class path if found
             if os.path.isfile(classPath + "/Thumbs.db"):
                 os.remove(classPath + "/Thumbs.db")
@@ -135,29 +134,58 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
             # If so, then create the new wafer map with red ovals in die 
             # location within the wafer map image, and save this image.
             for dieNameIndex, dieName in enumerate(dieNames):
+                isBadDie = False
                 for imageName in os.listdir(classPath):
                     if dieName in imageName:
-                        x1 = dieCoordinates[dieNameIndex][0]
-                        y1 = dieCoordinates[dieNameIndex][1]
-                        x2 = dieCoordinates[dieNameIndex][2]
-                        y2 = dieCoordinates[dieNameIndex][3]
+                        isBadDie = True
+                    else:
+                        isBadDie = False
                         
-                        midX    = round( (x1 + x2)/2)
-                        midY    = round( (y1 + y2)/2)
-                        
-                        lengthX = round( (x2 - x1)/2)
-                        lengthY = round( (y2 - y1)/2)
-                        
-                        # Places red ovals over wafer map using bad die's coordinate
-                        center      = (midX, midY)
-                        axes        = (lengthX, lengthY)
-                        angle       = 0
-                        startAngle  = 0
-                        endAngle    = 360
+                    x1 = dieCoordinates[dieNameIndex][0]
+                    y1 = dieCoordinates[dieNameIndex][1]
+                    x2 = dieCoordinates[dieNameIndex][2]
+                    y2 = dieCoordinates[dieNameIndex][3]
+                    
+                    midX    = round( (x1 + x2)/2)
+                    midY    = round( (y1 + y2)/2)
+                    
+                    lengthX = round( (x2 - x1)/2)
+                    lengthY = round( (y2 - y1)/2)
+                    
+                    lengthXInner = round( ( (x2 - x1) * 0.90 )/2)
+                    lengthYInner = round( ( (y2 - y1) * 0.90 )/2)
+                    
+                    # Places red ovals over wafer map using bad die's coordinate
+                    center      = (midX, midY)
+                    axes        = (lengthX, lengthY)
+                    angle       = 0
+                    startAngle  = 0
+                    endAngle    = 360
+                    if isBadDie:
                         color       = (0, 0, 255)
-                        thickness   = round(waferMap.shape[0] * 0.0009)
+                    else:
+                        color       = (0, 255, 0)
+                    thickness   = round(waferMap.shape[0] * 0.0009)
+                    
+                    cv2.ellipse(waferMap, center, 
+                                axes, 
+                                angle, 
+                                startAngle, 
+                                endAngle, 
+                                color,
+                                thickness
+                                )
+                    
+                    if isInletLot:
+                        # Places green/orange ovals over wafer map using bad die's coordinate
+                        # # This is used for "*-Out" file to overlay
+                        axes  = (lengthXInner, lengthYInner)
+                        if isBadDie:
+                            color       = (0, 0, 255)
+                        else:
+                            color       = (0, 255, 0)
                         
-                        cv2.ellipse(waferMap, center, 
+                        cv2.ellipse(tempWaferMap, center, 
                                     axes, 
                                     angle, 
                                     startAngle, 
@@ -165,24 +193,13 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
                                     color,
                                     thickness
                                     )
-                        
-                        if isInletLot:
-                            # Places green/orange ovals over wafer map using bad die's coordinate
-                            # # This is used for "*-Out" file to overlay
-                            color = (0, 200, 150)
-                            
-                            cv2.ellipse(tempWaferMap, center, 
-                                        axes, 
-                                        angle, 
-                                        startAngle, 
-                                        endAngle, 
-                                        color,
-                                        thickness
-                                        )
-                        
+                    
+                    if isBadDie:
                         numFailingDies += 1
-                        
                         break
+                    
+                if isBadDie:
+                    continue
             
             classIndex += 1
         
