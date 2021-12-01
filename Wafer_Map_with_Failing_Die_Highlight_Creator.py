@@ -69,8 +69,11 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     #  area for the current lotPath location
     shouldContinue = True
     for waferMapName in os.listdir(STORED_WAFER_DATA):
-        if waferMapName in os.listdir(PREDICTED_DIR):
-            shouldContinue = False
+        for lotPathName in os.listdir(PREDICTED_DIR):
+            if waferMapName in lotPathName:
+                shouldContinue = False
+                break
+        if shouldContinue == False:
             break
     if shouldContinue:
         continue
@@ -90,12 +93,16 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     # Cycles through each slot folder within the lot folder
     for slotPath in glob.glob(lotPath + "/*"):
         
+        isUsingOriginalMap = False
         if isInletLot:
             tempWaferMap = waferMap.copy()
         elif isCompareMap:
             inletSlotPath = slotPath.replace("-Out", "-In")
             if os.path.isfile(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg"):
                 waferMap = cv2.imread(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg")
+                isUsingOriginalMap = False
+            else:
+                isUsingOriginalMap = True
         
         # Removes Thumbs.db in slot path if found
         if os.path.isfile(slotPath + "/Thumbs.db"):
@@ -204,7 +211,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         lineType               = 2
         
         
-        if not isCompareMap:
+        if not isCompareMap or isUsingOriginalMap:
             cv2.putText(waferMap, 
                         "Slot Name: " + str(slotName), 
                         bottomLeftCornerOfText, 
@@ -231,17 +238,17 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         # Writes legend info on top right
         font                   = cv2.FONT_HERSHEY_SIMPLEX
         bottomLeftCornerOfText = (round(waferMap.shape[1]*23/30), 
-                                  round(waferMap.shape[0]*1/35))
+                                  round(waferMap.shape[0]*1/50))
         fontScale              = round(0.0004*waferMap.shape[1], 2)
         fontColor              = (255, 255, 255)
         thickness              = round(0.0013*waferMap.shape[1])
         lineType               = 2
         
-        if not isCompareMap:
+        if not isCompareMap or isUsingOriginalMap:
+            bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
+                                      round(waferMap.shape[0]*1/50))
             cv2.putText(waferMap, 
-                        "Green: Passing; Red: Failing\n"\
-                        + "Inner Circle: Incoming Wafer\n"\
-                        + "Outer Circle: Final Wafer", 
+                        "Green: Passing; Red: Failing", 
                         bottomLeftCornerOfText, 
                         font, 
                         fontScale,
@@ -249,13 +256,63 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         thickness,
                         lineType
                         )
+            
+            bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
+                                      round(waferMap.shape[0]*2/50))
+            cv2.putText(waferMap, 
+                        "Inner Circle: Incoming Wafer", 
+                        bottomLeftCornerOfText, 
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness,
+                        lineType
+                        )
+            
+            bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
+                                      round(waferMap.shape[0]*3/50))
+            cv2.putText(waferMap, 
+                        "Outer Circle: Final Wafer", 
+                        bottomLeftCornerOfText, 
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness,
+                        lineType
+                        )
+            
+            
         
         # Also writes name in temporary wafer map if available
         if isInletLot:
+            bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
+                                      round(waferMap.shape[0]*1/50))
             cv2.putText(tempWaferMap, 
-                        "Green: Passing; Red: Failing\n"\
-                        + "Inner Circle: Incoming Wafer\n"\
-                        + "Outer Circle: Final Wafer", 
+                        "Green: Passing; Red: Failing", 
+                        bottomLeftCornerOfText, 
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness,
+                        lineType
+                        )
+            
+            bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
+                                      round(waferMap.shape[0]*2/50))
+            cv2.putText(tempWaferMap, 
+                        "Inner Circle: Incoming Wafer", 
+                        bottomLeftCornerOfText, 
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness,
+                        lineType
+                        )
+            
+            bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
+                                      round(waferMap.shape[0]*3/50))
+            cv2.putText(tempWaferMap, 
+                        "Outer Circle: Final Wafer", 
                         bottomLeftCornerOfText, 
                         font, 
                         fontScale,
@@ -276,7 +333,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         
         if isInletLot:
             bottomLeftCornerOfText = (round(waferMap.shape[1]*23/30), 
-                          round(waferMap.shape[0]*77/80))
+                                      round(waferMap.shape[0]*77/80))
             
             cv2.putText(tempWaferMap, 
                         "Failing Dies of Inlet: " + str(numFailingDies), 
