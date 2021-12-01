@@ -233,7 +233,7 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         
         # Writes row and column number text in wafer map
         font                   = cv2.FONT_HERSHEY_SIMPLEX
-        bottomLeftCornerOfText = (x1 + round(winW * 0.055), midY)
+        bottomLeftCornerOfText = (x1 + round(winW * 0.056), midY)
         fontScale              = round(winW*0.0023, 2)
         fontColor              = (255, 100, 100)
         thickness              = 2

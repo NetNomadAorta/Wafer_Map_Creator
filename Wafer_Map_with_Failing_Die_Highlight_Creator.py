@@ -149,11 +149,11 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
                     midX    = round( (x1 + x2)/2)
                     midY    = round( (y1 + y2)/2)
                     
-                    lengthX = round( (x2 - x1)/2)
-                    lengthY = round( (y2 - y1)/2)
+                    lengthX = round( ( (x2 - x1) * 0.95 )/2)
+                    lengthY = round( ( (y2 - y1) * 0.95 )/2)
                     
-                    lengthXInner = round( ( (x2 - x1) * 0.90 )/2)
-                    lengthYInner = round( ( (y2 - y1) * 0.90 )/2)
+                    lengthXInner = round( ( (x2 - x1) * 0.85 )/2)
+                    lengthYInner = round( ( (y2 - y1) * 0.85 )/2)
                     
                     # Places red ovals over wafer map using bad die's coordinate
                     center      = (midX, midY)
