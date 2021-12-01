@@ -21,6 +21,7 @@ import numpy as np
 
 # User Parameters/Constants to Set
 PREDICTED_DIR = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/"
+STORED_WAFER_DATA = "C:/Users/troy.pena/.spyder-py3/Wafer_Map_Creator/Images/002-Wafer_Map/"
 COMPARE_OVERLAY = True # Will compare "*-In" and "*-Out" wafer maps and output in "*-Out" folder
 
 
@@ -50,7 +51,7 @@ start_time = time.time()
 print("\n\n\n\n\n\n\n\n\n\n\n\n\n")
 
 # Cycles through each lot folder
-for lotPath in glob.glob(PREDICTED_DIR + "*"):
+for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     
     # Sets parameter to enable comparing in and out files
     isInletLot = False
@@ -61,25 +62,49 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
         compareMap = True
         inletLotPath = lotPath.replace("-Out", "-In")
     
-    # If wafer map is not found in lot folder, then skip creating wafer map
-    # with failing dies image
-    slotLists = os.listdir(lotPath)
-    if "Coordinates.npy" not in slotLists \
-    and "dieNames.npy" not in slotLists \
-    and "Wafer_Map.jpg" not in slotLists:
+    # # If wafer map is not found in lot folder, then skip creating wafer map
+    # # with failing dies image
+    # slotLists = os.listdir(lotPath)
+    # if "Coordinates.npy" not in slotLists \
+    # and "dieNames.npy" not in slotLists \
+    # and "Wafer_Map.jpg" not in slotLists:
+    #     continue
+    
+    # Removes Thumbs.db in wafer map path if found
+    if os.path.isfile(STORED_WAFER_DATA + "Thumbs.db"):
+        os.remove(STORED_WAFER_DATA + "Thumbs.db")
+    
+    # Checks to see if lot existing wafer map found in wafer map generator
+    #  area for the current lotPath location
+    shouldContinue = True
+    for waferMapName in os.listdir(STORED_WAFER_DATA):
+        if waferMapName in os.listdir(PREDICTED_DIR):
+            shouldContinue = False
+            break
+    if shouldContinue:
         continue
     
-    if compareMap:
-        if os.path.isfile(inletLotPath + "/dieNames.npy") \
-        and os.path.isfile(inletLotPath + "/Coordinates.npy"):
-            dieNames = np.load(inletLotPath + "/dieNames.npy")
-            dieCoordinates = np.load(inletLotPath + "/Coordinates.npy")
-        else:
-            dieNames = np.load(lotPath + "/dieNames.npy")
-            dieCoordinates = np.load(lotPath + "/Coordinates.npy")
-    else:
-        dieNames = np.load(lotPath + "/dieNames.npy")
-        dieCoordinates = np.load(lotPath + "/Coordinates.npy")
+    # # Imports correct dieNames and dieCoordinates data
+    # if compareMap:
+    #     # If incoming folder has data, use this
+    #     if os.path.isfile(inletLotPath + "/dieNames.npy") \
+    #     and os.path.isfile(inletLotPath + "/Coordinates.npy"):
+    #         dieNames = np.load(inletLotPath + "/dieNames.npy")
+    #         dieCoordinates = np.load(inletLotPath + "/Coordinates.npy")
+    #     else:
+    #         dieNames = np.load(lotPath + "/dieNames.npy")
+    #         dieCoordinates = np.load(lotPath + "/Coordinates.npy")
+    # else:
+    #     dieNames = np.load(lotPath + "/dieNames.npy")
+    #     dieCoordinates = np.load(lotPath + "/Coordinates.npy")
+    
+    # Imports correct dieNames and dieCoordinates data
+    dieNames = np.load(STORED_WAFER_DATA + waferMapName + "/dieNames.npy")
+    dieCoordinates = np.load(STORED_WAFER_DATA + waferMapName + "/Coordinates.npy")
+    
+    # Creates wafer map
+    waferMap = cv2.imread(STORED_WAFER_DATA + waferMapName +  "/Wafer_Map.jpg")
+    
     
     # Removes Thumbs.db in lot path if found
     if os.path.isfile(lotPath + "/Thumbs.db"):
@@ -89,24 +114,19 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
     for slotPath in glob.glob(lotPath + "/*"):
         
         if isInletLot:
-            waferMap = cv2.imread(lotPath + "/Wafer_Map.jpg")
             tempWaferMap = waferMap.copy()
         elif compareMap:
             inletSlotPath = slotPath.replace("-Out", "-In")
             if os.path.isfile(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg"):
                 waferMap = cv2.imread(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg")
-            else:
-                waferMap = cv2.imread(lotPath + "/Wafer_Map.jpg")
-        else:
-            waferMap = cv2.imread(lotPath + "/Wafer_Map.jpg")
         
-        # If current slotPath is looking at a non-slot folder, then skip
-        slotName = slotPath[len(lotPath)+1:]
-        if "Coordinates.npy" in slotName \
-        or "dieNames.npy" in slotName \
-        or "Wafer_Map.jpg" in slotName \
-        or "Wafer_Map_with_Failing_Dies.jpg" in os.listdir(slotPath):
-            continue
+        # slotName = slotPath[len(lotPath)+1:]
+        # # If current slotPath is looking at a non-slot folder, then skip
+        # if "Coordinates.npy" in slotName \
+        # or "dieNames.npy" in slotName \
+        # or "Wafer_Map.jpg" in slotName \
+        # or "Wafer_Map_with_Failing_Dies.jpg" in os.listdir(slotPath):
+        #     continue
         
         # Removes Thumbs.db in slot path if found
         if os.path.isfile(slotPath + "/Thumbs.db"):
@@ -116,7 +136,7 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
         numFailingDies = 0
         
         # Within each slot, cycle through each class
-        for classIndex, classPath in enumerate(glob.glob(slotPath + "/*")):
+        for classIndex, classPath in enumerate(glob.glob(slotPath + "/*") ):
             # Skips directory if first class (non-defect) folder or if it 
             # includes the wafer map with failing dies image (if this program 
             # already created one from a previous run)
@@ -202,6 +222,8 @@ for lotPath in glob.glob(PREDICTED_DIR + "*"):
                     continue
             
             classIndex += 1
+        
+        slotName = slotPath[len(lotPath)+1:]
         
         # Writes slot name on top left
         font                   = cv2.FONT_HERSHEY_SIMPLEX
