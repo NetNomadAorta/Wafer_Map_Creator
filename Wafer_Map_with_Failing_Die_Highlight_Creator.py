@@ -21,7 +21,7 @@ import numpy as np
 
 # User Parameters/Constants to Set
 PREDICTED_DIR = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/"
-STORED_WAFER_DATA = "C:/Users/troy.pena/.spyder-py3/Wafer_Map_Creator/Images/002-Wafer_Map/"
+STORED_WAFER_DATA = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/ZZZ-General_Wafer_Map_Data/"
 COMPARE_OVERLAY = True # Will compare "*-In" and "*-Out" wafer maps and output in "*-Out" folder
 
 
