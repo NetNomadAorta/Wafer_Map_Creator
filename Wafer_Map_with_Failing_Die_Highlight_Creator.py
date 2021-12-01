@@ -14,7 +14,6 @@ If an inlet and outlet folder exist and COMPARE_OVERLAY is true, then this will
 import os
 import shutil
 import glob
-import imutils
 import cv2
 import time
 import numpy as np
@@ -55,20 +54,12 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     
     # Sets parameter to enable comparing in and out files
     isInletLot = False
-    compareMap = False
+    isCompareMap = False
     if "-In" in lotPath:
         isInletLot = True
     if "-Out" in lotPath and COMPARE_OVERLAY == True:
-        compareMap = True
+        isCompareMap = True
         inletLotPath = lotPath.replace("-Out", "-In")
-    
-    # # If wafer map is not found in lot folder, then skip creating wafer map
-    # # with failing dies image
-    # slotLists = os.listdir(lotPath)
-    # if "Coordinates.npy" not in slotLists \
-    # and "dieNames.npy" not in slotLists \
-    # and "Wafer_Map.jpg" not in slotLists:
-    #     continue
     
     # Removes Thumbs.db in wafer map path if found
     if os.path.isfile(STORED_WAFER_DATA + "Thumbs.db"):
@@ -83,20 +74,6 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             break
     if shouldContinue:
         continue
-    
-    # # Imports correct dieNames and dieCoordinates data
-    # if compareMap:
-    #     # If incoming folder has data, use this
-    #     if os.path.isfile(inletLotPath + "/dieNames.npy") \
-    #     and os.path.isfile(inletLotPath + "/Coordinates.npy"):
-    #         dieNames = np.load(inletLotPath + "/dieNames.npy")
-    #         dieCoordinates = np.load(inletLotPath + "/Coordinates.npy")
-    #     else:
-    #         dieNames = np.load(lotPath + "/dieNames.npy")
-    #         dieCoordinates = np.load(lotPath + "/Coordinates.npy")
-    # else:
-    #     dieNames = np.load(lotPath + "/dieNames.npy")
-    #     dieCoordinates = np.load(lotPath + "/Coordinates.npy")
     
     # Imports correct dieNames and dieCoordinates data
     dieNames = np.load(STORED_WAFER_DATA + waferMapName + "/dieNames.npy")
@@ -115,18 +92,10 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         
         if isInletLot:
             tempWaferMap = waferMap.copy()
-        elif compareMap:
+        elif isCompareMap:
             inletSlotPath = slotPath.replace("-Out", "-In")
             if os.path.isfile(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg"):
                 waferMap = cv2.imread(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg")
-        
-        # slotName = slotPath[len(lotPath)+1:]
-        # # If current slotPath is looking at a non-slot folder, then skip
-        # if "Coordinates.npy" in slotName \
-        # or "dieNames.npy" in slotName \
-        # or "Wafer_Map.jpg" in slotName \
-        # or "Wafer_Map_with_Failing_Dies.jpg" in os.listdir(slotPath):
-        #     continue
         
         # Removes Thumbs.db in slot path if found
         if os.path.isfile(slotPath + "/Thumbs.db"):
@@ -150,9 +119,9 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 os.remove(classPath + "/Thumbs.db")
             
             # Looks at die names in previously created wafer map and sees
-            # if this slot has the same die names within its defect folders.
+            #  if this slot has the same die names within its defect folders.
             # If so, then create the new wafer map with red ovals in die 
-            # location within the wafer map image, and save this image.
+            #  location within the wafer map image, and save this image.
             for dieNameIndex, dieName in enumerate(dieNames):
                 isBadDie = False
                 for imageName in os.listdir(classPath):
@@ -234,15 +203,17 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         thickness              = round(0.0015*waferMap.shape[1])
         lineType               = 2
         
-        cv2.putText(waferMap, 
-                    "Slot Name: " + str(slotName), 
-                    bottomLeftCornerOfText, 
-                    font, 
-                    fontScale,
-                    fontColor,
-                    thickness,
-                    lineType
-                    )
+        
+        if not isCompareMap:
+            cv2.putText(waferMap, 
+                        "Slot Name: " + str(slotName), 
+                        bottomLeftCornerOfText, 
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness,
+                        lineType
+                        )
         
         # Also writes name in temporary wafer map if available
         if isInletLot:
@@ -266,17 +237,32 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         thickness              = round(0.0013*waferMap.shape[1])
         lineType               = 2
         
-        cv2.putText(waferMap, 
-                    "Green: Passing; Red: Failing\n"\
-                    + "Inner Circle: Incoming Wafer\n"\
-                    + "Outer Circle: Final Wafer", 
-                    bottomLeftCornerOfText, 
-                    font, 
-                    fontScale,
-                    fontColor,
-                    thickness,
-                    lineType
-                    )
+        if not isCompareMap:
+            cv2.putText(waferMap, 
+                        "Green: Passing; Red: Failing\n"\
+                        + "Inner Circle: Incoming Wafer\n"\
+                        + "Outer Circle: Final Wafer", 
+                        bottomLeftCornerOfText, 
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness,
+                        lineType
+                        )
+        
+        # Also writes name in temporary wafer map if available
+        if isInletLot:
+            cv2.putText(tempWaferMap, 
+                        "Green: Passing; Red: Failing\n"\
+                        + "Inner Circle: Incoming Wafer\n"\
+                        + "Outer Circle: Final Wafer", 
+                        bottomLeftCornerOfText, 
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness,
+                        lineType
+                        )
         
         
         # Writes how many failing defects on bottom right
@@ -301,7 +287,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         thickness,
                         lineType
                         )
-        if compareMap:
+        if isCompareMap:
             cv2.putText(waferMap, 
                         "Failing Dies of Outlet: " + str(numFailingDies), 
                         bottomLeftCornerOfText, 
@@ -326,21 +312,9 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         cv2.imwrite(slotPath + "/Wafer_Map_with_Failing_Dies.jpg", waferMap)
         if isInletLot:
             cv2.imwrite(slotPath + "/Temp_Wafer_Map_to_Compare.jpg", tempWaferMap)
-        if compareMap:
+        if isCompareMap:
             if os.path.isfile(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg"):
                 os.remove(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg")
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
