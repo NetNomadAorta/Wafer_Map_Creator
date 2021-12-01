@@ -257,6 +257,28 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         )
         
         
+        # Writes legend info on top right
+        font                   = cv2.FONT_HERSHEY_SIMPLEX
+        bottomLeftCornerOfText = (round(waferMap.shape[1]*23/30), 
+                                  round(waferMap.shape[0]*1/35))
+        fontScale              = round(0.0004*waferMap.shape[1], 2)
+        fontColor              = (255, 255, 255)
+        thickness              = round(0.0013*waferMap.shape[1])
+        lineType               = 2
+        
+        cv2.putText(waferMap, 
+                    "Green: Passing; Red: Failing\n"\
+                    + "Inner Circle: Incoming Wafer\n"\
+                    + "Outer Circle: Final Wafer", 
+                    bottomLeftCornerOfText, 
+                    font, 
+                    fontScale,
+                    fontColor,
+                    thickness,
+                    lineType
+                    )
+        
+        
         # Writes how many failing defects on bottom right
         font                   = cv2.FONT_HERSHEY_SIMPLEX
         bottomLeftCornerOfText = (round(waferMap.shape[1]*23/30), 
