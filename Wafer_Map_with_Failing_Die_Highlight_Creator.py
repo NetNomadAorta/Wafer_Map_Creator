@@ -92,7 +92,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     
     # Cycles through each slot folder within the lot folder
     for slotPath in glob.glob(lotPath + "/*"):
-        
+        # ADD CHECK FOR IF WAFER MAP EXIST, SKIP IT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         isUsingOriginalMap = False
         if isInletLot:
             tempWaferMap = waferMap.copy()
@@ -145,11 +145,11 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     midX    = round( (x1 + x2)/2)
                     midY    = round( (y1 + y2)/2)
                     
-                    lengthX = round( ( (x2 - x1) * 0.95 )/2)
-                    lengthY = round( ( (y2 - y1) * 0.95 )/2)
+                    lengthX = round( ( (x2 - x1) * 0.97 )/2)
+                    lengthY = round( ( (y2 - y1) * 0.97 )/2)
                     
-                    lengthXInner = round( ( (x2 - x1) * 0.85 )/2)
-                    lengthYInner = round( ( (y2 - y1) * 0.85 )/2)
+                    lengthXInner = round( ( (x2 - x1) * 0.87 )/2)
+                    lengthYInner = round( ( (y2 - y1) * 0.87 )/2)
                     
                     # Places red ovals over wafer map using bad die's coordinate
                     center      = (midX, midY)
