@@ -22,6 +22,7 @@ import numpy as np
 PREDICTED_DIR = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/"
 STORED_WAFER_DATA = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/ZZZ-General_Wafer_Map_Data/"
 COMPARE_OVERLAY = True # Will compare "*-In" and "*-Out" wafer maps and output in "*-Out" folder
+SHOULD_REPLACE_ALL_MAPS = True
 
 
 def time_convert(sec):
@@ -92,7 +93,12 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     
     # Cycles through each slot folder within the lot folder
     for slotPath in glob.glob(lotPath + "/*"):
-        # ADD CHECK FOR IF WAFER MAP EXIST, SKIP IT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        
+        # Checks if wafer map already exist, and only skips if selected not to
+        if os.path.isfile(slotPath + "/Wafer_Map.jpg") \
+        and SHOULD_REPLACE_ALL_MAPS == False:
+            continue
+        
         isUsingOriginalMap = False
         if isInletLot:
             tempWaferMap = waferMap.copy()
