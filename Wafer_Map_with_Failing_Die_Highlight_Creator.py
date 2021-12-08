@@ -22,7 +22,7 @@ import numpy as np
 PREDICTED_DIR = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/"
 STORED_WAFER_DATA = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/ZZZ-General_Wafer_Map_Data/"
 COMPARE_OVERLAY = True # Will compare "*-In" and "*-Out" wafer maps and output in "*-Out" folder
-SHOULD_REPLACE_ALL_MAPS = True
+SHOULD_REPLACE_ALL_MAPS = False # Will remake each wafer map that already exist in AOI Output folder if set true
 
 
 def time_convert(sec):
@@ -52,6 +52,8 @@ print("\n\n\n\n\n\n\n\n\n\n\n\n\n")
 
 # Cycles through each lot folder
 for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
+    lotPathName = os.listdir(PREDICTED_DIR)[lotPathIndex]
+    print("Starting", lotPathName)
     
     # Sets parameter to enable comparing in and out files
     isInletLot = False
@@ -70,11 +72,8 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     #  area for the current lotPath location
     shouldContinue = True
     for waferMapName in os.listdir(STORED_WAFER_DATA):
-        for lotPathName in os.listdir(PREDICTED_DIR):
-            if waferMapName in lotPathName:
-                shouldContinue = False
-                break
-        if shouldContinue == False:
+        if waferMapName in lotPathName:
+            shouldContinue = False
             break
     if shouldContinue:
         continue
@@ -82,9 +81,8 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     # Imports correct dieNames and dieCoordinates data
     dieNames = np.load(STORED_WAFER_DATA + waferMapName + "/dieNames.npy")
     dieCoordinates = np.load(STORED_WAFER_DATA + waferMapName + "/Coordinates.npy")
-    
-    # Creates wafer map
-    waferMap = cv2.imread(STORED_WAFER_DATA + waferMapName +  "/Wafer_Map.jpg")
+
+
     
     
     # Removes Thumbs.db in lot path if found
@@ -93,9 +91,11 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     
     # Cycles through each slot folder within the lot folder
     for slotPath in glob.glob(lotPath + "/*"):
+        # Creates wafer map
+        waferMap = cv2.imread(STORED_WAFER_DATA + waferMapName +  "/Wafer_Map.jpg")
         
         # Checks if wafer map already exist, and only skips if selected not to
-        if os.path.isfile(slotPath + "/Wafer_Map.jpg") \
+        if os.path.isfile(slotPath + "/Wafer_Map_with_Failing_Dies.jpg") \
         and SHOULD_REPLACE_ALL_MAPS == False:
             continue
         
