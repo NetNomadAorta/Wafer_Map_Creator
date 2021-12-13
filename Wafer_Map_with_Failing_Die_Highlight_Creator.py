@@ -263,29 +263,29 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         lineType
                         )
             
-            bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
-                                      round(waferMap.shape[0]*2/50))
-            cv2.putText(waferMap, 
-                        "Inner Circle: Incoming Wafer", 
-                        bottomLeftCornerOfText, 
-                        font, 
-                        fontScale,
-                        fontColor,
-                        thickness,
-                        lineType
-                        )
+            # bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
+            #                           round(waferMap.shape[0]*2/50))
+            # cv2.putText(waferMap, 
+            #             "Inner Circle: Incoming Wafer", 
+            #             bottomLeftCornerOfText, 
+            #             font, 
+            #             fontScale,
+            #             fontColor,
+            #             thickness,
+            #             lineType
+            #             )
             
-            bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
-                                      round(waferMap.shape[0]*3/50))
-            cv2.putText(waferMap, 
-                        "Outer Circle: Final Wafer", 
-                        bottomLeftCornerOfText, 
-                        font, 
-                        fontScale,
-                        fontColor,
-                        thickness,
-                        lineType
-                        )
+            # bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
+            #                           round(waferMap.shape[0]*3/50))
+            # cv2.putText(waferMap, 
+            #             "Outer Circle: Final Wafer", 
+            #             bottomLeftCornerOfText, 
+            #             font, 
+            #             fontScale,
+            #             fontColor,
+            #             thickness,
+            #             lineType
+            #             )
             
             
         
