@@ -218,6 +218,20 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         
         
         if not isCompareMap or isUsingOriginalMap:
+            bottomLeftCornerOfText = (round(waferMap.shape[1]*1/80), 
+                                      round(waferMap.shape[0]*1/35))
+            cv2.putText(waferMap, 
+                        "Lot Name: " + str(lotPathName), 
+                        bottomLeftCornerOfText, 
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness,
+                        lineType
+                        )
+            
+            bottomLeftCornerOfText = (round(waferMap.shape[1]*1/80), 
+                                      round(waferMap.shape[0]*2/35))
             cv2.putText(waferMap, 
                         "Slot Name: " + str(slotName), 
                         bottomLeftCornerOfText, 
@@ -228,8 +242,23 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         lineType
                         )
         
+        if isCompareMap and not isUsingOriginalMap:
+            bottomLeftCornerOfText = (round(waferMap.shape[1]*1/80), 
+                                      round(waferMap.shape[0]*1/35))
+            cv2.putText(waferMap, 
+                        "Lot Name: " + str(lotPathName), 
+                        bottomLeftCornerOfText, 
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness,
+                        lineType
+                        )
+        
         # Also writes name in temporary wafer map if available
         if isInletLot:
+            bottomLeftCornerOfText = (round(waferMap.shape[1]*1/80), 
+                                      round(waferMap.shape[0]*2/35))
             cv2.putText(tempWaferMap, 
                         "Slot Name: " + str(slotName), 
                         bottomLeftCornerOfText, 
@@ -252,7 +281,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         
         if not isCompareMap or isUsingOriginalMap:
             bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
-                                      round(waferMap.shape[0]*1/50))
+                                      round(waferMap.shape[0]*3/100))
             cv2.putText(waferMap, 
                         "Green: Passing; Red: Failing", 
                         bottomLeftCornerOfText, 
@@ -263,49 +292,11 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         lineType
                         )
             
-            # bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
-            #                           round(waferMap.shape[0]*2/50))
-            # cv2.putText(waferMap, 
-            #             "Inner Circle: Incoming Wafer", 
-            #             bottomLeftCornerOfText, 
-            #             font, 
-            #             fontScale,
-            #             fontColor,
-            #             thickness,
-            #             lineType
-            #             )
-            
-            # bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
-            #                           round(waferMap.shape[0]*3/50))
-            # cv2.putText(waferMap, 
-            #             "Outer Circle: Final Wafer", 
-            #             bottomLeftCornerOfText, 
-            #             font, 
-            #             fontScale,
-            #             fontColor,
-            #             thickness,
-            #             lineType
-            #             )
-            
-            
-        
-        # Also writes name in temporary wafer map if available
-        if isInletLot:
+        # Only writes extra legend info on comparing maps using temp map
+        if isCompareMap and not isUsingOriginalMap:
             bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
-                                      round(waferMap.shape[0]*1/50))
-            cv2.putText(tempWaferMap, 
-                        "Green: Passing; Red: Failing", 
-                        bottomLeftCornerOfText, 
-                        font, 
-                        fontScale,
-                        fontColor,
-                        thickness,
-                        lineType
-                        )
-            
-            bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
-                                      round(waferMap.shape[0]*2/50))
-            cv2.putText(tempWaferMap, 
+                                      round(waferMap.shape[0]*5/100))
+            cv2.putText(waferMap, 
                         "Inner Circle: Incoming Wafer", 
                         bottomLeftCornerOfText, 
                         font, 
@@ -316,9 +307,25 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         )
             
             bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
-                                      round(waferMap.shape[0]*3/50))
-            cv2.putText(tempWaferMap, 
+                                      round(waferMap.shape[0]*7/100))
+            cv2.putText(waferMap, 
                         "Outer Circle: Final Wafer", 
+                        bottomLeftCornerOfText, 
+                        font, 
+                        fontScale,
+                        fontColor,
+                        thickness,
+                        lineType
+                        )
+            
+            
+        
+        # Also writes name in temporary wafer map if available
+        if isInletLot:
+            bottomLeftCornerOfText = (round(waferMap.shape[1]*24/30), 
+                                      round(waferMap.shape[0]*3/100))
+            cv2.putText(tempWaferMap, 
+                        "Green: Passing; Red: Failing", 
                         bottomLeftCornerOfText, 
                         font, 
                         fontScale,
@@ -338,7 +345,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         lineType               = 2
         
         if isInletLot:
-            bottomLeftCornerOfText = (round(waferMap.shape[1]*23/30), 
+            bottomLeftCornerOfText = (round(waferMap.shape[1]*22.5/30), 
                                       round(waferMap.shape[0]*77/80))
             
             cv2.putText(tempWaferMap, 
@@ -351,6 +358,8 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         lineType
                         )
         if isCompareMap:
+            bottomLeftCornerOfText = (round(waferMap.shape[1]*22.5/30), 
+                                      round(waferMap.shape[0]*79/80))
             cv2.putText(waferMap, 
                         "Failing Dies of Outlet: " + str(numFailingDies), 
                         bottomLeftCornerOfText, 
@@ -361,6 +370,8 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         lineType
                         )
         else:
+            bottomLeftCornerOfText = (round(waferMap.shape[1]*25/30), 
+                                      round(waferMap.shape[0]*79/80))
             cv2.putText(waferMap, 
                         "Failing Dies: " + str(numFailingDies), 
                         bottomLeftCornerOfText, 
