@@ -9,8 +9,8 @@ import numpy as np
 import math
 
 # User Parameters/Constants to Set
-MATCH_CL = 0.80 # Minimum confidence level (CL) required to match golden-image to scanned image
-DIE_SPACING = 1.05 # Scale of die to die plus spacing between die
+MATCH_CL = 0.70 # Minimum confidence level (CL) required to match golden-image to scanned image
+DIE_SPACING = 1.03 # Scale of die to die plus spacing between die
 STICHED_IMAGES_DIRECTORY = "./Images/000-Stitched_Images/"
 GOLDEN_IMAGES_DIRECTORY = "./Images/001-Golden_Images/"
 WAFER_MAP_DIRECTORY = "./Images/002-Wafer_Map/"
