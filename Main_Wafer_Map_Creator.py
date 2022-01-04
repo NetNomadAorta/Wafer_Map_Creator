@@ -54,8 +54,7 @@ def getMatch(window, goldenImage, x, y):
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
         
         if max_val > MATCH_CL: 
-            print("\nFOUND MATCH")
-            print("max_val = ", max_val)
+            print("\nFOUND MATCH - max_val =", round(max_val, 4) )
             print("Window Coordinates: x1:", x + max_loc[0], "y1:", y + max_loc[1], \
                   "x2:", x + max_loc[0] + w2, "y2:", y + max_loc[1] + h2)
             
