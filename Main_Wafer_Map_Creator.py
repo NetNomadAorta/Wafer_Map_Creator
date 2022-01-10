@@ -223,7 +223,7 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         colNumber = str(math.floor((x1-minX)/(goldenImage.shape[1]*DIE_SPACING)+1) )
         if int(colNumber) < 10:
             colNumber = "0" + colNumber
-        if colNum == 8:
+        if colNum == 8: # WHY IS THIS HERE AGAIN? lol, plus it won't be "True"; it's a string lol
             print("\n\n\n EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
             print(colNum)
             break
