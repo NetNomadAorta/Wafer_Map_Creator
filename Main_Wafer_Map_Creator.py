@@ -207,6 +207,10 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
     
     # Creates wafer map and changes column names in dieNames
     for i in range(len(dieCoordinates)):
+        # JUST ADDED TO SKIP FIRST ITERATION BECAUSE coord:0 and name:R#C#
+        if i == 0:
+            continue
+        
         x1 = dieCoordinates[i, 0]
         y1 = dieCoordinates[i, 1]
         x2 = dieCoordinates[i, 2]
