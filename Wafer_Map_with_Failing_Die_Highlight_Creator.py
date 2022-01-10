@@ -21,7 +21,7 @@ import numpy as np
 # User Parameters/Constants to Set
 PREDICTED_DIR = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/"
 STORED_WAFER_DATA = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/ZZZ-General_Wafer_Map_Data/"
-COMPARE_OVERLAY = True # Will compare "*-In" and "*-Out" wafer maps and output in "*-Out" folder
+COMPARE_OVERLAY = False # Will compare "*-In" and "*-Out" wafer maps and output in "*-Out" folder
 SHOULD_REPLACE_ALL_MAPS = False # Will remake each wafer map that already exist in AOI Output folder if set true
 
 
@@ -84,7 +84,6 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
 
 
     
-    
     # Removes Thumbs.db in lot path if found
     if os.path.isfile(lotPath + "/Thumbs.db"):
         os.remove(lotPath + "/Thumbs.db")
@@ -114,6 +113,8 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         if os.path.isfile(slotPath + "/Thumbs.db"):
             os.remove(slotPath + "/Thumbs.db")
         
+        # Making list of bad die names
+        badDieNames = []
         # Start count for failing dies
         numFailingDies = 0
         
@@ -123,9 +124,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             # includes the wafer map with failing dies image (if this program 
             # already created one from a previous run)
             if classIndex == 0 \
-            or os.listdir(slotPath)[classIndex] == "Wafer_Map_with_Failing_Dies.jpg"\
-            or os.listdir(slotPath)[classIndex] == "Temp_Wafer_Map_to_Compare.jpg":
-                # ABOVE LAST LINE AFTER OR STATEMENT MIGHT BE REDUNDANT. Should I remove?
+            or "ZZ-" in os.listdir(slotPath)[classIndex]:
                 continue
             # Removes Thumbs.db in class path if found
             if os.path.isfile(classPath + "/Thumbs.db"):
@@ -138,8 +137,13 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             for dieNameIndex, dieName in enumerate(dieNames):
                 isBadDie = False
                 for imageName in os.listdir(classPath):
+                    # Checks if same die name already claimed as bad in previous class folder
+                    if dieName in badDieNames:
+                        continue
+                    
                     if dieName in imageName:
                         isBadDie = True
+                        badDieNames.append(dieName)
                     else:
                         isBadDie = False
                         
@@ -202,6 +206,8 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     
                 if isBadDie:
                     continue
+            
+            # Insert if classpath[i] in classpath[i+1] then numFailingDies -= 1
             
             classIndex += 1
         
