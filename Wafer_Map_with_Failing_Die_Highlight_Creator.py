@@ -136,6 +136,8 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             #  location within the wafer map image, and save this image.
             for dieNameIndex, dieName in enumerate(dieNames):
                 isBadDie = False
+                # Below is needed incase there is no bad dies
+                isFirstImageRun = True
                 for imageName in os.listdir(classPath):
                     # Checks if same die name already claimed as bad in previous class folder
                     if dieName in badDieNames:
@@ -200,12 +202,48 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                                     thickness
                                     )
                     
+                    # Prevents green circles from being drawn
+                    isFirstImageRun = False
+                    
                     if isBadDie:
                         numFailingDies += 1
                         break
                     
                 if isBadDie:
                     continue
+                
+                if isFirstImageRun:
+                    x1 = dieCoordinates[dieNameIndex][0]
+                    y1 = dieCoordinates[dieNameIndex][1]
+                    x2 = dieCoordinates[dieNameIndex][2]
+                    y2 = dieCoordinates[dieNameIndex][3]
+                    
+                    midX    = round( (x1 + x2)/2)
+                    midY    = round( (y1 + y2)/2)
+                    
+                    lengthX = round( ( (x2 - x1) * 0.97 )/2)
+                    lengthY = round( ( (y2 - y1) * 0.97 )/2)
+                    
+                    lengthXInner = round( ( (x2 - x1) * 0.87 )/2)
+                    lengthYInner = round( ( (y2 - y1) * 0.87 )/2)
+                    
+                    # Places red ovals over wafer map using bad die's coordinate
+                    center      = (midX, midY)
+                    axes        = (lengthX, lengthY)
+                    angle       = 0
+                    startAngle  = 0
+                    endAngle    = 360
+                    color       = (0, 255, 0)
+                    thickness   = round(waferMap.shape[0] * 0.0009)
+                    
+                    cv2.ellipse(waferMap, center, 
+                                axes, 
+                                angle, 
+                                startAngle, 
+                                endAngle, 
+                                color,
+                                thickness
+                                )
             
             # Insert if classpath[i] in classpath[i+1] then numFailingDies -= 1
             
