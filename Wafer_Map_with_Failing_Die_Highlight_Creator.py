@@ -118,6 +118,9 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         # Start count for failing dies
         numFailingDies = 0
         
+        # Below is needed incase there is no bad dies
+        isFirstImageRun = True
+         
         # Within each slot, cycle through each class
         for classIndex, classPath in enumerate(glob.glob(slotPath + "/*") ):
             # Skips directory if first class (non-defect) folder or if it 
@@ -136,8 +139,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             #  location within the wafer map image, and save this image.
             for dieNameIndex, dieName in enumerate(dieNames):
                 isBadDie = False
-                # Below is needed incase there is no bad dies
-                isFirstImageRun = True
+                
                 for imageName in os.listdir(classPath):
                     # Checks if same die name already claimed as bad in previous class folder
                     if dieName in badDieNames:
