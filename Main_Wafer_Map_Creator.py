@@ -9,15 +9,14 @@ import numpy as np
 import math
 
 # User Parameters/Constants to Set
-MATCH_CL = 0.70 # Minimum confidence level (CL) required to match golden-image to scanned image
-DIE_SPACING = 1.03 # Scale of die to die plus spacing between die
+MATCH_CL = 0.60 # Minimum confidence level (CL) required to match golden-image to scanned image
 STICHED_IMAGES_DIRECTORY = "./Images/000-Stitched_Images/"
 GOLDEN_IMAGES_DIRECTORY = "./Images/001-Golden_Images/"
 WAFER_MAP_DIRECTORY = "./Images/002-Wafer_Map/"
 SLEEP_TIME = 0.0 # Time to sleep in seconds between each window step
 TOGGLE_DELETE_WAFER_MAP = False
 TOGGLE_SHOW_WINDOW_IMAGE = False # Set equal to "True" and it will show a graphical image of where it's at
-
+TOGGLE_STITCHED_OVERLAY = True # Will use original stitched image in final wafer map
 
 def time_convert(sec):
     mins = sec // 60
@@ -33,6 +32,20 @@ def deleteDirContents(dir):
     for f in os.listdir(dir):
         fullName = os.path.join(dir, f)
         shutil.rmtree(fullName)
+
+
+def decrease_brightness(img):
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    h, s, v = cv2.split(hsv)
+    
+    brightness_scale = round((255-sum(cv2.mean(stitchImage))/3) * 0.00138, 2)
+    
+    v[v < 25] = 0
+    v = np.uint8(v*brightness_scale)
+
+    final_hsv = cv2.merge((h, s, v))
+    img = cv2.cvtColor(final_hsv, cv2.COLOR_HSV2BGR)
+    return img
 
 
 def slidingWindow(stitchImage, stepSizeX, stepSizeY, windowSize):
@@ -131,8 +144,11 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         # Draw rectangle over sliding window for debugging and easier visual
         if TOGGLE_SHOW_WINDOW_IMAGE == True:
             displayImage = stitchImage.copy()
-            cv2.rectangle(displayImage, (x, y), (x + winW, y + winH), 
-                          (255, 0, 180), round(stitchImage.shape[0]*0.0027))
+            cv2.rectangle(displayImage, 
+                          (x, y), 
+                          (x + winW, y + winH), 
+                          (255, 0, 180), 
+                          round(stitchImage.shape[0]*0.0027))
             displayImageResize = cv2.resize(displayImage, (1000, round(stitchImage.shape[0] / stitchImage.shape[1] * 1000)))
             cv2.imshow("Stitched Image", displayImageResize) # TOGGLE TO SHOW OR NOT
             cv2.waitKey(1)
@@ -205,6 +221,13 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
     # Create blank image array
     waferMap = np.zeros([maxY+minY, maxX+minX, 3], np.uint8)
     
+    # Overlays wafermap with darkened stitched image
+    if TOGGLE_STITCHED_OVERLAY:
+        dark_stitched_image = decrease_brightness(stitchImage)
+        y_limit = dark_stitched_image[:maxY+minY, :maxX+minX].shape[0]
+        x_limit = dark_stitched_image[:maxY+minY, :maxX+minX].shape[1]
+        waferMap[:y_limit, :x_limit] = dark_stitched_image[:y_limit, :x_limit]
+    
     # Creates wafer map and changes column names in dieNames
     for i in range(len(dieCoordinates)):
         # JUST ADDED TO SKIP FIRST ITERATION BECAUSE coord:0 and name:R#C#
@@ -220,11 +243,15 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         midY = round((y1 + y2)/2)
         
         # Places green boxes over wafer map using each die's coordinate
-        cv2.rectangle(waferMap, (x1, y1), (x2, y2), (255, 255, 255), 
-                      round(stitchImage.shape[0]*0.0006))
+        cv2.rectangle(waferMap, 
+                      (x1, y1), 
+                      (x2, y2), 
+                      (255, 255, 255), 
+                      round(goldenImage.size * 0.000002))
         
         # Replaces dieNames list column number with correct value
-        colNumber = str(math.floor((x1-minX)/(goldenImage.shape[1]*DIE_SPACING)+1) )
+        die_spacing = 1 + round( (dieCoordinates[2, 0] - dieCoordinates[1, 2])/goldenImage.shape[1], 3)
+        colNumber = str(math.floor((x1-minX)/(goldenImage.shape[1]*die_spacing)+1) )
         if int(colNumber) < 10:
             colNumber = "0" + colNumber
         if colNum == 8: # WHY IS THIS HERE AGAIN? lol, plus it won't be "True"; it's a string lol
@@ -238,8 +265,8 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         font                   = cv2.FONT_HERSHEY_SIMPLEX
         bottomLeftCornerOfText = (x1 + round(winW * 0.056), midY)
         fontScale              = round(winW*0.0023, 2)
-        fontColor              = (255, 100, 100)
-        thickness              = 2
+        fontColor              = (255, 150, 150)
+        thickness              = round(goldenImage.size * 0.0000025)
         lineType               = 2
         
         cv2.putText(waferMap, dieNames[i], 
