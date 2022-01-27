@@ -428,10 +428,22 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         lineType
                         )
         
+        # Decides if image compression is needed
+        if waferMap.size > 750000000: 
+            image_quality_percent = 20
+        elif waferMap.size > 350000000: 
+            image_quality_percent = 90
+        else:
+            image_quality_percent = 95
+            
         # Saves Wafer Map and deletes Temp Wafer Map if needed
-        cv2.imwrite(slotPath + "/Wafer_Map_with_Failing_Dies.jpg", waferMap)
+        cv2.imwrite(slotPath + "/Wafer_Map_with_Failing_Dies.jpg", 
+                    waferMap, 
+                    [cv2.IMWRITE_JPEG_QUALITY, image_quality_percent])
         if isInletLot:
-            cv2.imwrite(slotPath + "/Temp_Wafer_Map_to_Compare.jpg", tempWaferMap)
+            cv2.imwrite(slotPath + "/Temp_Wafer_Map_to_Compare.jpg", 
+                        tempWaferMap, 
+                        [cv2.IMWRITE_JPEG_QUALITY, image_quality_percent])
         if isCompareMap:
             if os.path.isfile(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg"):
                 os.remove(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg")

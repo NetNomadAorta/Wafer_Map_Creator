@@ -10,7 +10,7 @@ import math
 
 # User Parameters/Constants to Set
 MATCH_CL = 0.70 # Minimum confidence level (CL) required to match golden-image to scanned image
-DIE_SPACING = 1.00 # Scale of die to die plus spacing between die
+DIE_SPACING = 1.03 # Scale of die to die plus spacing between die
 STICHED_IMAGES_DIRECTORY = "./Images/000-Stitched_Images/"
 GOLDEN_IMAGES_DIRECTORY = "./Images/001-Golden_Images/"
 WAFER_MAP_DIRECTORY = "./Images/002-Wafer_Map/"
