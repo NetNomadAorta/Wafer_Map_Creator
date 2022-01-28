@@ -9,7 +9,7 @@ import numpy as np
 import math
 
 # User Parameters/Constants to Set
-MATCH_CL = 0.60 # Minimum confidence level (CL) required to match golden-image to scanned image
+MATCH_CL = 0.75 # Minimum confidence level (CL) required to match golden-image to scanned image
 STICHED_IMAGES_DIRECTORY = "./Images/000-Stitched_Images/"
 GOLDEN_IMAGES_DIRECTORY = "./Images/001-Golden_Images/"
 WAFER_MAP_DIRECTORY = "./Images/002-Wafer_Map/"
@@ -17,6 +17,7 @@ SLEEP_TIME = 0.0 # Time to sleep in seconds between each window step
 TOGGLE_DELETE_WAFER_MAP = False
 TOGGLE_SHOW_WINDOW_IMAGE = False # Set equal to "True" and it will show a graphical image of where it's at
 TOGGLE_STITCHED_OVERLAY = True # Will use original stitched image in final wafer map
+DIE_SPACING_SCALE = 0.95
 
 def time_convert(sec):
     mins = sec // 60
@@ -212,6 +213,16 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
     colNum = 0
     sameCol = False
     
+    # Sets spacing between dies
+    die_spacing_list = []
+    for i in range(len(dieCoordinates)-2):
+        die_spacing_temp = dieCoordinates[i+2, 0] - dieCoordinates[i+1, 2]
+        if die_spacing_temp < (goldenImage.shape[1] * 0.6) and die_spacing_temp > 0:
+            die_spacing_list.append(die_spacing_temp)
+
+    die_spacing_max = max(die_spacing_list)
+    die_spacing = 1 + round( (die_spacing_max/goldenImage.shape[1])*DIE_SPACING_SCALE, 3)
+    
     # Grabbing max and min x and y coordinate values
     maxX = np.amax(dieCoordinates[:, 2] )
     maxY = np.amax(dieCoordinates[:, 3] )
@@ -250,14 +261,9 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
                       round(goldenImage.size * 0.000002))
         
         # Replaces dieNames list column number with correct value
-        die_spacing = 1 + round( (dieCoordinates[2, 0] - dieCoordinates[1, 2])/goldenImage.shape[1], 3)
         colNumber = str(math.floor((x1-minX)/(goldenImage.shape[1]*die_spacing)+1) )
         if int(colNumber) < 10:
             colNumber = "0" + colNumber
-        if colNum == 8: # WHY IS THIS HERE AGAIN? lol, plus it won't be "True"; it's a string lol
-            print("\n\n\n EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-            print(colNum)
-            break
         dieNames[i] = dieNames[i].replace("Col_" + dieNames[i][-2:], 
                                           "Col_" + str(colNumber))
         
