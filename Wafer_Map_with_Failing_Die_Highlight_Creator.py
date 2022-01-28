@@ -127,7 +127,8 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             # includes the wafer map with failing dies image (if this program 
             # already created one from a previous run)
             if classIndex == 0 \
-            or "ZZ-" in os.listdir(slotPath)[classIndex]:
+            or "ZZ-" in os.listdir(slotPath)[classIndex] \
+            or ".jpg" in os.listdir(slotPath)[classIndex]:
                 continue
             # Removes Thumbs.db in class path if found
             if os.path.isfile(classPath + "/Thumbs.db"):
@@ -437,13 +438,29 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             image_quality_percent = 95
             
         # Saves Wafer Map and deletes Temp Wafer Map if needed
-        cv2.imwrite(slotPath + "/Wafer_Map_with_Failing_Dies.jpg", 
-                    waferMap, 
-                    [cv2.IMWRITE_JPEG_QUALITY, image_quality_percent])
+        percent_knockoff = 5
+        while True:
+            cv2.imwrite(slotPath + "/Wafer_Map_with_Failing_Dies.jpg", 
+                        waferMap, 
+                        [cv2.IMWRITE_JPEG_QUALITY, 100-percent_knockoff])
+            size = os.path.getsize(slotPath + "/Wafer_Map_with_Failing_Dies.jpg")
+            if size > 20000000:
+                os.remove(slotPath + "/Wafer_Map_with_Failing_Dies.jpg")
+                percent_knockoff += 10
+            else:
+                break
         if isInletLot:
-            cv2.imwrite(slotPath + "/Temp_Wafer_Map_to_Compare.jpg", 
-                        tempWaferMap, 
-                        [cv2.IMWRITE_JPEG_QUALITY, image_quality_percent])
+            percent_knockoff = 5
+            while True:
+                cv2.imwrite(slotPath + "/Temp_Wafer_Map_to_Compare.jpg", 
+                            tempWaferMap, 
+                            [cv2.IMWRITE_JPEG_QUALITY, 100-percent_knockoff])
+                size = os.path.getsize(slotPath + "/Temp_Wafer_Map_to_Compare.jpg")
+                if size > 20000000:
+                    os.remove(slotPath + "/Temp_Wafer_Map_to_Compare.jpg")
+                    percent_knockoff += 10
+                else:
+                    break
         if isCompareMap:
             if os.path.isfile(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg"):
                 os.remove(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg")
