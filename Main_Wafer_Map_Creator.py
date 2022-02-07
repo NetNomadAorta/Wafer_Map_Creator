@@ -17,7 +17,7 @@ SLEEP_TIME = 0.0 # Time to sleep in seconds between each window step
 TOGGLE_DELETE_WAFER_MAP = False
 TOGGLE_SHOW_WINDOW_IMAGE = False # Set equal to "True" and it will show a graphical image of where it's at
 TOGGLE_STITCHED_OVERLAY = True # Will use original stitched image in final wafer map
-DIE_SPACING_SCALE = 0.95
+DIE_SPACING_SCALE = 0.99
 
 def time_convert(sec):
     mins = sec // 60
@@ -39,7 +39,7 @@ def decrease_brightness(img):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     h, s, v = cv2.split(hsv)
     
-    brightness_scale = round((255-sum(cv2.mean(stitchImage))/3) * 0.00138, 2)
+    brightness_scale = round((255-sum(cv2.mean(stitchImage))/3) * 0.0023, 2) # Was 0.00138
     
     v[v < 25] = 0
     v = np.uint8(v*brightness_scale)
@@ -68,7 +68,7 @@ def getMatch(window, goldenImage, x, y):
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
         
         if max_val > MATCH_CL: 
-            print("\nFOUND MATCH - max_val =", round(max_val, 4) )
+            print("\nFOUND MATCH: max_val =", round(max_val, 4) )
             print("Window Coordinates: x1:", x + max_loc[0], "y1:", y + max_loc[1], \
                   "x2:", x + max_loc[0] + w2, "y2:", y + max_loc[1] + h2)
             
@@ -160,54 +160,59 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         # Scans window and grabs cropped image coordinates relative to window
         # Uses each golden image in the file if multiple part types are present
         
-        # Gets coordinates relative to window of matched dies within a Stitched-Image
-        win_x1, win_y1, win_x2, win_y2, matchedCL = getMatch(window, goldenImage, x, y)
-        
-        # Saves cropped image and names with coordinates
-        if win_x1 != "null":
-            # Turns cropped image coordinates relative to window to stitched-image coordinates
-            x1 = x + win_x1
-            y1 = y + win_y1
-            x2 = x + win_x2
-            y2 = y + win_y2
+        # Runs through each golden image
+        for goldenImagePath in glob.glob(goldenFolderPath + "/*"):
+            goldenImage = cv2.imread(goldenImagePath)
             
-            # Makes sure same image does not get saved as different names
-            if y1 >= (prev_y1 + round(stepSizeY / 2.95)) or y1 <= (prev_y1 - round(stepSizeY / 2.95)):
-                rowNum += 1
-                colNum = 1
-                sameCol = False
-            else:
-                if x1 >= (prev_x1 + round(stepSizeX / 2.95)) or x1 <= (prev_x1 - round(stepSizeX / 2.95)):
-                    colNum += 1
-                    prev_matchedCL = 0
+            # Gets coordinates relative to window of matched dies within a Stitched-Image
+            win_x1, win_y1, win_x2, win_y2, matchedCL = getMatch(window, goldenImage, x, y)
+            
+            # Saves cropped image and names with coordinates
+            if win_x1 != "null":
+                # Turns cropped image coordinates relative to window to stitched-image coordinates
+                x1 = x + win_x1
+                y1 = y + win_y1
+                x2 = x + win_x2
+                y2 = y + win_y2
+                
+                # Makes sure same image does not get saved as different names
+                if y1 >= (prev_y1 + round(goldenImage.shape[0] / 2.95)) or y1 <= (prev_y1 - round(goldenImage.shape[0] / 2.95)):
+                    rowNum += 1
+                    colNum = 1
                     sameCol = False
+                else:
+                    if x1 >= (prev_x1 + round(goldenImage.shape[1] / 2.95)) or x1 <= (prev_x1 - round(goldenImage.shape[1] / 2.95)):
+                        colNum += 1
+                        prev_matchedCL = 0
+                        sameCol = False
+                    else: 
+                        sameCol = True
+                
+                # NEEDS A CHECK TO SEE IF FIRST X IN PREVIOUS Y-ROW IS THE SAME
+                #   IF IT ISN'T, THEN MAKE PREVIOUS FIRST X IN PREVIOUS ROW
+                #   HAVE A COLUMN_NUMBER += 1 AND DELETE OLD SAVE AND RESAVE
+                #   WITH NEW NAME
+                
+                # Puts 0 in front of single digit row nad column number
+                if rowNum < 10:
+                    rZ = 0
                 else: 
-                    sameCol = True
-            
-            # NEEDS A CHECK TO SEE IF FIRST X IN PREVIOUS Y-ROW IS THE SAME
-            #   IF IT ISN'T, THEN MAKE PREVIOUS FIRST X IN PREVIOUS ROW
-            #   HAVE A COLUMN_NUMBER += 1 AND DELETE OLD SAVE AND RESAVE
-            #   WITH NEW NAME
-            
-            # Puts 0 in front of single digit row nad column number
-            if rowNum < 10:
-                rZ = 0
-            else: 
-                rZ = ""
-            if colNum < 10:
-                cZ = 0
-            else: 
-                cZ = ""
-            
-            if sameCol == False: 
-                dieNames.append("Row_{}{}.Col_{}{}".format(rZ, rowNum, cZ, colNum) )
-                dieCoordinates = np.append(dieCoordinates, [[x1, y1, x2, y2]], axis=0)
-            elif sameCol == True and matchedCL > prev_matchedCL:
-                dieCoordinates[len(dieCoordinates)-1] = np.array([x1, y1, x2, y2], ndmin=2)
-            
-            prev_y1 = y1
-            prev_x1 = x1
-            prev_matchedCL = matchedCL
+                    rZ = ""
+                if colNum < 10:
+                    cZ = 0
+                else: 
+                    cZ = ""
+                
+                if sameCol == False: 
+                    dieNames.append("Row_{}{}.Col_{}{}".format(rZ, rowNum, cZ, colNum) )
+                    dieCoordinates = np.append(dieCoordinates, [[x1, y1, x2, y2]], axis=0)
+                elif sameCol == True and matchedCL > prev_matchedCL:
+                    dieCoordinates[len(dieCoordinates)-1] = np.array([x1, y1, x2, y2], ndmin=2)
+                
+                prev_y1 = y1
+                prev_x1 = x1
+                if sameCol == True and matchedCL > prev_matchedCL:
+                    prev_matchedCL = matchedCL
         # ==================================================================================
     rowNum += 1
     colNum = 0
