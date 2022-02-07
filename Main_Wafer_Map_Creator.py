@@ -88,6 +88,8 @@ start_time = time.time()
 # Clears some of the screen for asthetics
 print("\n\n\n\n\n\n\n\n\n\n\n\n\n")
 
+cv2.destroyAllWindows()
+
 # Deletes contents in cropped- and split-image folders
 if TOGGLE_DELETE_WAFER_MAP == True:
     deleteDirContents(WAFER_MAP_DIRECTORY)
