@@ -18,6 +18,9 @@ TOGGLE_DELETE_WAFER_MAP = False
 TOGGLE_SHOW_WINDOW_IMAGE = False # Set equal to "True" and it will show a graphical image of where it's at
 TOGGLE_STITCHED_OVERLAY = True # Will use original stitched image in final wafer map
 DIE_SPACING_SCALE = 0.99
+# Usually puts "0" in "Row_01". If 3 digits necessary, such as "Col_007", or
+#  "Row_255", then toggle below "True"
+THREE_DIGITS_TOGGLE = True # Usually puts "0" in "Row_01". If 3 digits necessary
 
 def time_convert(sec):
     mins = sec // 60
@@ -195,15 +198,29 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
                 #   HAVE A COLUMN_NUMBER += 1 AND DELETE OLD SAVE AND RESAVE
                 #   WITH NEW NAME
                 
-                # Puts 0 in front of single digit row nad column number
-                if rowNum < 10:
-                    rZ = 0
-                else: 
-                    rZ = ""
-                if colNum < 10:
-                    cZ = 0
-                else: 
-                    cZ = ""
+                # Puts 0 in front of single digit row and column number
+                if THREE_DIGITS_TOGGLE:
+                    if rowNum < 10:
+                        rZ = "00"
+                    elif rowNum < 100:
+                        rZ = "0"
+                    else: 
+                        rZ = ""
+                    if colNum < 10:
+                        cZ = "00"
+                    elif colNum < 100:
+                        cZ = "0"
+                    else: 
+                        cZ = ""
+                else:
+                    if rowNum < 10:
+                        rZ = 0
+                    else: 
+                        rZ = ""
+                    if colNum < 10:
+                        cZ = 0
+                    else: 
+                        cZ = ""
                 
                 if sameCol == False: 
                     dieNames.append("Row_{}{}.Col_{}{}".format(rZ, rowNum, cZ, colNum) )
@@ -269,8 +286,14 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         
         # Replaces dieNames list column number with correct value
         colNumber = str(math.floor((x1-minX)/(goldenImage.shape[1]*die_spacing)+1) )
-        if int(colNumber) < 10:
-            colNumber = "0" + colNumber
+        if THREE_DIGITS_TOGGLE:
+            if int(colNumber) < 10:
+                colNumber = "00" + colNumber
+            elif int(colNumber) < 100:
+                colNumber = "0" + colNumber
+        else:
+            if int(colNumber) < 10:
+                colNumber = "0" + colNumber
         dieNames[i] = dieNames[i].replace("Col_" + dieNames[i][-2:], 
                                           "Col_" + str(colNumber))
         
