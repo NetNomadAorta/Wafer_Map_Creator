@@ -157,7 +157,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     else:
                         isBadDie = False
                     
-                    if isBadDie or list_index < 2:
+                    if isBadDie or list_index < 2: # SHOULD THIS BE < 1? EEEEEEEEEEEEEEEEEEEEEEEEEEE
                         x1 = dieCoordinates[dieNameIndex][0]
                         y1 = dieCoordinates[dieNameIndex][1]
                         x2 = dieCoordinates[dieNameIndex][2]
