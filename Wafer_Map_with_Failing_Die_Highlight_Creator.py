@@ -142,6 +142,9 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             for dieNameIndex, dieName in enumerate(dieNames):
                 isBadDie = False
                 
+                if dieNameIndex == 0:
+                    continue
+                
                 for list_index, imageName in enumerate(list):
                     # Checks if same die name already claimed as bad in previous class folder
                     if dieName in badDieNames:
@@ -149,56 +152,39 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     
                     if dieName in imageName:
                         isBadDie = True
-                        del list[list_index]
+                        del list[:(list_index+1)]
                         badDieNames.append(dieName)
                     else:
                         isBadDie = False
+                    
+                    if isBadDie or list_index < 2:
+                        x1 = dieCoordinates[dieNameIndex][0]
+                        y1 = dieCoordinates[dieNameIndex][1]
+                        x2 = dieCoordinates[dieNameIndex][2]
+                        y2 = dieCoordinates[dieNameIndex][3]
                         
-                    x1 = dieCoordinates[dieNameIndex][0]
-                    y1 = dieCoordinates[dieNameIndex][1]
-                    x2 = dieCoordinates[dieNameIndex][2]
-                    y2 = dieCoordinates[dieNameIndex][3]
-                    
-                    midX    = round( (x1 + x2)/2)
-                    midY    = round( (y1 + y2)/2)
-                    
-                    lengthX = round( ( (x2 - x1) * 0.97 )/2)
-                    lengthY = round( ( (y2 - y1) * 0.97 )/2)
-                    
-                    lengthXInner = round( ( (x2 - x1) * 0.87 )/2)
-                    lengthYInner = round( ( (y2 - y1) * 0.87 )/2)
-                    
-                    # Places red ovals over wafer map using bad die's coordinate
-                    center      = (midX, midY)
-                    axes        = (lengthX, lengthY)
-                    angle       = 0
-                    startAngle  = 0
-                    endAngle    = 360
-                    if isBadDie:
-                        color       = (0, 0, 255)
-                    else:
-                        color       = (0, 255, 0)
-                    thickness   = round(waferMap.shape[0] * 0.0009)
-                    
-                    cv2.ellipse(waferMap, center, 
-                                axes, 
-                                angle, 
-                                startAngle, 
-                                endAngle, 
-                                color,
-                                thickness
-                                )
-                    
-                    if isInletLot:
-                        # Places green/orange ovals over wafer map using bad die's coordinate
-                        # # This is used for "*-Out" file to overlay
-                        axes  = (lengthXInner, lengthYInner)
+                        midX    = round( (x1 + x2)/2)
+                        midY    = round( (y1 + y2)/2)
+                        
+                        lengthX = round( ( (x2 - x1) * 0.97 )/2)
+                        lengthY = round( ( (y2 - y1) * 0.97 )/2)
+                        
+                        lengthXInner = round( ( (x2 - x1) * 0.87 )/2)
+                        lengthYInner = round( ( (y2 - y1) * 0.87 )/2)
+                        
+                        # Places red ovals over wafer map using bad die's coordinate
+                        center      = (midX, midY)
+                        axes        = (lengthX, lengthY)
+                        angle       = 0
+                        startAngle  = 0
+                        endAngle    = 360
                         if isBadDie:
                             color       = (0, 0, 255)
                         else:
                             color       = (0, 255, 0)
+                        thickness   = round(lengthX * 0.03)
                         
-                        cv2.ellipse(tempWaferMap, center, 
+                        cv2.ellipse(waferMap, center, 
                                     axes, 
                                     angle, 
                                     startAngle, 
@@ -206,6 +192,26 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                                     color,
                                     thickness
                                     )
+                        
+                        if isInletLot:
+                            # Places green/orange ovals over wafer map using bad die's coordinate
+                            # # This is used for "*-Out" file to overlay
+                            axes  = (lengthXInner, lengthYInner)
+                            if isBadDie:
+                                color       = (0, 0, 255)
+                            else:
+                                color       = (0, 255, 0)
+                            
+                            cv2.ellipse(tempWaferMap, center, 
+                                        axes, 
+                                        angle, 
+                                        startAngle, 
+                                        endAngle, 
+                                        color,
+                                        thickness
+                                        )
+                    else:
+                        break
                     
                     # Prevents green circles from being drawn
                     isFirstImageRun = False
@@ -239,7 +245,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     startAngle  = 0
                     endAngle    = 360
                     color       = (0, 255, 0)
-                    thickness   = round(waferMap.shape[0] * 0.0009)
+                    thickness   = round(lengthX * 0.03)
                     
                     cv2.ellipse(waferMap, center, 
                                 axes, 
@@ -431,7 +437,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         lineType
                         )
         
-        image_size_limit = 20 # in mb
+        image_size_limit = 100 # in mb
         image_size_limit = image_size_limit * 1000000 # now im bytes
         
         # Saves Wafer Map and deletes Temp Wafer Map if needed
