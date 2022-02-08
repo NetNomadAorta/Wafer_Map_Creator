@@ -58,7 +58,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     # Sets parameter to enable comparing in and out files
     isInletLot = False
     isCompareMap = False
-    if "-In" in lotPath:
+    if "-In" in lotPath and COMPARE_OVERLAY == True:
         isInletLot = True
     if "-Out" in lotPath and COMPARE_OVERLAY == True:
         isCompareMap = True
@@ -138,16 +138,18 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             #  if this slot has the same die names within its defect folders.
             # If so, then create the new wafer map with red ovals in die 
             #  location within the wafer map image, and save this image.
+            list = os.listdir(classPath)
             for dieNameIndex, dieName in enumerate(dieNames):
                 isBadDie = False
                 
-                for imageName in os.listdir(classPath):
+                for list_index, imageName in enumerate(list):
                     # Checks if same die name already claimed as bad in previous class folder
                     if dieName in badDieNames:
                         continue
                     
                     if dieName in imageName:
                         isBadDie = True
+                        del list[list_index]
                         badDieNames.append(dieName)
                     else:
                         isBadDie = False
@@ -429,7 +431,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         lineType
                         )
         
-        image_size_limit = 100 # in mb
+        image_size_limit = 20 # in mb
         image_size_limit = image_size_limit * 1000000 # now im bytes
         
         # Saves Wafer Map and deletes Temp Wafer Map if needed
