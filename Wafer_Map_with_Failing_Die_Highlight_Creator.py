@@ -429,14 +429,9 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         lineType
                         )
         
-        # Decides if image compression is needed
-        if waferMap.size > 750000000: 
-            image_quality_percent = 20
-        elif waferMap.size > 350000000: 
-            image_quality_percent = 90
-        else:
-            image_quality_percent = 95
-            
+        image_size_limit = 100 # in mb
+        image_size_limit = image_size_limit * 1000000 # now im bytes
+        
         # Saves Wafer Map and deletes Temp Wafer Map if needed
         percent_knockoff = 5
         while True:
@@ -444,7 +439,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         waferMap, 
                         [cv2.IMWRITE_JPEG_QUALITY, 100-percent_knockoff])
             size = os.path.getsize(slotPath + "/Wafer_Map_with_Failing_Dies.jpg")
-            if size > 20000000:
+            if size > image_size_limit:
                 os.remove(slotPath + "/Wafer_Map_with_Failing_Dies.jpg")
                 percent_knockoff += 10
             else:
@@ -456,7 +451,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                             tempWaferMap, 
                             [cv2.IMWRITE_JPEG_QUALITY, 100-percent_knockoff])
                 size = os.path.getsize(slotPath + "/Temp_Wafer_Map_to_Compare.jpg")
-                if size > 20000000:
+                if size > image_size_limit:
                     os.remove(slotPath + "/Temp_Wafer_Map_to_Compare.jpg")
                     percent_knockoff += 10
                 else:

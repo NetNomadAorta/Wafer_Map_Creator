@@ -224,7 +224,10 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
                         cZ = ""
                 
                 if sameCol == False: 
-                    dieNames.append("Row_{}{}.Col_{}{}".format(rZ, rowNum, cZ, colNum) )
+                    if THREE_DIGITS_TOGGLE:
+                        dieNames.append("R_{}{}.C_{}{}".format(rZ, rowNum, cZ, colNum) )
+                    else:
+                        dieNames.append("Row_{}{}.Col_{}{}".format(rZ, rowNum, cZ, colNum) )
                     dieCoordinates = np.append(dieCoordinates, [[x1, y1, x2, y2]], axis=0)
                 elif sameCol == True and matchedCL > prev_matchedCL:
                     dieCoordinates[len(dieCoordinates)-1] = np.array([x1, y1, x2, y2], ndmin=2)
@@ -300,8 +303,12 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         
         # Writes row and column number text in wafer map
         font                   = cv2.FONT_HERSHEY_SIMPLEX
-        bottomLeftCornerOfText = (x1 + round(winW * 0.056), midY)
-        fontScale              = round(winW*0.0023, 2)
+        if THREE_DIGITS_TOGGLE:
+            bottomLeftCornerOfText = (x1 + round(winW * 0.01), midY)
+            fontScale              = round(winW*0.003, 2)
+        else:
+            bottomLeftCornerOfText = (x1 + round(winW * 0.056), midY)
+            fontScale              = round(winW*0.0023, 2)
         fontColor              = (255, 150, 150)
         thickness              = round(goldenImage.size * 0.0000025)
         lineType               = 2
