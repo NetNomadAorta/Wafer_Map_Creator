@@ -23,6 +23,7 @@ PREDICTED_DIR = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/"
 STORED_WAFER_DATA = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/ZZZ-General_Wafer_Map_Data/"
 COMPARE_OVERLAY = False # Will compare "*-In" and "*-Out" wafer maps and output in "*-Out" folder
 SHOULD_REPLACE_ALL_MAPS = False # Will remake each wafer map that already exist in AOI Output folder if set true
+WAFER_MAP_SIZE_LIMIT = 150 # mb # If wafer map size above this value, reduce quality until size is under this value
 
 
 def time_convert(sec):
@@ -58,7 +59,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     # Sets parameter to enable comparing in and out files
     isInletLot = False
     isCompareMap = False
-    if "-In" in lotPath:
+    if "-In" in lotPath and COMPARE_OVERLAY == True:
         isInletLot = True
     if "-Out" in lotPath and COMPARE_OVERLAY == True:
         isCompareMap = True
@@ -80,6 +81,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     
     # Imports correct dieNames and dieCoordinates data
     dieNames = np.load(STORED_WAFER_DATA + waferMapName + "/dieNames.npy")
+    len_dieNames = len(dieNames)
     dieCoordinates = np.load(STORED_WAFER_DATA + waferMapName + "/Coordinates.npy")
 
 
@@ -138,65 +140,71 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             #  if this slot has the same die names within its defect folders.
             # If so, then create the new wafer map with red ovals in die 
             #  location within the wafer map image, and save this image.
+            list = os.listdir(classPath)
             for dieNameIndex, dieName in enumerate(dieNames):
                 isBadDie = False
                 
-                for imageName in os.listdir(classPath):
+                if dieNameIndex == 0:
+                    continue
+                
+                # Shows progress in current slot
+                if len_dieNames > 100:
+                    if round(dieNameIndex/len_dieNames, 2) == 0.25:
+                        print("   " + slotPath + " - Progress:", 
+                              round(dieNameIndex/len_dieNames*100), "%")
+                    if round(dieNameIndex/len_dieNames, 2) == 0.50:
+                        print("   " + slotPath + " - Progress:", 
+                              round(dieNameIndex/len_dieNames*100), "%")
+                    if round(dieNameIndex/len_dieNames, 2) == 0.75:
+                        print("   " + slotPath + " - Progress:", 
+                              round(dieNameIndex/len_dieNames*100), "%")
+                
+                for list_index, imageName in enumerate(list):
                     # Checks if same die name already claimed as bad in previous class folder
                     if dieName in badDieNames:
                         continue
                     
                     if dieName in imageName:
                         isBadDie = True
+                        del list[:(list_index+1)]
                         badDieNames.append(dieName)
                     else:
                         isBadDie = False
+                    
+                    # Incase list is empty, makese a placeholder to allow rest of code to run correctly
+                    if len(list) == 0:
+                        list.append("This is a placeholder!")
+                        imageName = "This is also a placeholder!"
+                    
+                    
+                    if isBadDie or list_index < 10: # "list_index < X" related to # of parts per die
+                        x1 = dieCoordinates[dieNameIndex][0]
+                        y1 = dieCoordinates[dieNameIndex][1]
+                        x2 = dieCoordinates[dieNameIndex][2]
+                        y2 = dieCoordinates[dieNameIndex][3]
                         
-                    x1 = dieCoordinates[dieNameIndex][0]
-                    y1 = dieCoordinates[dieNameIndex][1]
-                    x2 = dieCoordinates[dieNameIndex][2]
-                    y2 = dieCoordinates[dieNameIndex][3]
-                    
-                    midX    = round( (x1 + x2)/2)
-                    midY    = round( (y1 + y2)/2)
-                    
-                    lengthX = round( ( (x2 - x1) * 0.97 )/2)
-                    lengthY = round( ( (y2 - y1) * 0.97 )/2)
-                    
-                    lengthXInner = round( ( (x2 - x1) * 0.87 )/2)
-                    lengthYInner = round( ( (y2 - y1) * 0.87 )/2)
-                    
-                    # Places red ovals over wafer map using bad die's coordinate
-                    center      = (midX, midY)
-                    axes        = (lengthX, lengthY)
-                    angle       = 0
-                    startAngle  = 0
-                    endAngle    = 360
-                    if isBadDie:
-                        color       = (0, 0, 255)
-                    else:
-                        color       = (0, 255, 0)
-                    thickness   = round(waferMap.shape[0] * 0.0009)
-                    
-                    cv2.ellipse(waferMap, center, 
-                                axes, 
-                                angle, 
-                                startAngle, 
-                                endAngle, 
-                                color,
-                                thickness
-                                )
-                    
-                    if isInletLot:
-                        # Places green/orange ovals over wafer map using bad die's coordinate
-                        # # This is used for "*-Out" file to overlay
-                        axes  = (lengthXInner, lengthYInner)
+                        midX    = round( (x1 + x2)/2)
+                        midY    = round( (y1 + y2)/2)
+                        
+                        lengthX = round( ( (x2 - x1) * 0.97 )/2)
+                        lengthY = round( ( (y2 - y1) * 0.97 )/2)
+                        
+                        lengthXInner = round( ( (x2 - x1) * 0.87 )/2)
+                        lengthYInner = round( ( (y2 - y1) * 0.87 )/2)
+                        
+                        # Places red ovals over wafer map using bad die's coordinate
+                        center      = (midX, midY)
+                        axes        = (lengthX, lengthY)
+                        angle       = 0
+                        startAngle  = 0
+                        endAngle    = 360
                         if isBadDie:
                             color       = (0, 0, 255)
                         else:
                             color       = (0, 255, 0)
+                        thickness   = round(lengthX * 0.03)
                         
-                        cv2.ellipse(tempWaferMap, center, 
+                        cv2.ellipse(waferMap, center, 
                                     axes, 
                                     angle, 
                                     startAngle, 
@@ -204,6 +212,26 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                                     color,
                                     thickness
                                     )
+                        
+                        if isInletLot:
+                            # Places green/orange ovals over wafer map using bad die's coordinate
+                            # # This is used for "*-Out" file to overlay
+                            axes  = (lengthXInner, lengthYInner)
+                            if isBadDie:
+                                color       = (0, 0, 255)
+                            else:
+                                color       = (0, 255, 0)
+                            
+                            cv2.ellipse(tempWaferMap, center, 
+                                        axes, 
+                                        angle, 
+                                        startAngle, 
+                                        endAngle, 
+                                        color,
+                                        thickness
+                                        )
+                    else:
+                        break
                     
                     # Prevents green circles from being drawn
                     isFirstImageRun = False
@@ -237,7 +265,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     startAngle  = 0
                     endAngle    = 360
                     color       = (0, 255, 0)
-                    thickness   = round(waferMap.shape[0] * 0.0009)
+                    thickness   = round(lengthX * 0.03)
                     
                     cv2.ellipse(waferMap, center, 
                                 axes, 
@@ -429,14 +457,9 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         lineType
                         )
         
-        # Decides if image compression is needed
-        if waferMap.size > 750000000: 
-            image_quality_percent = 20
-        elif waferMap.size > 350000000: 
-            image_quality_percent = 90
-        else:
-            image_quality_percent = 95
-            
+        image_size_limit = WAFER_MAP_SIZE_LIMIT # in mb
+        image_size_limit = image_size_limit * 1000000 # now im bytes
+        
         # Saves Wafer Map and deletes Temp Wafer Map if needed
         percent_knockoff = 5
         while True:
@@ -444,7 +467,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         waferMap, 
                         [cv2.IMWRITE_JPEG_QUALITY, 100-percent_knockoff])
             size = os.path.getsize(slotPath + "/Wafer_Map_with_Failing_Dies.jpg")
-            if size > 20000000:
+            if size > image_size_limit:
                 os.remove(slotPath + "/Wafer_Map_with_Failing_Dies.jpg")
                 percent_knockoff += 10
             else:
@@ -456,7 +479,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                             tempWaferMap, 
                             [cv2.IMWRITE_JPEG_QUALITY, 100-percent_knockoff])
                 size = os.path.getsize(slotPath + "/Temp_Wafer_Map_to_Compare.jpg")
-                if size > 20000000:
+                if size > image_size_limit:
                     os.remove(slotPath + "/Temp_Wafer_Map_to_Compare.jpg")
                     percent_knockoff += 10
                 else:
