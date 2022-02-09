@@ -158,7 +158,13 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     else:
                         isBadDie = False
                     
-                    if isBadDie or list_index < 1: # SHOULD THIS BE < 1? EEEEEEEEEEEEEEEEEEEEEEEEEEE
+                    # Incase list is empty, makese a placeholder to allow rest of code to run correctly
+                    if len(list) == 0:
+                        list.append("This is a placeholder!")
+                        imageName = "This is also a placeholder!"
+                    
+                    
+                    if isBadDie or list_index < 10: # "list_index < X" related to # of parts per die
                         x1 = dieCoordinates[dieNameIndex][0]
                         y1 = dieCoordinates[dieNameIndex][1]
                         x2 = dieCoordinates[dieNameIndex][2]
