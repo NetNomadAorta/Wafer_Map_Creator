@@ -81,6 +81,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     
     # Imports correct dieNames and dieCoordinates data
     dieNames = np.load(STORED_WAFER_DATA + waferMapName + "/dieNames.npy")
+    len_dieNames = len(dieNames)
     dieCoordinates = np.load(STORED_WAFER_DATA + waferMapName + "/Coordinates.npy")
 
 
@@ -145,6 +146,18 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 
                 if dieNameIndex == 0:
                     continue
+                
+                # Shows progress in current slot
+                if len_dieNames > 100:
+                    if round(dieNameIndex/len_dieNames, 2) == 0.25:
+                        print("   " + slotPath + " - Progress:", 
+                              round(dieNameIndex/len_dieNames*100), "%")
+                    if round(dieNameIndex/len_dieNames, 2) == 0.50:
+                        print("   " + slotPath + " - Progress:", 
+                              round(dieNameIndex/len_dieNames*100), "%")
+                    if round(dieNameIndex/len_dieNames, 2) == 0.75:
+                        print("   " + slotPath + " - Progress:", 
+                              round(dieNameIndex/len_dieNames*100), "%")
                 
                 for list_index, imageName in enumerate(list):
                     # Checks if same die name already claimed as bad in previous class folder
