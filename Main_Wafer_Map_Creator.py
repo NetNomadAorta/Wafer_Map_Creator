@@ -9,7 +9,7 @@ import numpy as np
 import math
 
 # User Parameters/Constants to Set
-MATCH_CL = 0.65 # Minimum confidence level (CL) required to match golden-image to scanned image
+MATCH_CL = 0.85 # Minimum confidence level (CL) required to match golden-image to scanned image
 STICHED_IMAGES_DIRECTORY = "./Images/000-Stitched_Images/"
 GOLDEN_IMAGES_DIRECTORY = "./Images/001-Golden_Images/"
 WAFER_MAP_DIRECTORY = "./Images/002-Wafer_Map/"
@@ -17,11 +17,11 @@ SLEEP_TIME = 0.0 # Time to sleep in seconds between each window step
 TOGGLE_DELETE_WAFER_MAP = False
 TOGGLE_SHOW_WINDOW_IMAGE = False # Set equal to "True" and it will show a graphical image of where it's at
 TOGGLE_STITCHED_OVERLAY = True # Will use original stitched image in final wafer map
-DIE_SPACING_SCALE = 0.99
+DIE_SPACING_SCALE = 0.95
 
 # Usually puts "0" in "Row_01". If 3 digits necessary, such as "Col_007", or
 #  "Row_255", then toggle below "True"
-THREE_DIGITS_TOGGLE = True 
+THREE_DIGITS_TOGGLE = False 
 
 def time_convert(sec):
     mins = sec // 60
@@ -292,11 +292,15 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
                 colNumber = "00" + colNumber
             elif int(colNumber) < 100:
                 colNumber = "0" + colNumber
+            
+            dieNames[i] = dieNames[i].replace("Col_" + dieNames[i][-3:], 
+                                              "Col_" + str(colNumber))
         else:
             if int(colNumber) < 10:
                 colNumber = "0" + colNumber
-        dieNames[i] = dieNames[i].replace("Col_" + dieNames[i][-2:], 
-                                          "Col_" + str(colNumber))
+            
+            dieNames[i] = dieNames[i].replace("Col_" + dieNames[i][-2:], 
+                                              "Col_" + str(colNumber))
         
         # Writes row and column number text in wafer map
         font                   = cv2.FONT_HERSHEY_SIMPLEX
