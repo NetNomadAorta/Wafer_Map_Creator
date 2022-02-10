@@ -240,7 +240,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 
                 if isBadDie:
                     
-                    if len(dieNames) > 500 and dieNameIndex % 500 == 0:
+                    if len(dieNames) > 1000 and dieNameIndex % 1000 == 0:
                         for list_index, image_name in enumerate(list):
                             if dieName in image_name:
                                 del list[:list_index]
