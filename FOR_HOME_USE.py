@@ -252,6 +252,9 @@ print("   Saving Excel sheet results..")
 workbook = xlsxwriter.Workbook(PREDICTED_DIR + 'Results.xlsx')
 worksheet = workbook.add_worksheet()
 
+# Add a bold format to use to highlight cells.
+bold = workbook.add_format({'bold': True})
+
 # Start from the third row cell. Rows and columns are zero indexed.
 row = 3
 col = 0
@@ -267,17 +270,17 @@ for index, badDieName in enumerate(badDieNames):
     row += 1
 
 # Write a header for above table
-worksheet.write(2, 0, dieNames[0])
-worksheet.write(2, 1, "x1")
-worksheet.write(2, 2, "y1")
-worksheet.write(2, 3, "x2")
-worksheet.write(2, 4, "y2")
+worksheet.write(2, 0, dieNames[0], bold)
+worksheet.write(2, 1, "x1", bold)
+worksheet.write(2, 2, "y1", bold)
+worksheet.write(2, 3, "x2", bold)
+worksheet.write(2, 4, "y2", bold)
 
 # Write a total using a formula.
-worksheet.write(0, 0, 'Total Failing Dies: ')
+worksheet.write(0, 0, 'Total Failing Dies:', bold)
 worksheet.write(0, 1, str(len(badDieNames)) )
 
-worksheet.set_column(0, 0, width=len("Total Failing Dies:"))
+worksheet.set_column(0, 0, width=len("Total Failing Dies"))
 
 workbook.close()
 # -----------------------------------------------------------------------------
