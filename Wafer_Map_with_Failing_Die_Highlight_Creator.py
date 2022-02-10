@@ -25,6 +25,7 @@ STORED_WAFER_DATA = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/ZZZ-
 COMPARE_OVERLAY = False # Will compare "*-In" and "*-Out" wafer maps and output in "*-Out" folder
 SHOULD_REPLACE_ALL_MAPS = False # Will remake each wafer map that already exist in AOI Output folder if set true
 WAFER_MAP_SIZE_LIMIT = 250 # mb # If wafer map size above this value, reduce quality until size is under this value
+EXCEL_GENERATOR_TOGGLE = True
 
 
 def time_convert(sec):
@@ -177,6 +178,9 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 if dieName in badDieNames:
                     continue
                 
+                # Checks to see if current die name from general wafer 
+                #  map die names is in any of the image names from current
+                #  class folder
                 if any(dieName in s for s in list):
                     isBadDie = True
                     badDieNames.append(dieName)
@@ -464,9 +468,10 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         lineType
                         )
         
+        print("   Saving wafer map..")
+        # Wafer map size limit set
         image_size_limit = WAFER_MAP_SIZE_LIMIT # in mb
         image_size_limit = image_size_limit * 1000000 # now im bytes
-        
         # Saves Wafer Map and deletes Temp Wafer Map if needed
         percent_knockoff = 5
         while True:
@@ -497,38 +502,40 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
 
         # XLS Section
         # -----------------------------------------------------------------------------
-        # Create a workbook and add a worksheet.
-        workbook = xlsxwriter.Workbook('Results.xlsx')
-        worksheet = workbook.add_worksheet()
-        
-        # Start from the third row cell. Rows and columns are zero indexed.
-        row = 3
-        col = 0
-        
-        # Iterate over the data and write it out row by row.
-        # starting with failing die names
-        for index, badDieName in enumerate(badDieNames):
-            worksheet.write(row, col, badDieName)
-            worksheet.write(row, col + 1, dieCoordinates[index][0]) # x1
-            worksheet.write(row, col + 2, dieCoordinates[index][1]) # y1
-            worksheet.write(row, col + 3, dieCoordinates[index][2]) # x2
-            worksheet.write(row, col + 4, dieCoordinates[index][3]) # y2
-            row += 1
-        
-        # Write a header for above table
-        worksheet.write(2, 0, dieNames[0])
-        worksheet.write(2, 1, "x1")
-        worksheet.write(2, 2, "y1")
-        worksheet.write(2, 3, "x2")
-        worksheet.write(2, 4, "y2")
-        
-        # Write a total using a formula.
-        worksheet.write(0, 0, 'Total Failing Dies: ')
-        worksheet.write(0, 1, str(len(badDieNames)) )
-        
-        worksheet.set_column(0, 0, width=len("Total Failing Dies:"))
-        
-        workbook.close()
+        if EXCEL_GENERATOR_TOGGLE:
+            print("   Saving Excel sheet results..")
+            # Create a workbook and add a worksheet.
+            workbook = xlsxwriter.Workbook(slotPath + 'Results.xlsx')
+            worksheet = workbook.add_worksheet()
+            
+            # Start from the third row cell. Rows and columns are zero indexed.
+            row = 3
+            col = 0
+            
+            # Iterate over the data and write it out row by row.
+            # starting with failing die names
+            for index, badDieName in enumerate(badDieNames):
+                worksheet.write(row, col, badDieName)
+                worksheet.write(row, col + 1, dieCoordinates[index][0]) # x1
+                worksheet.write(row, col + 2, dieCoordinates[index][1]) # y1
+                worksheet.write(row, col + 3, dieCoordinates[index][2]) # x2
+                worksheet.write(row, col + 4, dieCoordinates[index][3]) # y2
+                row += 1
+            
+            # Write a header for above table
+            worksheet.write(2, 0, dieNames[0])
+            worksheet.write(2, 1, "x1")
+            worksheet.write(2, 2, "y1")
+            worksheet.write(2, 3, "x2")
+            worksheet.write(2, 4, "y2")
+            
+            # Write a total using a formula.
+            worksheet.write(0, 0, 'Total Failing Dies: ')
+            worksheet.write(0, 1, str(len(badDieNames)) )
+            
+            worksheet.set_column(0, 0, width=len("Total Failing Dies:"))
+            
+            workbook.close()
         # -----------------------------------------------------------------------------
 
 print("Done!")
