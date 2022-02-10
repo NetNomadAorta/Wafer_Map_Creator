@@ -152,7 +152,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     continue
                 
                 # Shows progress in current slot
-                if len_dieNames > 100:
+                if len_dieNames > 1000:
                     if (round(dieNameIndex/len_dieNames, 2) == 0.25
                     and shown_progress_25 == False):
                         print("   ..." + slotPath[-15:] + " - Progress:", 
