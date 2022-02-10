@@ -20,7 +20,7 @@ import numpy as np
 
 # User Parameters/Constants to Set
 PREDICTED_DIR = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/"
-STORED_WAFER_DATA = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/ZZZ-General_Wafer_Map_Data/"
+STORED_WAFER_DATA = "C:/Users/troya/.spyder-py3/Wafer_Map_Creator/Images/002-Wafer_Map/"
 COMPARE_OVERLAY = False # Will compare "*-In" and "*-Out" wafer maps and output in "*-Out" folder
 SHOULD_REPLACE_ALL_MAPS = False # Will remake each wafer map that already exist in AOI Output folder if set true
 WAFER_MAP_SIZE_LIMIT = 250 # mb # If wafer map size above this value, reduce quality until size is under this value
