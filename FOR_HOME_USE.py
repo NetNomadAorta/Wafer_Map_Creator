@@ -17,6 +17,7 @@ import glob
 import cv2
 import time
 import numpy as np
+import xlsxwriter
 
 # User Parameters/Constants to Set
 PREDICTED_DIR = "C:/Users/troya/.spyder-py3/ML-Defect_Detection/Images/Prediction_Images/Predicted_Images/"
@@ -70,6 +71,7 @@ waferMap = cv2.imread("C:/Users/troya/.spyder-py3/Wafer_Map_Creator/Images/002-W
 
 # Making list of bad die names
 badDieNames = []
+badDieCoordinates = []
 # Start count for failing dies
 numFailingDies = 0
 
@@ -95,7 +97,8 @@ for classIndex, classPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     #  location within the wafer map image, and save this image.
     list = os.listdir(classPath)
     
-    shown_progress_25, shown_progress_50, shown_progress_75 = False, False, False
+    (shown_progress_25, shown_progress_50, 
+     shown_progress_75, shown_progress_100) = False, False, False, False
     
     for dieNameIndex, dieName in enumerate(dieNames):
         isBadDie = False
@@ -120,7 +123,11 @@ for classIndex, classPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 print("   Progress:", 
                       str(round(dieNameIndex/len_dieNames*100) ) + "%")
                 shown_progress_75 = True
-        
+            if (round(dieNameIndex/len_dieNames, 2) == 1.00
+            and shown_progress_100 == False):
+                print("   Progress:", 
+                      str(round(dieNameIndex/len_dieNames*100) ) + "%")
+                shown_progress_100 = True
 
         # Checks if same die name already claimed as bad in previous class folder
         if dieName in badDieNames:
@@ -129,6 +136,7 @@ for classIndex, classPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         if any(dieName in s for s in list):
             isBadDie = True
             badDieNames.append(dieName)
+            badDieCoordinates.append(dieCoordinates[dieNameIndex])
         else:
             isBadDie = False
         
@@ -173,7 +181,7 @@ for classIndex, classPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         
         if isBadDie:
             
-            if len(dieNames) > 10000 and dieNameIndex % 10000 == 0:
+            if len(dieNames) > 1000 and dieNameIndex % 1000 == 0:
                 for list_index, image_name in enumerate(list):
                     if dieName in image_name:
                         del list[:list_index]
@@ -237,7 +245,41 @@ while True:
     else:
         break
 
+# XLS Section
+# -----------------------------------------------------------------------------
+# Create a workbook and add a worksheet.
+workbook = xlsxwriter.Workbook(PREDICTED_DIR + 'Results.xlsx')
+worksheet = workbook.add_worksheet()
 
+# Start from the third row cell. Rows and columns are zero indexed.
+row = 3
+col = 0
+
+# Iterate over the data and write it out row by row.
+# starting with failing die names
+for index, badDieName in enumerate(badDieNames):
+    worksheet.write(row, col, badDieName)
+    worksheet.write(row, col + 1, dieCoordinates[index][0]) # x1
+    worksheet.write(row, col + 2, dieCoordinates[index][1]) # y1
+    worksheet.write(row, col + 3, dieCoordinates[index][2]) # x2
+    worksheet.write(row, col + 4, dieCoordinates[index][3]) # y2
+    row += 1
+
+# Write a header for above table
+worksheet.write(2, 0, dieNames[0])
+worksheet.write(2, 1, "x1")
+worksheet.write(2, 2, "y1")
+worksheet.write(2, 3, "x2")
+worksheet.write(2, 4, "y2")
+
+# Write a total using a formula.
+worksheet.write(0, 0, 'Total Failing Dies: ')
+worksheet.write(0, 1, str(len(badDieNames)) )
+
+worksheet.set_column(0, 0, width=len("Total Failing Dies:"))
+
+workbook.close()
+# -----------------------------------------------------------------------------
 
 
 print("Done!")

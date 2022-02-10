@@ -17,6 +17,7 @@ import glob
 import cv2
 import time
 import numpy as np
+import xlsxwriter
 
 # User Parameters/Constants to Set
 PREDICTED_DIR = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/"
@@ -494,7 +495,41 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             if os.path.isfile(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg"):
                 os.remove(inletSlotPath + "/Temp_Wafer_Map_to_Compare.jpg")
 
+# XLS Section
+# -----------------------------------------------------------------------------
+# Create a workbook and add a worksheet.
+workbook = xlsxwriter.Workbook('Results.xlsx')
+worksheet = workbook.add_worksheet()
 
+# Start from the third row cell. Rows and columns are zero indexed.
+row = 3
+col = 0
+
+# Iterate over the data and write it out row by row.
+# starting with failing die names
+for index, badDieName in enumerate(badDieNames):
+    worksheet.write(row, col, badDieName)
+    worksheet.write(row, col + 1, dieCoordinates[index][0]) # x1
+    worksheet.write(row, col + 2, dieCoordinates[index][1]) # y1
+    worksheet.write(row, col + 3, dieCoordinates[index][2]) # x2
+    worksheet.write(row, col + 4, dieCoordinates[index][3]) # y2
+    row += 1
+
+# Write a header for above table
+worksheet.write(2, 0, dieNames[0])
+worksheet.write(2, 1, "x1")
+worksheet.write(2, 2, "y1")
+worksheet.write(2, 3, "x2")
+worksheet.write(2, 4, "y2")
+
+# Write a total using a formula.
+worksheet.write(0, 0, 'Total Failing Dies: ')
+worksheet.write(0, 1, str(len(badDieNames)) )
+
+worksheet.set_column(0, 0, width=len("Total Failing Dies:"))
+
+workbook.close()
+# -----------------------------------------------------------------------------
 
 print("Done!")
 
