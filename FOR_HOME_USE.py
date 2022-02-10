@@ -247,6 +247,7 @@ while True:
 
 # XLS Section
 # -----------------------------------------------------------------------------
+print("   Saving Excel sheet results..")
 # Create a workbook and add a worksheet.
 workbook = xlsxwriter.Workbook(PREDICTED_DIR + 'Results.xlsx')
 worksheet = workbook.add_worksheet()
@@ -259,10 +260,10 @@ col = 0
 # starting with failing die names
 for index, badDieName in enumerate(badDieNames):
     worksheet.write(row, col, badDieName)
-    worksheet.write(row, col + 1, dieCoordinates[index][0]) # x1
-    worksheet.write(row, col + 2, dieCoordinates[index][1]) # y1
-    worksheet.write(row, col + 3, dieCoordinates[index][2]) # x2
-    worksheet.write(row, col + 4, dieCoordinates[index][3]) # y2
+    worksheet.write(row, col + 1, badDieCoordinates[index][0]) # x1
+    worksheet.write(row, col + 2, badDieCoordinates[index][1]) # y1
+    worksheet.write(row, col + 3, badDieCoordinates[index][2]) # x2
+    worksheet.write(row, col + 4, badDieCoordinates[index][3]) # y2
     row += 1
 
 # Write a header for above table
