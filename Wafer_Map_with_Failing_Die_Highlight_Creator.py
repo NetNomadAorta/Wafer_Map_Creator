@@ -24,7 +24,7 @@ PREDICTED_DIR = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/"
 STORED_WAFER_DATA = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/ZZZ-General_Wafer_Map_Data/"
 COMPARE_OVERLAY = False # Will compare "*-In" and "*-Out" wafer maps and output in "*-Out" folder
 SHOULD_REPLACE_ALL_MAPS = False # Will remake each wafer map that already exist in AOI Output folder if set true
-WAFER_MAP_SIZE_LIMIT = 250 # mb # If wafer map size above this value, reduce quality until size is under this value
+WAFER_MAP_SIZE_LIMIT = 300 # mb # If wafer map size above this value, reduce quality until size is under this value
 EXCEL_GENERATOR_TOGGLE = True
 
 
@@ -119,6 +119,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         
         # Making list of bad die names
         badDieNames = []
+        badDieCoordinates = []
         # Start count for failing dies
         numFailingDies = 0
         
@@ -184,6 +185,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 if any(dieName in s for s in list):
                     isBadDie = True
                     badDieNames.append(dieName)
+                    badDieCoordinates.append(dieCoordinates[dieNameIndex])
                 else:
                     isBadDie = False
                 
@@ -516,10 +518,10 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             # starting with failing die names
             for index, badDieName in enumerate(badDieNames):
                 worksheet.write(row, col, badDieName)
-                worksheet.write(row, col + 1, dieCoordinates[index][0]) # x1
-                worksheet.write(row, col + 2, dieCoordinates[index][1]) # y1
-                worksheet.write(row, col + 3, dieCoordinates[index][2]) # x2
-                worksheet.write(row, col + 4, dieCoordinates[index][3]) # y2
+                worksheet.write(row, col + 1, bad[index][0]) # x1
+                worksheet.write(row, col + 2, badDieCoordinates[index][1]) # y1
+                worksheet.write(row, col + 3, badDieCoordinates[index][2]) # x2
+                worksheet.write(row, col + 4, badDieCoordinates[index][3]) # y2
                 row += 1
             
             # Write a header for above table
