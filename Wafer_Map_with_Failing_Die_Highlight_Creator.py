@@ -505,7 +505,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         if EXCEL_GENERATOR_TOGGLE:
             print("   Saving Excel sheet results..")
             # Create a workbook and add a worksheet.
-            workbook = xlsxwriter.Workbook(slotPath + 'Results.xlsx')
+            workbook = xlsxwriter.Workbook(slotPath + '/Results.xlsx')
             worksheet = workbook.add_worksheet()
             
             # Start from the third row cell. Rows and columns are zero indexed.
