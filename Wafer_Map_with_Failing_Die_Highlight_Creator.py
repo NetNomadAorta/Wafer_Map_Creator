@@ -471,7 +471,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         print("   Saving wafer map..")
         # Wafer map size limit set
         image_size_limit = WAFER_MAP_SIZE_LIMIT # in mb
-        image_size_limit = image_size_limit * 1000000 # now im bytes
+        image_size_limit = image_size_limit * 1000000 # now in bytes
         # Saves Wafer Map and deletes Temp Wafer Map if needed
         percent_knockoff = 5
         while True:
