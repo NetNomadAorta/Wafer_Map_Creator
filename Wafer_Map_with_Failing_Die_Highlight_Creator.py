@@ -518,7 +518,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             # starting with failing die names
             for index, badDieName in enumerate(badDieNames):
                 worksheet.write(row, col, badDieName)
-                worksheet.write(row, col + 1, bad[index][0]) # x1
+                worksheet.write(row, col + 1, badDieCoordinates[index][0]) # x1
                 worksheet.write(row, col + 2, badDieCoordinates[index][1]) # y1
                 worksheet.write(row, col + 3, badDieCoordinates[index][2]) # x2
                 worksheet.write(row, col + 4, badDieCoordinates[index][3]) # y2
