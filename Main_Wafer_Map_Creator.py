@@ -56,8 +56,8 @@ def decrease_brightness(img):
 
 def slidingWindow(fullImage, stepSizeX, stepSizeY, windowSize):
     # Slides a window across the stitched-image
-    for y in range(0, fullImage.shape[0], stepSizeY):
-        for x in range(0, fullImage.shape[1], stepSizeX):
+    for y in range(0, fullImage.shape[0] - windowSize[1]+stepSizeY, stepSizeY):
+        for x in range(0, fullImage.shape[1] - windowSize[0]+stepSizeX, stepSizeX):
             if (y + windowSize[1]) > fullImage.shape[0]:
                 y = fullImage.shape[0] - windowSize[1]
             if (x + windowSize[0]) > fullImage.shape[1]:
