@@ -9,7 +9,7 @@ import numpy as np
 import math
 
 # User Parameters/Constants to Set
-MATCH_CL = 0.85 # Minimum confidence level (CL) required to match golden-image to scanned image
+MATCH_CL = 0.95 # Minimum confidence level (CL) required to match golden-image to scanned image
 STICHED_IMAGES_DIRECTORY = "./Images/000-Stitched_Images/"
 GOLDEN_IMAGES_DIRECTORY = "./Images/001-Golden_Images/"
 WAFER_MAP_DIRECTORY = "./Images/002-Wafer_Map/"
@@ -17,11 +17,12 @@ SLEEP_TIME = 0.0 # Time to sleep in seconds between each window step
 TOGGLE_DELETE_WAFER_MAP = False
 TOGGLE_SHOW_WINDOW_IMAGE = False # Set equal to "True" and it will show a graphical image of where it's at
 TOGGLE_STITCHED_OVERLAY = True # Will use original stitched image in final wafer map
-DIE_SPACING_SCALE = 0.95
+DIE_SPACING_SCALE = 0.99
 
 # Usually puts "0" in "Row_01". If 3 digits necessary, such as "Col_007", or
 #  "Row_255", then toggle below "True"
 THREE_DIGITS_TOGGLE = False 
+PRINT_INFO = True
 
 def time_convert(sec):
     mins = sec // 60
@@ -53,12 +54,16 @@ def decrease_brightness(img):
     return img
 
 
-def slidingWindow(stitchImage, stepSizeX, stepSizeY, windowSize):
+def slidingWindow(fullImage, stepSizeX, stepSizeY, windowSize):
     # Slides a window across the stitched-image
-    for y in range(0, stitchImage.shape[0], stepSizeY):
-        for x in range(0, stitchImage.shape[1], stepSizeX):
+    for y in range(0, fullImage.shape[0], stepSizeY):
+        for x in range(0, fullImage.shape[1], stepSizeX):
+            if (y + windowSize[1]) > fullImage.shape[0]:
+                y = fullImage.shape[0] - windowSize[1]
+            if (x + windowSize[0]) > fullImage.shape[1]:
+                x = fullImage.shape[1] - windowSize[0]
             # Yield the current window
-            yield (x, y, stitchImage[y:y + windowSize[1], x:x + windowSize[0]])
+            yield (x, y, fullImage[y:y + windowSize[1], x:x + windowSize[0]])
 
 
 # Comparison scan window-image to golden-image
@@ -72,9 +77,9 @@ def getMatch(window, goldenImage, x, y):
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
         
         if max_val > MATCH_CL: 
-            print("\nFOUND MATCH: max_val =", round(max_val, 4) )
-            print("Window Coordinates: x1:", x + max_loc[0], "y1:", y + max_loc[1], \
-                  "x2:", x + max_loc[0] + w2, "y2:", y + max_loc[1] + h2)
+            # print("\nFOUND MATCH: max_val =", round(max_val, 4) )
+            # print("Window Coordinates: x1:", x + max_loc[0], "y1:", y + max_loc[1], \
+            #       "x2:", x + max_loc[0] + w2, "y2:", y + max_loc[1] + h2)
             
             # Gets coordinates of cropped image
             return (max_loc[0], max_loc[1], max_loc[0] + w2, max_loc[1] + h2, max_val)
@@ -100,6 +105,7 @@ if TOGGLE_DELETE_WAFER_MAP == True:
 
 lenStitchDir = len(STICHED_IMAGES_DIRECTORY)
 
+die_index = -1
 
 # Runs through each slot file within the main file within stitched-image folder
 for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"): 
@@ -182,12 +188,14 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
                 y2 = y + win_y2
                 
                 # Makes sure same image does not get saved as different names
-                if y1 >= (prev_y1 + round(goldenImage.shape[0] / 2.95)) or y1 <= (prev_y1 - round(goldenImage.shape[0] / 2.95)):
+                if (y1 >= (prev_y1 + round(goldenImage.shape[0] * .9) ) 
+                    or y1 <= (prev_y1 - round(goldenImage.shape[0] * .9) ) ):
                     rowNum += 1
                     colNum = 1
+                    prev_matchedCL = 0
                     sameCol = False
                 else:
-                    if x1 >= (prev_x1 + round(goldenImage.shape[1] / 2.95)) or x1 <= (prev_x1 - round(goldenImage.shape[1] / 2.95)):
+                    if x1 >= (prev_x1 + round(goldenImage.shape[1] * .9) ):
                         colNum += 1
                         prev_matchedCL = 0
                         sameCol = False
@@ -229,15 +237,36 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
                     else:
                         dieNames.append("Row_{}{}.Col_{}{}".format(rZ, rowNum, cZ, colNum) )
                     dieCoordinates = np.append(dieCoordinates, [[x1, y1, x2, y2]], axis=0)
+                    
+                    prev_y1 = y1
+                    prev_x1 = x1
+                    prev_matchedCL = matchedCL
+                    
+                    die_index += 1
+                    if PRINT_INFO:
+                        if (die_index+1) < 10:
+                            print("Die Number:", (die_index+1), "  matchedCL:", round(matchedCL,3))
+                        elif (die_index+1) < 100:
+                            print("Die Number:", (die_index+1), " matchedCL:", round(matchedCL,3))
+                        else:
+                            print("Die Number:", (die_index+1), "matchedCL:", round(matchedCL,3))
+                    
                 elif sameCol == True and matchedCL > prev_matchedCL:
                     dieCoordinates[len(dieCoordinates)-1] = np.array([x1, y1, x2, y2], ndmin=2)
-                
-                prev_y1 = y1
-                prev_x1 = x1
-                if sameCol == True and matchedCL > prev_matchedCL:
+                    
+                    prev_y1 = y1
+                    prev_x1 = x1
                     prev_matchedCL = matchedCL
+                    
+                    if PRINT_INFO:
+                        if (die_index+1) < 10:
+                            print("                matchedCL:", round(matchedCL,3))
+                        elif (die_index+1) < 100:
+                            print("                matchedCL:", round(matchedCL,3))
+                        else:
+                            print("                matchedCL:", round(matchedCL,3))
         # ==================================================================================
-    rowNum += 1
+    rowNum += 1 # Why +=1? Is this even needed? Is colNum needed?
     colNum = 0
     sameCol = False
     
@@ -281,7 +310,7 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         midX = round((x1 + x2)/2)
         midY = round((y1 + y2)/2)
         
-        # Places green boxes over wafer map using each die's coordinate
+        # Places white boxes over wafer map using each die's coordinate
         cv2.rectangle(waferMap, 
                       (x1, y1), 
                       (x2, y2), 
@@ -290,14 +319,19 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         
         # Replaces dieNames list column number with correct value
         colNumber = str(math.floor((x1-minX)/(goldenImage.shape[1]*die_spacing)+1) )
+
         if THREE_DIGITS_TOGGLE:
+            # THIS PART IS FOR LED 160,000 WAFER!
+            if int(colNumber)>200:
+                colNumber = str(int(colNumber)-1)
+            
             if int(colNumber) < 10:
                 colNumber = "00" + colNumber
             elif int(colNumber) < 100:
                 colNumber = "0" + colNumber
             
-            dieNames[i] = dieNames[i].replace("Col_" + dieNames[i][-3:], 
-                                              "Col_" + str(colNumber))
+            dieNames[i] = dieNames[i].replace("C_" + dieNames[i][-3:], 
+                                              "C_" + str(colNumber))
         else:
             if int(colNumber) < 10:
                 colNumber = "0" + colNumber
@@ -333,10 +367,6 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
                 + "/dieNames", dieNames)
     np.save(WAFER_MAP_DIRECTORY + stitchFolderPath[lenStitchDir:] \
                 + "/Coordinates", dieCoordinates)
-    # test1 = np.load(WAFER_MAP_DIRECTORY + stitchFolderPath[lenStitchDir:] \
-    #             + "/dieNames.npy")
-    # test2 = np.load(WAFER_MAP_DIRECTORY + stitchFolderPath[lenStitchDir:] \
-    #             + "/Coordinates.npy")
 
 
 print("Done!")
