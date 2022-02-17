@@ -9,7 +9,7 @@ import numpy as np
 import math
 
 # User Parameters/Constants to Set
-MATCH_CL = 0.95 # Minimum confidence level (CL) required to match golden-image to scanned image
+MATCH_CL = 0.90 # Minimum confidence level (CL) required to match golden-image to scanned image
 STICHED_IMAGES_DIRECTORY = "./Images/000-Stitched_Images/"
 GOLDEN_IMAGES_DIRECTORY = "./Images/001-Golden_Images/"
 WAFER_MAP_DIRECTORY = "./Images/002-Wafer_Map/"
@@ -21,7 +21,7 @@ DIE_SPACING_SCALE = 0.99
 
 # Usually puts "0" in "Row_01". If 3 digits necessary, such as "Col_007", or
 #  "Row_255", then toggle below "True"
-THREE_DIGITS_TOGGLE = False 
+THREE_DIGITS_TOGGLE = True 
 PRINT_INFO = True
 
 def time_convert(sec):
@@ -252,7 +252,7 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
                             print("Die Number:", (die_index+1), "matchedCL:", round(matchedCL,3))
                     
                 elif sameCol == True and matchedCL > prev_matchedCL:
-                    dieCoordinates[len(dieCoordinates)-1] = np.array([x1, y1, x2, y2], ndmin=2)
+                    dieCoordinates[-1] = np.array([x1, y1, x2, y2], ndmin=2)
                     
                     prev_y1 = y1
                     prev_x1 = x1
@@ -296,7 +296,10 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         x_limit = dark_stitched_image[:maxY+minY, :maxX+minX].shape[1]
         waferMap[:y_limit, :x_limit] = dark_stitched_image[:y_limit, :x_limit]
     
-    # Creates wafer map and changes column names in dieNames
+    
+    
+    print("Changing column names")
+    # Changes column names in dieNames
     for i in range(len(dieCoordinates)):
         # JUST ADDED TO SKIP FIRST ITERATION BECAUSE coord:0 and name:R#C#
         if i == 0:
@@ -309,13 +312,6 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         
         midX = round((x1 + x2)/2)
         midY = round((y1 + y2)/2)
-        
-        # Places white boxes over wafer map using each die's coordinate
-        cv2.rectangle(waferMap, 
-                      (x1, y1), 
-                      (x2, y2), 
-                      (255, 255, 255), 
-                      round(goldenImage.size * 0.000002))
         
         # Replaces dieNames list column number with correct value
         colNumber = str(math.floor((x1-minX)/(goldenImage.shape[1]*die_spacing)+1) )
@@ -339,6 +335,52 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
             dieNames[i] = dieNames[i].replace("Col_" + dieNames[i][-2:], 
                                               "Col_" + str(colNumber))
         
+    
+    print("Deleting duplicates - Part 1 of 2")
+    # Deletes duplicates
+    temp_list = []
+    list_of_indexes_to_delete = []
+    for index, dieName in enumerate(dieNames):
+        if dieName not in temp_list:
+            temp_list.append(dieName)
+        else:
+            list_of_indexes_to_delete.append(index)
+    print("Deleting duplicates - Part 2 of 2")
+    length_list_of_indexes_to_delete = len(list_of_indexes_to_delete)
+    # Deletes duplicates from dieNames starting at end to front to prevent index changes
+    for index in range(len(list_of_indexes_to_delete)):
+        del dieNames[ list_of_indexes_to_delete[length_list_of_indexes_to_delete-index-1] ]
+        dieCoordinates = np.delete(dieCoordinates, 
+            (list_of_indexes_to_delete[length_list_of_indexes_to_delete-index-1]), 
+            axis=0)
+    
+    # dieCoordinates = np.delete(dieCoordinates, list_of_indexes_to_delete, axis=0)
+    
+    
+    
+    
+    print("Creating wafer map")
+    # Creates wafer map
+    for i in range(len(dieCoordinates)):
+        # JUST ADDED TO SKIP FIRST ITERATION BECAUSE coord:0 and name:R#C#
+        if i == 0:
+            continue
+        x1 = dieCoordinates[i, 0]
+        y1 = dieCoordinates[i, 1]
+        x2 = dieCoordinates[i, 2]
+        y2 = dieCoordinates[i, 3]
+        
+        midX = round((x1 + x2)/2)
+        midY = round((y1 + y2)/2)
+        
+        # Places white boxes over wafer map using each die's coordinate
+        cv2.rectangle(waferMap, 
+                      (x1, y1), 
+                      (x2, y2), 
+                      (255, 255, 255), 
+                      round(goldenImage.size * 0.000002))
+        
+        
         # Writes row and column number text in wafer map
         font                   = cv2.FONT_HERSHEY_SIMPLEX
         if THREE_DIGITS_TOGGLE:
@@ -359,6 +401,9 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
                     thickness,
                     lineType)
     
+    
+    
+    
     cv2.imwrite(WAFER_MAP_DIRECTORY + stitchFolderPath[lenStitchDir:] \
                 + "/Wafer_Map.jpg", waferMap)
     
@@ -367,6 +412,13 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
                 + "/dieNames", dieNames)
     np.save(WAFER_MAP_DIRECTORY + stitchFolderPath[lenStitchDir:] \
                 + "/Coordinates", dieCoordinates)
+
+
+
+
+
+
+
 
 
 print("Done!")

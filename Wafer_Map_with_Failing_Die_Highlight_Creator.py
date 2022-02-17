@@ -120,6 +120,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         # Making list of bad die names
         badDieNames = []
         badDieCoordinates = []
+        badDieBinNumbers = []
         # Start count for failing dies
         numFailingDies = 0
         
@@ -186,6 +187,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     isBadDie = True
                     badDieNames.append(dieName)
                     badDieCoordinates.append(dieCoordinates[dieNameIndex])
+                    badDieBinNumbers.append(classIndex)
                 else:
                     isBadDie = False
                 
@@ -505,40 +507,97 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         # XLS Section
         # -----------------------------------------------------------------------------
         if EXCEL_GENERATOR_TOGGLE:
-            print("   Saving Excel sheet results..")
+            print("   Starting Excel sheet results..")
             # Create a workbook and add a worksheet.
-            workbook = xlsxwriter.Workbook(slotPath + '/Results.xlsx')
-            worksheet = workbook.add_worksheet()
+            workbook = xlsxwriter.Workbook(PREDICTED_DIR + 'Results.xlsx')
+            worksheet_TL = workbook.add_worksheet("TL")
+            worksheet_TR = workbook.add_worksheet("TR")
+            worksheet_BL = workbook.add_worksheet("BL")
+            worksheet_BR = workbook.add_worksheet("BR")
+            worksheet_list = [worksheet_TL, worksheet_TR, worksheet_BL, worksheet_BR]
             
             # Add a bold format to use to highlight cells.
             bold = workbook.add_format({'bold': True})
             
             # Start from the third row cell. Rows and columns are zero indexed.
-            row = 3
-            col = 0
+            row = 0
+            col = 3
             
-            # Iterate over the data and write it out row by row.
-            # starting with failing die names
-            for index, badDieName in enumerate(badDieNames):
-                worksheet.write(row, col, badDieName)
-                worksheet.write(row, col + 1, badDieCoordinates[index][0]) # x1
-                worksheet.write(row, col + 2, badDieCoordinates[index][1]) # y1
-                worksheet.write(row, col + 3, badDieCoordinates[index][2]) # x2
-                worksheet.write(row, col + 4, badDieCoordinates[index][3]) # y2
-                row += 1
+            # Iterates over each 200x200 dies and defaults bin number to 8
+            for row in range(200):
+                for col in range(200):
+                    worksheet_TL.write(row, col, 8)
+                    worksheet_TR.write(row, col, 8)
+                    worksheet_BL.write(row, col, 8)
+                    worksheet_BR.write(row, col, 8)
             
-            # Write a header for above table
-            worksheet.write(2, 0, dieNames[0], bold)
-            worksheet.write(2, 1, "x1", bold)
-            worksheet.write(2, 2, "y1", bold)
-            worksheet.write(2, 3, "x2", bold)
-            worksheet.write(2, 4, "y2", bold)
             
-            # Write a total using a formula.
-            worksheet.write(0, 0, 'Total Failing Dies:', bold)
-            worksheet.write(0, 1, str(len(badDieNames)) )
+            # Combines all die names and bin numbers
+            all_dieNames = badDieNames
+            all_dieBinNumbers = badDieBinNumbers
+            print("   Started making good bins..")
+            list = os.listdir(glob.glob(PREDICTED_DIR + "*")[1])
+            # Checks to see which are good dies since previous scan in classes skipped good dies
+            for dieNameIndex, dieName in enumerate(dieNames):
+                if any(dieName in s for s in list):
+                    all_dieNames.append(dieName)
+                    all_dieBinNumbers.append(1)
             
-            worksheet.set_column(0, 0, width=len("Total Failing Dies"))
+                if len(dieNames) > 1000 and dieNameIndex % 1000 == 0:
+                    for list_index, image_name in enumerate(list):
+                        if dieName in image_name:
+                            del list[:list_index]
+                            break
+            
+            print("   Started writing Excel sheet bin numbers..")
+            # Writes all dies info in Excel
+            for all_dieName_index, all_dieName in enumerate(all_dieNames):
+                row = int(all_dieName[4:7])
+                col = int(all_dieName[-3:])
+                
+                if row <= 200:
+                    if col <= 200:
+                        worksheet_TL.write(row, col, all_dieBinNumbers[all_dieName_index])
+                    else:
+                        worksheet_TR.write(row, col, all_dieBinNumbers[all_dieName_index])
+                else:
+                    if col <= 200:
+                        worksheet_BL.write(row, col, all_dieBinNumbers[all_dieName_index])
+                    else:
+                        worksheet_BR.write(row, col, all_dieBinNumbers[all_dieName_index])
+            
+            # Write a count for each bin at the bottom
+            for worksheet_name in worksheet_list:
+                worksheet_name.write(202, 0, "0-Bad-Count", bold)
+                worksheet_name.write(202, 4, all_dieBinNumbers.count(0))
+                
+                worksheet_name.write(203, 0, "1-All_Good-Count", bold)
+                worksheet_name.write(203, 4, all_dieBinNumbers.count(1))
+                
+                worksheet_name.write(204, 0, "2-Red_Only_Present-Count", bold)
+                worksheet_name.write(204, 4, all_dieBinNumbers.count(2))
+                
+                worksheet_name.write(205, 0, "3-Green_Only_Present", bold)
+                worksheet_name.write(205, 4, all_dieBinNumbers.count(3))
+                
+                worksheet_name.write(206, 0, "4-Red_Green_Only_Present-Count", bold)
+                worksheet_name.write(206, 4, all_dieBinNumbers.count(4))
+                
+                worksheet_name.write(207, 0, "5-Blue_Only_Present", bold)
+                worksheet_name.write(207, 4, all_dieBinNumbers.count(5))
+                
+                worksheet_name.write(208, 0, "6-Red_Blue_Only_Present-Count", bold)
+                worksheet_name.write(208, 4, all_dieBinNumbers.count(6))
+                
+                worksheet_name.write(209, 0, "7-Green_Blue_Only_Present-Count", bold)
+                worksheet_name.write(209, 4, all_dieBinNumbers.count(7))
+                
+                worksheet_name.write(210, 0, "8-Not_Tested-Count", bold)
+                worksheet_name.write(210, 4, "=160000-sum(E203:E210)")
+                
+                
+                # worksheet_name.set_column(0, 0, width=len("7-Green_Blue_Only_Present-Count"))
+                worksheet_name.set_column(4, 4, width=7)
             
             workbook.close()
         # -----------------------------------------------------------------------------
