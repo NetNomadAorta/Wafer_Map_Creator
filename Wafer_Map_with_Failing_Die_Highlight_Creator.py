@@ -132,7 +132,9 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             # Skips directory if first class (non-defect) folder or if it 
             # includes the wafer map with failing dies image (if this program 
             # already created one from a previous run)
-            if classIndex == 0 \
+            
+            # WAS classIndex == 0 NOW 1 FOR X-Display!! CHANGGGEE BACCKKKKK
+            if classIndex == 1 \
             or "ZZ-" in os.listdir(slotPath)[classIndex] \
             or ".jpg" in os.listdir(slotPath)[classIndex]:
                 continue
@@ -506,10 +508,10 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
 
         # XLS Section
         # -----------------------------------------------------------------------------
-        if EXCEL_GENERATOR_TOGGLE:
+        if EXCEL_GENERATOR_TOGGLE and os.path.isfile(slotPath + "/Wafer_Map_with_Failing_Dies.jpg"):
             print("   Starting Excel sheet results..")
             # Create a workbook and add a worksheet.
-            workbook = xlsxwriter.Workbook(PREDICTED_DIR + 'Results.xlsx')
+            workbook = xlsxwriter.Workbook(slotPath + '/Results.xlsx')
             worksheet_TL = workbook.add_worksheet("TL")
             worksheet_TR = workbook.add_worksheet("TR")
             worksheet_BL = workbook.add_worksheet("BL")
@@ -518,10 +520,25 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             
             # Add a bold format to use to highlight cells.
             bold = workbook.add_format({'bold': True})
+            # bin 0 - black
+            bin0_background = workbook.add_format({'bg_color': 'black'})
+            # bin 1 - light green
+            bin1_background = workbook.add_format({'bg_color': 'lime'})
+            # bin 2 - red
+            bin2_background = workbook.add_format({'bg_color': 'red'})
+            # bin 3 - dark green or green
+            bin3_background = workbook.add_format({'bg_color': 'green'})
+            # bin 4 - yellow
+            bin4_background = workbook.add_format({'bg_color': 'yellow'})
+            # bin 5 - blue
+            bin5_background = workbook.add_format({'bg_color': 'blue'})
+            # bin 6 - pink
+            bin6_background = workbook.add_format({'bg_color': 'magenta'})
+            # bin 7 - cyan
+            bin7_background = workbook.add_format({'bg_color': 'cyan'})
+            # bin 8 - gray
+            bin8_background = workbook.add_format({'bg_color': 'gray'})
             
-            # Start from the third row cell. Rows and columns are zero indexed.
-            row = 0
-            col = 3
             
             # Iterates over each 200x200 dies and defaults bin number to 8
             for row in range(200):
@@ -535,8 +552,9 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             # Combines all die names and bin numbers
             all_dieNames = badDieNames
             all_dieBinNumbers = badDieBinNumbers
+            print(all_dieBinNumbers[:10])
             print("   Started making good bins..")
-            list = os.listdir(glob.glob(PREDICTED_DIR + "*")[1])
+            list = os.listdir(glob.glob(slotPath + "/*")[1])
             # Checks to see which are good dies since previous scan in classes skipped good dies
             for dieNameIndex, dieName in enumerate(dieNames):
                 if any(dieName in s for s in list):
@@ -555,44 +573,81 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 row = int(all_dieName[4:7])
                 col = int(all_dieName[-3:])
                 
+                # Checks to see which background bin number to use
+                if all_dieBinNumbers[all_dieName_index] == 0:
+                    background = bin0_background
+                elif all_dieBinNumbers[all_dieName_index] == 1:
+                    background = bin1_background
+                elif all_dieBinNumbers[all_dieName_index] == 2:
+                    background = bin2_background
+                elif all_dieBinNumbers[all_dieName_index] == 3:
+                    background = bin3_background
+                elif all_dieBinNumbers[all_dieName_index] == 4:
+                    background = bin4_background
+                elif all_dieBinNumbers[all_dieName_index] == 5:
+                    background = bin5_background
+                elif all_dieBinNumbers[all_dieName_index] == 6:
+                    background = bin6_background
+                elif all_dieBinNumbers[all_dieName_index] == 7:
+                    background = bin7_background
+                elif all_dieBinNumbers[all_dieName_index] == 8:
+                    background = bin8_background
+                
                 if row <= 200:
                     if col <= 200:
-                        worksheet_TL.write(row, col, all_dieBinNumbers[all_dieName_index])
+                        worksheet_TL.write(row, col, 
+                                           all_dieBinNumbers[all_dieName_index], 
+                                           background)
                     else:
-                        worksheet_TR.write(row, col, all_dieBinNumbers[all_dieName_index])
+                        worksheet_TR.write(row, col, 
+                                           all_dieBinNumbers[all_dieName_index],
+                                           background)
                 else:
                     if col <= 200:
-                        worksheet_BL.write(row, col, all_dieBinNumbers[all_dieName_index])
+                        worksheet_BL.write(row, col, 
+                                           all_dieBinNumbers[all_dieName_index],
+                                           background)
                     else:
-                        worksheet_BR.write(row, col, all_dieBinNumbers[all_dieName_index])
+                        worksheet_BR.write(row, col, 
+                                           all_dieBinNumbers[all_dieName_index],
+                                           background)
             
             # Write a count for each bin at the bottom
             for worksheet_name in worksheet_list:
-                worksheet_name.write(202, 0, "0-Bad-Count", bold)
+                worksheet_name.write(202, 0, "0-Bad-Count", 
+                                     bold, bin0_background)
                 worksheet_name.write(202, 4, all_dieBinNumbers.count(0))
                 
-                worksheet_name.write(203, 0, "1-All_Good-Count", bold)
+                worksheet_name.write(203, 0, "1-All_Good-Count", 
+                                     bold, bin1_background)
                 worksheet_name.write(203, 4, all_dieBinNumbers.count(1))
                 
-                worksheet_name.write(204, 0, "2-Red_Only_Present-Count", bold)
+                worksheet_name.write(204, 0, "2-Red_Only_Present-Count", 
+                                     bold, bin2_background)
                 worksheet_name.write(204, 4, all_dieBinNumbers.count(2))
                 
-                worksheet_name.write(205, 0, "3-Green_Only_Present", bold)
+                worksheet_name.write(205, 0, "3-Green_Only_Present",
+                                     bold, bin3_background)
                 worksheet_name.write(205, 4, all_dieBinNumbers.count(3))
                 
-                worksheet_name.write(206, 0, "4-Red_Green_Only_Present-Count", bold)
+                worksheet_name.write(206, 0, "4-Red_Green_Only_Present-Count", 
+                                     bold, bin4_background)
                 worksheet_name.write(206, 4, all_dieBinNumbers.count(4))
                 
-                worksheet_name.write(207, 0, "5-Blue_Only_Present", bold)
+                worksheet_name.write(207, 0, "5-Blue_Only_Present", 
+                                     bold, bin5_background)
                 worksheet_name.write(207, 4, all_dieBinNumbers.count(5))
                 
-                worksheet_name.write(208, 0, "6-Red_Blue_Only_Present-Count", bold)
+                worksheet_name.write(208, 0, "6-Red_Blue_Only_Present-Count", 
+                                     bold, bin6_background, bin0_background)
                 worksheet_name.write(208, 4, all_dieBinNumbers.count(6))
                 
-                worksheet_name.write(209, 0, "7-Green_Blue_Only_Present-Count", bold)
+                worksheet_name.write(209, 0, "7-Green_Blue_Only_Present-Count", 
+                                     bold, bin7_background)
                 worksheet_name.write(209, 4, all_dieBinNumbers.count(7))
                 
-                worksheet_name.write(210, 0, "8-Not_Tested-Count", bold)
+                worksheet_name.write(210, 0, "8-Not_Tested-Count", 
+                                     bold, bin8_background)
                 worksheet_name.write(210, 4, "=160000-sum(E203:E210)")
                 
                 
