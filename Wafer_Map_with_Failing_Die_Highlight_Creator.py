@@ -157,22 +157,22 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 if len_dieNames > 1000:
                     if (round(dieNameIndex/len_dieNames, 2) == 0.25
                     and shown_progress_25 == False):
-                        print("   ..." + slotPath[-15:] + " - Progress:", 
+                        print("  ", classPath[-25:], "Progress:", 
                               str(round(dieNameIndex/len_dieNames*100) ) + "%")
                         shown_progress_25 = True
                     if (round(dieNameIndex/len_dieNames, 2) == 0.50
                     and shown_progress_50 == False):
-                        print("   ..." + slotPath[-15:] + " - Progress:", 
+                        print("  ", classPath[-25:], "Progress:", 
                               str(round(dieNameIndex/len_dieNames*100) ) + "%")
                         shown_progress_50 = True
                     if (round(dieNameIndex/len_dieNames, 2) == 0.75
                     and shown_progress_75 == False):
-                        print("   ..." + slotPath[-15:] + " - Progress:", 
+                        print("  ", classPath[-25:], "Progress:", 
                               str(round(dieNameIndex/len_dieNames*100) ) + "%")
                         shown_progress_75 = True
                     if (round(dieNameIndex/len_dieNames, 2) == 1.00
                     and shown_progress_100 == False):
-                        print("   ..." + slotPath[-15:] + " - Progress:", 
+                        print("  ", classPath[-25:], "Progress:", 
                               str(round(dieNameIndex/len_dieNames*100) ) + "%")
                         shown_progress_100 = True
                 
