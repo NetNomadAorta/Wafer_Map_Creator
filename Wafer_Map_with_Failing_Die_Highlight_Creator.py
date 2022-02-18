@@ -522,22 +522,40 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             bold = workbook.add_format({'bold': True})
             # bin 0 - black
             bin0_background = workbook.add_format({'bg_color': 'black'})
+            bin0_bold_background = workbook.add_format({'bold': True, 
+                                                        'bg_color': 'black'})
             # bin 1 - light green
             bin1_background = workbook.add_format({'bg_color': 'lime'})
+            bin1_bold_background = workbook.add_format({'bold': True, 
+                                                        'bg_color': 'lime'})
             # bin 2 - red
             bin2_background = workbook.add_format({'bg_color': 'red'})
+            bin2_bold_background = workbook.add_format({'bold': True, 
+                                                        'bg_color': 'red'})
             # bin 3 - dark green or green
             bin3_background = workbook.add_format({'bg_color': 'green'})
+            bin3_bold_background = workbook.add_format({'bold': True, 
+                                                        'bg_color': 'green'})
             # bin 4 - yellow
             bin4_background = workbook.add_format({'bg_color': 'yellow'})
+            bin4_bold_background = workbook.add_format({'bold': True, 
+                                                        'bg_color': 'yellow'})
             # bin 5 - blue
             bin5_background = workbook.add_format({'bg_color': 'blue'})
+            bin5_bold_background = workbook.add_format({'bold': True, 
+                                                        'bg_color': 'blue'})
             # bin 6 - pink
             bin6_background = workbook.add_format({'bg_color': 'magenta'})
+            bin6_bold_background = workbook.add_format({'bold': True, 
+                                                        'bg_color': 'magenta'})
             # bin 7 - cyan
             bin7_background = workbook.add_format({'bg_color': 'cyan'})
+            bin7_bold_background = workbook.add_format({'bold': True, 
+                                                        'bg_color': 'cyan'})
             # bin 8 - gray
             bin8_background = workbook.add_format({'bg_color': 'gray'})
+            bin8_bold_background = workbook.add_format({'bold': True, 
+                                                        'bg_color': 'gray'})
             
             
             # Iterates over each 200x200 dies and defaults bin number to 8
@@ -615,39 +633,39 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             # Write a count for each bin at the bottom
             for worksheet_name in worksheet_list:
                 worksheet_name.write(202, 0, "0-Bad-Count", 
-                                     bold, bin0_background)
+                                     bin0_bold_background)
                 worksheet_name.write(202, 4, all_dieBinNumbers.count(0))
                 
                 worksheet_name.write(203, 0, "1-All_Good-Count", 
-                                     bold, bin1_background)
+                                     bin1_bold_background)
                 worksheet_name.write(203, 4, all_dieBinNumbers.count(1))
                 
                 worksheet_name.write(204, 0, "2-Red_Only_Present-Count", 
-                                     bold, bin2_background)
+                                     bin2_bold_background)
                 worksheet_name.write(204, 4, all_dieBinNumbers.count(2))
                 
-                worksheet_name.write(205, 0, "3-Green_Only_Present",
-                                     bold, bin3_background)
+                worksheet_name.write(205, 0, "3-Green_Only_Present", 
+                                     bin3_bold_background)
                 worksheet_name.write(205, 4, all_dieBinNumbers.count(3))
                 
                 worksheet_name.write(206, 0, "4-Red_Green_Only_Present-Count", 
-                                     bold, bin4_background)
+                                     bin4_bold_background)
                 worksheet_name.write(206, 4, all_dieBinNumbers.count(4))
                 
                 worksheet_name.write(207, 0, "5-Blue_Only_Present", 
-                                     bold, bin5_background)
+                                     bin5_bold_background)
                 worksheet_name.write(207, 4, all_dieBinNumbers.count(5))
                 
                 worksheet_name.write(208, 0, "6-Red_Blue_Only_Present-Count", 
-                                     bold, bin6_background, bin0_background)
+                                     bin6_bold_background)
                 worksheet_name.write(208, 4, all_dieBinNumbers.count(6))
                 
                 worksheet_name.write(209, 0, "7-Green_Blue_Only_Present-Count", 
-                                     bold, bin7_background)
+                                     bin7_bold_background)
                 worksheet_name.write(209, 4, all_dieBinNumbers.count(7))
                 
                 worksheet_name.write(210, 0, "8-Not_Tested-Count", 
-                                     bold, bin8_background)
+                                     bin8_bold_background)
                 worksheet_name.write(210, 4, "=160000-sum(E203:E210)")
                 
                 
