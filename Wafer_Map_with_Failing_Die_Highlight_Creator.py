@@ -159,22 +159,22 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 if len_dieNames > 1000:
                     if (round(dieNameIndex/len_dieNames, 2) == 0.25
                     and shown_progress_25 == False):
-                        print("  ", classPath[-25:], "Progress:", 
+                        print("  ", classPath[-30:], "Progress:", 
                               str(round(dieNameIndex/len_dieNames*100) ) + "%")
                         shown_progress_25 = True
                     if (round(dieNameIndex/len_dieNames, 2) == 0.50
                     and shown_progress_50 == False):
-                        print("  ", classPath[-25:], "Progress:", 
+                        print("  ", classPath[-30:], "Progress:", 
                               str(round(dieNameIndex/len_dieNames*100) ) + "%")
                         shown_progress_50 = True
                     if (round(dieNameIndex/len_dieNames, 2) == 0.75
                     and shown_progress_75 == False):
-                        print("  ", classPath[-25:], "Progress:", 
+                        print("  ", classPath[-30:], "Progress:", 
                               str(round(dieNameIndex/len_dieNames*100) ) + "%")
                         shown_progress_75 = True
                     if (round(dieNameIndex/len_dieNames, 2) == 1.00
                     and shown_progress_100 == False):
-                        print("  ", classPath[-25:], "Progress:", 
+                        print("  ", classPath[-30:], "Progress:", 
                               str(round(dieNameIndex/len_dieNames*100) ) + "%")
                         shown_progress_100 = True
                 
@@ -633,46 +633,73 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             for worksheet_name in worksheet_list:
                 worksheet_name.write(202, 0, "0-Bad-Count", 
                                      bin0_bold_background)
+                worksheet_name.write(202, 1, "", bin0_background)
+                worksheet_name.write(202, 2, "", bin0_background)
+                worksheet_name.write(202, 3, "", bin0_background)
                 worksheet_name.write(202, 4, all_dieBinNumbers.count(0),
                                      bin0_bold_background)
                 
                 worksheet_name.write(203, 0, "1-All_Good-Count", 
                                      bin1_bold_background)
+                worksheet_name.write(203, 1, "", bin1_background)
+                worksheet_name.write(203, 2, "", bin1_background)
+                worksheet_name.write(203, 3, "", bin1_background)
                 worksheet_name.write(203, 4, all_dieBinNumbers.count(1),
                                      bin1_bold_background)
                 
                 worksheet_name.write(204, 0, "2-Red_Only_Present-Count", 
                                      bin2_bold_background)
+                worksheet_name.write(204, 1, "", bin2_background)
+                worksheet_name.write(204, 2, "", bin2_background)
+                worksheet_name.write(204, 3, "", bin2_background)
                 worksheet_name.write(204, 4, all_dieBinNumbers.count(2),
                                      bin2_bold_background)
                 
                 worksheet_name.write(205, 0, "3-Green_Only_Present", 
                                      bin3_bold_background)
+                worksheet_name.write(205, 1, "", bin3_background)
+                worksheet_name.write(205, 2, "", bin3_background)
+                worksheet_name.write(205, 3, "", bin3_background)
                 worksheet_name.write(205, 4, all_dieBinNumbers.count(3),
                                      bin3_bold_background)
                 
                 worksheet_name.write(206, 0, "4-Red_Green_Only_Present-Count", 
                                      bin4_bold_background)
+                worksheet_name.write(206, 1, "", bin4_background)
+                worksheet_name.write(206, 2, "", bin4_background)
+                worksheet_name.write(206, 3, "", bin4_background)
                 worksheet_name.write(206, 4, all_dieBinNumbers.count(4),
                                      bin4_bold_background)
                 
                 worksheet_name.write(207, 0, "5-Blue_Only_Present", 
                                      bin5_bold_background)
+                worksheet_name.write(207, 1, "", bin5_background)
+                worksheet_name.write(207, 2, "", bin5_background)
+                worksheet_name.write(207, 3, "", bin5_background)
                 worksheet_name.write(207, 4, all_dieBinNumbers.count(5),
                                      bin5_bold_background)
                 
                 worksheet_name.write(208, 0, "6-Red_Blue_Only_Present-Count", 
                                      bin6_bold_background)
+                worksheet_name.write(208, 1, "", bin6_background)
+                worksheet_name.write(208, 2, "", bin6_background)
+                worksheet_name.write(208, 3, "", bin6_background)
                 worksheet_name.write(208, 4, all_dieBinNumbers.count(6),
                                      bin6_bold_background)
                 
                 worksheet_name.write(209, 0, "7-Green_Blue_Only_Present-Count", 
                                      bin7_bold_background)
+                worksheet_name.write(209, 1, "", bin7_background)
+                worksheet_name.write(209, 2, "", bin7_background)
+                worksheet_name.write(209, 3, "", bin7_background)
                 worksheet_name.write(209, 4, all_dieBinNumbers.count(7),
                                      bin7_bold_background)
                 
                 worksheet_name.write(210, 0, "8-Not_Tested-Count", 
                                      bin8_bold_background)
+                worksheet_name.write(210, 1, "", bin8_background)
+                worksheet_name.write(210, 2, "", bin8_background)
+                worksheet_name.write(210, 3, "", bin8_background)
                 worksheet_name.write(210, 4, "=160000-sum(E203:E210)",
                                      bin8_bold_background)
                 
