@@ -487,7 +487,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             size = os.path.getsize(slotPath + "/Wafer_Map_with_Failing_Dies.jpg")
             if size > image_size_limit:
                 os.remove(slotPath + "/Wafer_Map_with_Failing_Dies.jpg")
-                percent_knockoff += 10
+                percent_knockoff += 15
             else:
                 break
         if isInletLot:
@@ -499,7 +499,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 size = os.path.getsize(slotPath + "/Temp_Wafer_Map_to_Compare.jpg")
                 if size > image_size_limit:
                     os.remove(slotPath + "/Temp_Wafer_Map_to_Compare.jpg")
-                    percent_knockoff += 10
+                    percent_knockoff += 15
                 else:
                     break
         if isCompareMap:
@@ -531,20 +531,26 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             bin1_bold_background = workbook.add_format({'bold': True, 
                                                         'bg_color': 'lime'})
             # bin 2 - red
-            bin2_background = workbook.add_format({'bg_color': 'red'})
+            bin2_background = workbook.add_format({'font_color': 'white',
+                                                   'bg_color': 'red'})
             bin2_bold_background = workbook.add_format({'bold': True, 
+                                                        'font_color': 'white',
                                                         'bg_color': 'red'})
             # bin 3 - dark green or green
-            bin3_background = workbook.add_format({'bg_color': 'green'})
+            bin3_background = workbook.add_format({'font_color': 'white',
+                                                   'bg_color': 'green'})
             bin3_bold_background = workbook.add_format({'bold': True, 
+                                                        'font_color': 'white',
                                                         'bg_color': 'green'})
             # bin 4 - yellow
             bin4_background = workbook.add_format({'bg_color': 'yellow'})
             bin4_bold_background = workbook.add_format({'bold': True, 
                                                         'bg_color': 'yellow'})
             # bin 5 - blue
-            bin5_background = workbook.add_format({'bg_color': 'blue'})
+            bin5_background = workbook.add_format({'font_color': 'white',
+                                                   'bg_color': 'blue'})
             bin5_bold_background = workbook.add_format({'bold': True, 
+                                                        'font_color': 'white',
                                                         'bg_color': 'blue'})
             # bin 6 - pink
             bin6_background = workbook.add_format({'bg_color': 'magenta'})
@@ -555,8 +561,10 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             bin7_bold_background = workbook.add_format({'bold': True, 
                                                         'bg_color': 'cyan'})
             # bin 8 - gray
-            bin8_background = workbook.add_format({'bg_color': 'gray'})
+            bin8_background = workbook.add_format({'font_color': 'white',
+                                                   'bg_color': 'gray'})
             bin8_bold_background = workbook.add_format({'bold': True, 
+                                                        'font_color': 'white',
                                                         'bg_color': 'gray'})
             
             
@@ -586,6 +594,49 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                             del list[:list_index]
                             break
             
+            
+            
+            # Bin count for each quadrant
+            tl_bin0 = 0
+            tl_bin1 = 0
+            tl_bin2 = 0
+            tl_bin3 = 0
+            tl_bin4 = 0
+            tl_bin5 = 0
+            tl_bin6 = 0
+            tl_bin7 = 0
+            tl_bin8 = 0
+            
+            tr_bin0 = 0
+            tr_bin1 = 0
+            tr_bin2 = 0
+            tr_bin3 = 0
+            tr_bin4 = 0
+            tr_bin5 = 0
+            tr_bin6 = 0
+            tr_bin7 = 0
+            tr_bin8 = 0
+            
+            bl_bin0 = 0
+            bl_bin1 = 0
+            bl_bin2 = 0
+            bl_bin3 = 0
+            bl_bin4 = 0
+            bl_bin5 = 0
+            bl_bin6 = 0
+            bl_bin7 = 0
+            bl_bin8 = 0
+            
+            br_bin0 = 0
+            br_bin1 = 0
+            br_bin2 = 0
+            br_bin3 = 0
+            br_bin4 = 0
+            br_bin5 = 0
+            br_bin6 = 0
+            br_bin7 = 0
+            br_bin8 = 0
+            
             print("   Started writing Excel sheet bin numbers..")
             # Writes all dies info in Excel
             for all_dieName_index, all_dieName in enumerate(all_dieNames):
@@ -595,112 +646,492 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 # Checks to see which background bin number to use
                 if all_dieBinNumbers[all_dieName_index] == 0:
                     background = bin0_background
+                    bin_number = all_dieBinNumbers[all_dieName_index]
                 elif all_dieBinNumbers[all_dieName_index] == 1:
                     background = bin1_background
+                    bin_number = all_dieBinNumbers[all_dieName_index]
                 elif all_dieBinNumbers[all_dieName_index] == 2:
                     background = bin2_background
+                    bin_number = all_dieBinNumbers[all_dieName_index]
                 elif all_dieBinNumbers[all_dieName_index] == 3:
                     background = bin3_background
+                    bin_number = all_dieBinNumbers[all_dieName_index]
                 elif all_dieBinNumbers[all_dieName_index] == 4:
                     background = bin4_background
+                    bin_number = all_dieBinNumbers[all_dieName_index]
                 elif all_dieBinNumbers[all_dieName_index] == 5:
                     background = bin5_background
+                    bin_number = all_dieBinNumbers[all_dieName_index]
                 elif all_dieBinNumbers[all_dieName_index] == 6:
                     background = bin6_background
+                    bin_number = all_dieBinNumbers[all_dieName_index]
                 elif all_dieBinNumbers[all_dieName_index] == 7:
                     background = bin7_background
+                    bin_number = all_dieBinNumbers[all_dieName_index]
                 
                 if row <= 200:
                     if col <= 200:
                         worksheet_TL.write(row-1, col-1, 
                                            all_dieBinNumbers[all_dieName_index], 
                                            background)
+                        if bin_number == 0:
+                            tl_bin0 += 1
+                        elif bin_number == 1:
+                            tl_bin1 += 1
+                        elif bin_number == 2:
+                            tl_bin2 += 1
+                        elif bin_number == 3:
+                            tl_bin3 += 1
+                        elif bin_number == 4:
+                            tl_bin4 += 1
+                        elif bin_number == 5:
+                            tl_bin5 += 1
+                        elif bin_number == 6:
+                            tl_bin6 += 1
+                        elif bin_number == 7:
+                            tl_bin7 += 1
+                        
                     else:
                         worksheet_TR.write(row-1, col-1-200, 
                                            all_dieBinNumbers[all_dieName_index],
                                            background)
+                        if bin_number == 0:
+                            tr_bin0 += 1
+                        elif bin_number == 1:
+                            tr_bin1 += 1
+                        elif bin_number == 2:
+                            tr_bin2 += 1
+                        elif bin_number == 3:
+                            tr_bin3 += 1
+                        elif bin_number == 4:
+                            tr_bin4 += 1
+                        elif bin_number == 5:
+                            tr_bin5 += 1
+                        elif bin_number == 6:
+                            tr_bin6 += 1
+                        elif bin_number == 7:
+                            tr_bin7 += 1
                 else:
                     if col <= 200:
                         worksheet_BL.write(row-1-200, col-1, 
                                            all_dieBinNumbers[all_dieName_index],
                                            background)
+                        if bin_number == 0:
+                            bl_bin0 += 1
+                        elif bin_number == 1:
+                            bl_bin1 += 1
+                        elif bin_number == 2:
+                            bl_bin2 += 1
+                        elif bin_number == 3:
+                            bl_bin3 += 1
+                        elif bin_number == 4:
+                            bl_bin4 += 1
+                        elif bin_number == 5:
+                            bl_bin5 += 1
+                        elif bin_number == 6:
+                            bl_bin6 += 1
+                        elif bin_number == 7:
+                            bl_bin7 += 1
                     else:
                         worksheet_BR.write(row-1-200, col-1-200, 
                                            all_dieBinNumbers[all_dieName_index],
                                            background)
+                        if bin_number == 0:
+                            br_bin0 += 1
+                        elif bin_number == 1:
+                            br_bin1 += 1
+                        elif bin_number == 2:
+                            br_bin2 += 1
+                        elif bin_number == 3:
+                            br_bin3 += 1
+                        elif bin_number == 4:
+                            br_bin4 += 1
+                        elif bin_number == 5:
+                            br_bin5 += 1
+                        elif bin_number == 6:
+                            br_bin6 += 1
+                        elif bin_number == 7:
+                            br_bin7 += 1
             
-            # Write a count for each bin at the bottom
+            
+            
+            # TL 
+            # -----------------------------------------------------------
+            worksheet_list[0].write(202, 0, "0-Bad-Count", 
+                                 bin0_bold_background)
+            worksheet_list[0].write(202, 1, "", bin0_background)
+            worksheet_list[0].write(202, 2, "", bin0_background)
+            worksheet_list[0].write(202, 3, "", bin0_background)
+            worksheet_list[0].write(202, 4, tl_bin0,
+                                 bin0_bold_background)
+            
+            worksheet_list[0].write(203, 0, "1-All_Good-Count", 
+                                 bin1_bold_background)
+            worksheet_list[0].write(203, 1, "", bin1_background)
+            worksheet_list[0].write(203, 2, "", bin1_background)
+            worksheet_list[0].write(203, 3, "", bin1_background)
+            worksheet_list[0].write(203, 4, tl_bin1,
+                                 bin1_bold_background)
+            
+            worksheet_list[0].write(204, 0, "2-Red_Only_Present-Count", 
+                                 bin2_bold_background)
+            worksheet_list[0].write(204, 1, "", bin2_background)
+            worksheet_list[0].write(204, 2, "", bin2_background)
+            worksheet_list[0].write(204, 3, "", bin2_background)
+            worksheet_list[0].write(204, 4, tl_bin2,
+                                 bin2_bold_background)
+            
+            worksheet_list[0].write(205, 0, "3-Green_Only_Present", 
+                                 bin3_bold_background)
+            worksheet_list[0].write(205, 1, "", bin3_background)
+            worksheet_list[0].write(205, 2, "", bin3_background)
+            worksheet_list[0].write(205, 3, "", bin3_background)
+            worksheet_list[0].write(205, 4, tl_bin3,
+                                 bin3_bold_background)
+            
+            worksheet_list[0].write(206, 0, "4-Red_Green_Only_Present-Count", 
+                                 bin4_bold_background)
+            worksheet_list[0].write(206, 1, "", bin4_background)
+            worksheet_list[0].write(206, 2, "", bin4_background)
+            worksheet_list[0].write(206, 3, "", bin4_background)
+            worksheet_list[0].write(206, 4, tl_bin4,
+                                 bin4_bold_background)
+            
+            worksheet_list[0].write(207, 0, "5-Blue_Only_Present", 
+                                 bin5_bold_background)
+            worksheet_list[0].write(207, 1, "", bin5_background)
+            worksheet_list[0].write(207, 2, "", bin5_background)
+            worksheet_list[0].write(207, 3, "", bin5_background)
+            worksheet_list[0].write(207, 4, tl_bin5,
+                                 bin5_bold_background)
+            
+            worksheet_list[0].write(208, 0, "6-Red_Blue_Only_Present-Count", 
+                                 bin6_bold_background)
+            worksheet_list[0].write(208, 1, "", bin6_background)
+            worksheet_list[0].write(208, 2, "", bin6_background)
+            worksheet_list[0].write(208, 3, "", bin6_background)
+            worksheet_list[0].write(208, 4, tl_bin6,
+                                 bin6_bold_background)
+            
+            worksheet_list[0].write(209, 0, "7-Green_Blue_Only_Present-Count", 
+                                 bin7_bold_background)
+            worksheet_list[0].write(209, 1, "", bin7_background)
+            worksheet_list[0].write(209, 2, "", bin7_background)
+            worksheet_list[0].write(209, 3, "", bin7_background)
+            worksheet_list[0].write(209, 4, tl_bin7,
+                                 bin7_bold_background)
+            
+            worksheet_list[0].write(210, 0, "8-Not_Tested-Count", 
+                                 bin8_bold_background)
+            worksheet_list[0].write(210, 1, "", bin8_background)
+            worksheet_list[0].write(210, 2, "", bin8_background)
+            worksheet_list[0].write(210, 3, "", bin8_background)
+            worksheet_list[0].write(210, 4, "=40000-sum(E203:E210)",
+                                 bin8_bold_background)
+            
+            # -----------------------------------------------------------
+            
+            
+            # TR
+            # -----------------------------------------------------------
+            worksheet_list[0].write(202, 0, "0-Bad-Count", 
+                                 bin0_bold_background)
+            worksheet_list[0].write(202, 1, "", bin0_background)
+            worksheet_list[0].write(202, 2, "", bin0_background)
+            worksheet_list[0].write(202, 3, "", bin0_background)
+            worksheet_list[0].write(202, 4, tr_bin0,
+                                 bin0_bold_background)
+            
+            worksheet_list[0].write(203, 0, "1-All_Good-Count", 
+                                 bin1_bold_background)
+            worksheet_list[0].write(203, 1, "", bin1_background)
+            worksheet_list[0].write(203, 2, "", bin1_background)
+            worksheet_list[0].write(203, 3, "", bin1_background)
+            worksheet_list[0].write(203, 4, tr_bin1,
+                                 bin1_bold_background)
+            
+            worksheet_list[0].write(204, 0, "2-Red_Only_Present-Count", 
+                                 bin2_bold_background)
+            worksheet_list[0].write(204, 1, "", bin2_background)
+            worksheet_list[0].write(204, 2, "", bin2_background)
+            worksheet_list[0].write(204, 3, "", bin2_background)
+            worksheet_list[0].write(204, 4, tr_bin2,
+                                 bin2_bold_background)
+            
+            worksheet_list[0].write(205, 0, "3-Green_Only_Present", 
+                                 bin3_bold_background)
+            worksheet_list[0].write(205, 1, "", bin3_background)
+            worksheet_list[0].write(205, 2, "", bin3_background)
+            worksheet_list[0].write(205, 3, "", bin3_background)
+            worksheet_list[0].write(205, 4, tr_bin3,
+                                 bin3_bold_background)
+            
+            worksheet_list[0].write(206, 0, "4-Red_Green_Only_Present-Count", 
+                                 bin4_bold_background)
+            worksheet_list[0].write(206, 1, "", bin4_background)
+            worksheet_list[0].write(206, 2, "", bin4_background)
+            worksheet_list[0].write(206, 3, "", bin4_background)
+            worksheet_list[0].write(206, 4, tr_bin4,
+                                 bin4_bold_background)
+            
+            worksheet_list[0].write(207, 0, "5-Blue_Only_Present", 
+                                 bin5_bold_background)
+            worksheet_list[0].write(207, 1, "", bin5_background)
+            worksheet_list[0].write(207, 2, "", bin5_background)
+            worksheet_list[0].write(207, 3, "", bin5_background)
+            worksheet_list[0].write(207, 4, tr_bin5,
+                                 bin5_bold_background)
+            
+            worksheet_list[0].write(208, 0, "6-Red_Blue_Only_Present-Count", 
+                                 bin6_bold_background)
+            worksheet_list[0].write(208, 1, "", bin6_background)
+            worksheet_list[0].write(208, 2, "", bin6_background)
+            worksheet_list[0].write(208, 3, "", bin6_background)
+            worksheet_list[0].write(208, 4, tr_bin6,
+                                 bin6_bold_background)
+            
+            worksheet_list[0].write(209, 0, "7-Green_Blue_Only_Present-Count", 
+                                 bin7_bold_background)
+            worksheet_list[0].write(209, 1, "", bin7_background)
+            worksheet_list[0].write(209, 2, "", bin7_background)
+            worksheet_list[0].write(209, 3, "", bin7_background)
+            worksheet_list[0].write(209, 4, tr_bin7,
+                                 bin7_bold_background)
+            
+            worksheet_list[0].write(210, 0, "8-Not_Tested-Count", 
+                                 bin8_bold_background)
+            worksheet_list[0].write(210, 1, "", bin8_background)
+            worksheet_list[0].write(210, 2, "", bin8_background)
+            worksheet_list[0].write(210, 3, "", bin8_background)
+            worksheet_list[0].write(210, 4, "=40000-sum(E203:E210)",
+                                 bin8_bold_background)
+            
+            # BL
+            # -----------------------------------------------------------
+            worksheet_list[0].write(202, 0, "0-Bad-Count", 
+                                 bin0_bold_background)
+            worksheet_list[0].write(202, 1, "", bin0_background)
+            worksheet_list[0].write(202, 2, "", bin0_background)
+            worksheet_list[0].write(202, 3, "", bin0_background)
+            worksheet_list[0].write(202, 4, bl_bin0,
+                                 bin0_bold_background)
+            
+            worksheet_list[0].write(203, 0, "1-All_Good-Count", 
+                                 bin1_bold_background)
+            worksheet_list[0].write(203, 1, "", bin1_background)
+            worksheet_list[0].write(203, 2, "", bin1_background)
+            worksheet_list[0].write(203, 3, "", bin1_background)
+            worksheet_list[0].write(203, 4, bl_bin1,
+                                 bin1_bold_background)
+            
+            worksheet_list[0].write(204, 0, "2-Red_Only_Present-Count", 
+                                 bin2_bold_background)
+            worksheet_list[0].write(204, 1, "", bin2_background)
+            worksheet_list[0].write(204, 2, "", bin2_background)
+            worksheet_list[0].write(204, 3, "", bin2_background)
+            worksheet_list[0].write(204, 4, bl_bin2,
+                                 bin2_bold_background)
+            
+            worksheet_list[0].write(205, 0, "3-Green_Only_Present", 
+                                 bin3_bold_background)
+            worksheet_list[0].write(205, 1, "", bin3_background)
+            worksheet_list[0].write(205, 2, "", bin3_background)
+            worksheet_list[0].write(205, 3, "", bin3_background)
+            worksheet_list[0].write(205, 4, bl_bin3,
+                                 bin3_bold_background)
+            
+            worksheet_list[0].write(206, 0, "4-Red_Green_Only_Present-Count", 
+                                 bin4_bold_background)
+            worksheet_list[0].write(206, 1, "", bin4_background)
+            worksheet_list[0].write(206, 2, "", bin4_background)
+            worksheet_list[0].write(206, 3, "", bin4_background)
+            worksheet_list[0].write(206, 4, bl_bin4,
+                                 bin4_bold_background)
+            
+            worksheet_list[0].write(207, 0, "5-Blue_Only_Present", 
+                                 bin5_bold_background)
+            worksheet_list[0].write(207, 1, "", bin5_background)
+            worksheet_list[0].write(207, 2, "", bin5_background)
+            worksheet_list[0].write(207, 3, "", bin5_background)
+            worksheet_list[0].write(207, 4, bl_bin5,
+                                 bin5_bold_background)
+            
+            worksheet_list[0].write(208, 0, "6-Red_Blue_Only_Present-Count", 
+                                 bin6_bold_background)
+            worksheet_list[0].write(208, 1, "", bin6_background)
+            worksheet_list[0].write(208, 2, "", bin6_background)
+            worksheet_list[0].write(208, 3, "", bin6_background)
+            worksheet_list[0].write(208, 4, bl_bin6,
+                                 bin6_bold_background)
+            
+            worksheet_list[0].write(209, 0, "7-Green_Blue_Only_Present-Count", 
+                                 bin7_bold_background)
+            worksheet_list[0].write(209, 1, "", bin7_background)
+            worksheet_list[0].write(209, 2, "", bin7_background)
+            worksheet_list[0].write(209, 3, "", bin7_background)
+            worksheet_list[0].write(209, 4, bl_bin7,
+                                 bin7_bold_background)
+            
+            worksheet_list[0].write(210, 0, "8-Not_Tested-Count", 
+                                 bin8_bold_background)
+            worksheet_list[0].write(210, 1, "", bin8_background)
+            worksheet_list[0].write(210, 2, "", bin8_background)
+            worksheet_list[0].write(210, 3, "", bin8_background)
+            worksheet_list[0].write(210, 4, "=40000-sum(E203:E210)",
+                                 bin8_bold_background)
+            # -----------------------------------------------------------
+            
+            
+            # BR
+            # -----------------------------------------------------------
+            worksheet_list[0].write(202, 0, "0-Bad-Count", 
+                                 bin0_bold_background)
+            worksheet_list[0].write(202, 1, "", bin0_background)
+            worksheet_list[0].write(202, 2, "", bin0_background)
+            worksheet_list[0].write(202, 3, "", bin0_background)
+            worksheet_list[0].write(202, 4, br_bin0,
+                                 bin0_bold_background)
+            
+            worksheet_list[0].write(203, 0, "1-All_Good-Count", 
+                                 bin1_bold_background)
+            worksheet_list[0].write(203, 1, "", bin1_background)
+            worksheet_list[0].write(203, 2, "", bin1_background)
+            worksheet_list[0].write(203, 3, "", bin1_background)
+            worksheet_list[0].write(203, 4, br_bin1,
+                                 bin1_bold_background)
+            
+            worksheet_list[0].write(204, 0, "2-Red_Only_Present-Count", 
+                                 bin2_bold_background)
+            worksheet_list[0].write(204, 1, "", bin2_background)
+            worksheet_list[0].write(204, 2, "", bin2_background)
+            worksheet_list[0].write(204, 3, "", bin2_background)
+            worksheet_list[0].write(204, 4, br_bin2,
+                                 bin2_bold_background)
+            
+            worksheet_list[0].write(205, 0, "3-Green_Only_Present", 
+                                 bin3_bold_background)
+            worksheet_list[0].write(205, 1, "", bin3_background)
+            worksheet_list[0].write(205, 2, "", bin3_background)
+            worksheet_list[0].write(205, 3, "", bin3_background)
+            worksheet_list[0].write(205, 4, br_bin3,
+                                 bin3_bold_background)
+            
+            worksheet_list[0].write(206, 0, "4-Red_Green_Only_Present-Count", 
+                                 bin4_bold_background)
+            worksheet_list[0].write(206, 1, "", bin4_background)
+            worksheet_list[0].write(206, 2, "", bin4_background)
+            worksheet_list[0].write(206, 3, "", bin4_background)
+            worksheet_list[0].write(206, 4, br_bin4,
+                                 bin4_bold_background)
+            
+            worksheet_list[0].write(207, 0, "5-Blue_Only_Present", 
+                                 bin5_bold_background)
+            worksheet_list[0].write(207, 1, "", bin5_background)
+            worksheet_list[0].write(207, 2, "", bin5_background)
+            worksheet_list[0].write(207, 3, "", bin5_background)
+            worksheet_list[0].write(207, 4, br_bin5,
+                                 bin5_bold_background)
+            
+            worksheet_list[0].write(208, 0, "6-Red_Blue_Only_Present-Count", 
+                                 bin6_bold_background)
+            worksheet_list[0].write(208, 1, "", bin6_background)
+            worksheet_list[0].write(208, 2, "", bin6_background)
+            worksheet_list[0].write(208, 3, "", bin6_background)
+            worksheet_list[0].write(208, 4, br_bin6,
+                                 bin6_bold_background)
+            
+            worksheet_list[0].write(209, 0, "7-Green_Blue_Only_Present-Count", 
+                                 bin7_bold_background)
+            worksheet_list[0].write(209, 1, "", bin7_background)
+            worksheet_list[0].write(209, 2, "", bin7_background)
+            worksheet_list[0].write(209, 3, "", bin7_background)
+            worksheet_list[0].write(209, 4, br_bin7,
+                                 bin7_bold_background)
+            
+            worksheet_list[0].write(210, 0, "8-Not_Tested-Count", 
+                                 bin8_bold_background)
+            worksheet_list[0].write(210, 1, "", bin8_background)
+            worksheet_list[0].write(210, 2, "", bin8_background)
+            worksheet_list[0].write(210, 3, "", bin8_background)
+            worksheet_list[0].write(210, 4, "=40000-sum(E203:E210)",
+                                 bin8_bold_background)
+            # -----------------------------------------------------------
+            
+            
+            
+            
+            # Write a count for each bin (all four quadrants) at the bottom
             for worksheet_name in worksheet_list:
-                worksheet_name.write(202, 0, "0-Bad-Count", 
+                worksheet_name.write(212, 0, "0-Bad-Count", 
                                      bin0_bold_background)
-                worksheet_name.write(202, 1, "", bin0_background)
-                worksheet_name.write(202, 2, "", bin0_background)
-                worksheet_name.write(202, 3, "", bin0_background)
-                worksheet_name.write(202, 4, all_dieBinNumbers.count(0),
+                worksheet_name.write(212, 1, "", bin0_background)
+                worksheet_name.write(212, 2, "", bin0_background)
+                worksheet_name.write(212, 3, "", bin0_background)
+                worksheet_name.write(212, 4, all_dieBinNumbers.count(0),
                                      bin0_bold_background)
                 
-                worksheet_name.write(203, 0, "1-All_Good-Count", 
+                worksheet_name.write(213, 0, "1-All_Good-Count", 
                                      bin1_bold_background)
-                worksheet_name.write(203, 1, "", bin1_background)
-                worksheet_name.write(203, 2, "", bin1_background)
-                worksheet_name.write(203, 3, "", bin1_background)
-                worksheet_name.write(203, 4, all_dieBinNumbers.count(1),
+                worksheet_name.write(213, 1, "", bin1_background)
+                worksheet_name.write(213, 2, "", bin1_background)
+                worksheet_name.write(213, 3, "", bin1_background)
+                worksheet_name.write(213, 4, all_dieBinNumbers.count(1),
                                      bin1_bold_background)
                 
-                worksheet_name.write(204, 0, "2-Red_Only_Present-Count", 
+                worksheet_name.write(214, 0, "2-Red_Only_Present-Count", 
                                      bin2_bold_background)
-                worksheet_name.write(204, 1, "", bin2_background)
-                worksheet_name.write(204, 2, "", bin2_background)
-                worksheet_name.write(204, 3, "", bin2_background)
-                worksheet_name.write(204, 4, all_dieBinNumbers.count(2),
+                worksheet_name.write(214, 1, "", bin2_background)
+                worksheet_name.write(214, 2, "", bin2_background)
+                worksheet_name.write(214, 3, "", bin2_background)
+                worksheet_name.write(214, 4, all_dieBinNumbers.count(2),
                                      bin2_bold_background)
                 
-                worksheet_name.write(205, 0, "3-Green_Only_Present", 
+                worksheet_name.write(215, 0, "3-Green_Only_Present", 
                                      bin3_bold_background)
-                worksheet_name.write(205, 1, "", bin3_background)
-                worksheet_name.write(205, 2, "", bin3_background)
-                worksheet_name.write(205, 3, "", bin3_background)
-                worksheet_name.write(205, 4, all_dieBinNumbers.count(3),
+                worksheet_name.write(215, 1, "", bin3_background)
+                worksheet_name.write(215, 2, "", bin3_background)
+                worksheet_name.write(215, 3, "", bin3_background)
+                worksheet_name.write(215, 4, all_dieBinNumbers.count(3),
                                      bin3_bold_background)
                 
-                worksheet_name.write(206, 0, "4-Red_Green_Only_Present-Count", 
+                worksheet_name.write(216, 0, "4-Red_Green_Only_Present-Count", 
                                      bin4_bold_background)
-                worksheet_name.write(206, 1, "", bin4_background)
-                worksheet_name.write(206, 2, "", bin4_background)
-                worksheet_name.write(206, 3, "", bin4_background)
-                worksheet_name.write(206, 4, all_dieBinNumbers.count(4),
+                worksheet_name.write(216, 1, "", bin4_background)
+                worksheet_name.write(216, 2, "", bin4_background)
+                worksheet_name.write(216, 3, "", bin4_background)
+                worksheet_name.write(216, 4, all_dieBinNumbers.count(4),
                                      bin4_bold_background)
                 
-                worksheet_name.write(207, 0, "5-Blue_Only_Present", 
+                worksheet_name.write(217, 0, "5-Blue_Only_Present", 
                                      bin5_bold_background)
-                worksheet_name.write(207, 1, "", bin5_background)
-                worksheet_name.write(207, 2, "", bin5_background)
-                worksheet_name.write(207, 3, "", bin5_background)
-                worksheet_name.write(207, 4, all_dieBinNumbers.count(5),
+                worksheet_name.write(217, 1, "", bin5_background)
+                worksheet_name.write(217, 2, "", bin5_background)
+                worksheet_name.write(217, 3, "", bin5_background)
+                worksheet_name.write(217, 4, all_dieBinNumbers.count(5),
                                      bin5_bold_background)
                 
-                worksheet_name.write(208, 0, "6-Red_Blue_Only_Present-Count", 
+                worksheet_name.write(218, 0, "6-Red_Blue_Only_Present-Count", 
                                      bin6_bold_background)
-                worksheet_name.write(208, 1, "", bin6_background)
-                worksheet_name.write(208, 2, "", bin6_background)
-                worksheet_name.write(208, 3, "", bin6_background)
-                worksheet_name.write(208, 4, all_dieBinNumbers.count(6),
+                worksheet_name.write(218, 1, "", bin6_background)
+                worksheet_name.write(218, 2, "", bin6_background)
+                worksheet_name.write(218, 3, "", bin6_background)
+                worksheet_name.write(218, 4, all_dieBinNumbers.count(6),
                                      bin6_bold_background)
                 
-                worksheet_name.write(209, 0, "7-Green_Blue_Only_Present-Count", 
+                worksheet_name.write(219, 0, "7-Green_Blue_Only_Present-Count", 
                                      bin7_bold_background)
-                worksheet_name.write(209, 1, "", bin7_background)
-                worksheet_name.write(209, 2, "", bin7_background)
-                worksheet_name.write(209, 3, "", bin7_background)
-                worksheet_name.write(209, 4, all_dieBinNumbers.count(7),
+                worksheet_name.write(219, 1, "", bin7_background)
+                worksheet_name.write(219, 2, "", bin7_background)
+                worksheet_name.write(219, 3, "", bin7_background)
+                worksheet_name.write(219, 4, all_dieBinNumbers.count(7),
                                      bin7_bold_background)
                 
-                worksheet_name.write(210, 0, "8-Not_Tested-Count", 
+                worksheet_name.write(220, 0, "8-Not_Tested-Count", 
                                      bin8_bold_background)
-                worksheet_name.write(210, 1, "", bin8_background)
-                worksheet_name.write(210, 2, "", bin8_background)
-                worksheet_name.write(210, 3, "", bin8_background)
-                worksheet_name.write(210, 4, "=160000-sum(E203:E210)",
+                worksheet_name.write(220, 1, "", bin8_background)
+                worksheet_name.write(220, 2, "", bin8_background)
+                worksheet_name.write(220, 3, "", bin8_background)
+                worksheet_name.write(220, 4, "=160000-sum(E203:E210)",
                                      bin8_bold_background)
                 
                 
