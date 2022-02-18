@@ -612,20 +612,20 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 
                 if row <= 200:
                     if col <= 200:
-                        worksheet_TL.write(row, col, 
+                        worksheet_TL.write(row-1, col-1, 
                                            all_dieBinNumbers[all_dieName_index], 
                                            background)
                     else:
-                        worksheet_TR.write(row, col, 
+                        worksheet_TR.write(row-1, col-1-200, 
                                            all_dieBinNumbers[all_dieName_index],
                                            background)
                 else:
                     if col <= 200:
-                        worksheet_BL.write(row, col, 
+                        worksheet_BL.write(row-1-200, col-1, 
                                            all_dieBinNumbers[all_dieName_index],
                                            background)
                     else:
-                        worksheet_BR.write(row, col, 
+                        worksheet_BR.write(row-1-200, col-1-200, 
                                            all_dieBinNumbers[all_dieName_index],
                                            background)
             
