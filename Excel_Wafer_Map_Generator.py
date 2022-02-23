@@ -1,15 +1,3 @@
-"""
-This python script uses the wafer map and coordinates created in 
- "Main_Wafer_Map_Creator.py" to create a wafer map with red ovals around each
- die location in the wafer map that are failing. 
-It does this by looking at existing images, with row and column numbers 
- included in the images' name, that are found in the non-defect folder from the
- "Automated_AOI.py" output.
-If an inlet and outlet folder exist and COMPARE_OVERLAY is true, then this will
- create an output wafer map with green/ovals around dies that are no longer 
- failing from the inlet folder
-"""
-
 # Import the necessary packages
 import os
 import shutil
@@ -22,9 +10,6 @@ import xlsxwriter
 # User Parameters/Constants to Set
 PREDICTED_DIR = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/"
 STORED_WAFER_DATA = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/ZZZ-General_Wafer_Map_Data/"
-COMPARE_OVERLAY = False # Will compare "*-In" and "*-Out" wafer maps and output in "*-Out" folder
-SHOULD_REPLACE_ALL_MAPS = False # Will remake each wafer map that already exist in AOI Output folder if set true
-WAFER_MAP_SIZE_LIMIT = 300 # mb # If wafer map size above this value, reduce quality until size is under this value
 EXCEL_GENERATOR_TOGGLE = True
 
 
@@ -94,8 +79,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         waferMap = cv2.imread(STORED_WAFER_DATA + waferMapName +  "/Wafer_Map.jpg")
         
         # Checks if Excel sheet already exist, and only skips if selected not to
-        if os.path.isfile(slotPath + "/Results.xlsx") \
-        and SHOULD_REPLACE_ALL_MAPS == False:
+        if os.path.isfile(slotPath + "/Results.xlsx"):
             continue
         
         # Removes Thumbs.db in slot path if found
@@ -193,7 +177,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
 
         # XLS Section
         # -----------------------------------------------------------------------------
-        if EXCEL_GENERATOR_TOGGLE and os.path.isfile(slotPath + "/Wafer_Map_with_Failing_Dies.jpg"):
+        if EXCEL_GENERATOR_TOGGLE:
             print("   Starting Excel sheet results..")
             # Create a workbook and add a worksheet.
             workbook = xlsxwriter.Workbook(slotPath + '/Results.xlsx')
