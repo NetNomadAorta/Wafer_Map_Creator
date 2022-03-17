@@ -56,10 +56,6 @@ print("\n\n\n\n\n\n\n\n\n\n\n\n\n")
 for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     lotPathName = os.listdir(PREDICTED_DIR)[lotPathIndex]
     
-    # Skips LED lot
-    if "LED" in lotPathName:
-        continue
-    
     print("Starting", lotPathName)
     
     # Sets parameter to enable comparing in and out files
@@ -138,9 +134,10 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             # already created one from a previous run)
             
             # WAS classIndex == 0 NOW 1 FOR X-Display!! CHANGGGEE BACCKKKKK
-            if classIndex == 0 \
-            or "ZZ-" in os.listdir(slotPath)[classIndex] \
-            or ".jpg" in os.listdir(slotPath)[classIndex]:
+            if (classIndex == 0
+            or "ZZ-" in os.listdir(slotPath)[classIndex]
+            or ".jpg" in os.listdir(slotPath)[classIndex]
+            or ".xlsx" in os.listdir(slotPath)[classIndex]):
                 continue
             # Removes Thumbs.db in class path if found
             if os.path.isfile(classPath + "/Thumbs.db"):
