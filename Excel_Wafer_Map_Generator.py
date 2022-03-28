@@ -90,17 +90,18 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         os.remove(lotPath + "/Thumbs.db")
     
     # Cycles through each slot folder within the lot folder
-    for slotPath in glob.glob(lotPath + "/*"):
+    for slot_name in os.listdir(lotPath):
+        slot_path = os.path.join(lotPath, slot_name)
         # Creates wafer map
         waferMap = cv2.imread(STORED_WAFER_DATA + waferMapName +  "/Wafer_Map.jpg")
         
         # Checks if Excel sheet already exist, and only skips if selected not to
-        if os.path.isfile(slotPath + "/Results.xlsx"):
+        if os.path.isfile(slot_path + "/" + slot_name+ ".xlsx"):
             continue
         
         # Removes Thumbs.db in slot path if found
-        if os.path.isfile(slotPath + "/Thumbs.db"):
-            os.remove(slotPath + "/Thumbs.db")
+        if os.path.isfile(slot_path + "/Thumbs.db"):
+            os.remove(slot_path + "/Thumbs.db")
         
         # Making list of bad die names
         badDieNames = []
@@ -116,8 +117,8 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         isFirstImageRun = True
          
         # Within each slot, cycle through each class
-        for class_index, class_name in enumerate(os.listdir(slotPath) ):
-            class_path = os.path.join(slotPath, class_name)
+        for class_index, class_name in enumerate(os.listdir(slot_path) ):
+            class_path = os.path.join(slot_path, class_name)
             # Skips directory if first class (non-defect) folder or if it 
             # includes the wafer map with failing dies image (if this program 
             # already created one from a previous run)
@@ -217,10 +218,10 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             
             print("   Starting Excel sheet results..")
             # Create a workbook and add a worksheet.
-            workbook = xlsxwriter.Workbook(slotPath + '/Results.xlsx')
+            workbook = xlsxwriter.Workbook(slot_path + '/' + slot_name + '.xlsx')
             # Checks to see how many worksheet list needed
             if num_excel_sheets == 1:
-                worksheet_TL = workbook.add_worksheet("Wafer_Map")
+                worksheet_TL = workbook.add_worksheet(slot_name)
                 
                 worksheet_list = [worksheet_TL]
             else:
@@ -302,7 +303,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             all_dieNames = badDieNames
             all_dieBinNumbers = badDieBinNumbers
             print("   Started making good bins..")
-            list = os.listdir(glob.glob(slotPath + "/*")[good_class_index])
+            list = os.listdir(glob.glob(slot_path + "/*")[good_class_index])
             
             # Checks to see which are good dies since previous scan in classes skipped good dies
             for dieNameIndex, dieName in enumerate(dieNames):
@@ -662,34 +663,34 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                                      bin8_bold_background)
             elif sqrt(num_excel_sheets) == 1:
                 
-                worksheet_list[0].write(max_row + 3, 0, classes[0], 
+                worksheet_list[0].write(max_row + 2, 0, classes[0], 
                                      bin1_bold_background)
-                worksheet_list[0].write(max_row + 3, 1, "", bin1_background)
-                worksheet_list[0].write(max_row + 3, 2, "", bin1_background)
-                worksheet_list[0].write(max_row + 3, 3, "", bin1_background)
-                worksheet_list[0].write(max_row + 3, 4, "", bin1_background)
-                worksheet_list[0].write(max_row + 3, 5, "", bin1_background)
-                worksheet_list[0].write(max_row + 3, 6, "", bin1_background)
-                worksheet_list[0].write(max_row + 3, 7, "", bin1_background)
-                worksheet_list[0].write(max_row + 3, 8, "", bin1_background)
-                worksheet_list[0].write(max_row + 3, 9, "", bin1_background)
-                worksheet_list[0].write(max_row + 3, 10, "", bin1_background)
-                worksheet_list[0].write(max_row + 3, 11, tl_bin0,
+                worksheet_list[0].write(max_row + 2, 1, "", bin1_background)
+                worksheet_list[0].write(max_row + 2, 2, "", bin1_background)
+                worksheet_list[0].write(max_row + 2, 3, "", bin1_background)
+                worksheet_list[0].write(max_row + 2, 4, "", bin1_background)
+                worksheet_list[0].write(max_row + 2, 5, "", bin1_background)
+                worksheet_list[0].write(max_row + 2, 6, "", bin1_background)
+                worksheet_list[0].write(max_row + 2, 7, "", bin1_background)
+                worksheet_list[0].write(max_row + 2, 8, "", bin1_background)
+                worksheet_list[0].write(max_row + 2, 9, "", bin1_background)
+                worksheet_list[0].write(max_row + 2, 10, "", bin1_background)
+                worksheet_list[0].write(max_row + 2, 11, tl_bin0,
                                      bin1_bold_background)
                 
-                worksheet_list[0].write(max_row + 4, 0, classes[1], 
+                worksheet_list[0].write(max_row + 3, 0, classes[1], 
                                      bin2_bold_background)
-                worksheet_list[0].write(max_row + 4, 1, "", bin2_background)
-                worksheet_list[0].write(max_row + 4, 2, "", bin2_background)
-                worksheet_list[0].write(max_row + 4, 3, "", bin2_background)
-                worksheet_list[0].write(max_row + 4, 4, "", bin2_background)
-                worksheet_list[0].write(max_row + 4, 5, "", bin2_background)
-                worksheet_list[0].write(max_row + 4, 6, "", bin2_background)
-                worksheet_list[0].write(max_row + 4, 7, "", bin2_background)
-                worksheet_list[0].write(max_row + 4, 8, "", bin2_background)
-                worksheet_list[0].write(max_row + 4, 9, "", bin2_background)
-                worksheet_list[0].write(max_row + 4, 10, "", bin2_background)
-                worksheet_list[0].write(max_row + 4, 11, tl_bin1,
+                worksheet_list[0].write(max_row + 3, 1, "", bin2_background)
+                worksheet_list[0].write(max_row + 3, 2, "", bin2_background)
+                worksheet_list[0].write(max_row + 3, 3, "", bin2_background)
+                worksheet_list[0].write(max_row + 3, 4, "", bin2_background)
+                worksheet_list[0].write(max_row + 3, 5, "", bin2_background)
+                worksheet_list[0].write(max_row + 3, 6, "", bin2_background)
+                worksheet_list[0].write(max_row + 3, 7, "", bin2_background)
+                worksheet_list[0].write(max_row + 3, 8, "", bin2_background)
+                worksheet_list[0].write(max_row + 3, 9, "", bin2_background)
+                worksheet_list[0].write(max_row + 3, 10, "", bin2_background)
+                worksheet_list[0].write(max_row + 3, 11, tl_bin1,
                                      bin2_bold_background)
                 
                 # worksheet_name.set_column(0, 0, width=len("7-Green_Blue_Only_Present-Count"))
@@ -698,34 +699,34 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             
                 
                 if len(classes) > 2:
-                    worksheet_list[0].write(max_row + 5, 0, classes[2], 
+                    worksheet_list[0].write(max_row + 4, 0, classes[2], 
                                          bin6_bold_background)
-                    worksheet_list[0].write(max_row + 5, 1, "", bin6_background)
-                    worksheet_list[0].write(max_row + 5, 2, "", bin6_background)
-                    worksheet_list[0].write(max_row + 5, 3, "", bin6_background)
-                    worksheet_list[0].write(max_row + 5, 4, "", bin6_background)
-                    worksheet_list[0].write(max_row + 5, 5, "", bin6_background)
-                    worksheet_list[0].write(max_row + 5, 6, "", bin6_background)
-                    worksheet_list[0].write(max_row + 5, 7, "", bin6_background)
-                    worksheet_list[0].write(max_row + 5, 8, "", bin6_background)
-                    worksheet_list[0].write(max_row + 5, 9, "", bin6_background)
-                    worksheet_list[0].write(max_row + 5, 10, "", bin6_background)
-                    worksheet_list[0].write(max_row + 5, 11, tl_bin2,
+                    worksheet_list[0].write(max_row + 4, 1, "", bin6_background)
+                    worksheet_list[0].write(max_row + 4, 2, "", bin6_background)
+                    worksheet_list[0].write(max_row + 4, 3, "", bin6_background)
+                    worksheet_list[0].write(max_row + 4, 4, "", bin6_background)
+                    worksheet_list[0].write(max_row + 4, 5, "", bin6_background)
+                    worksheet_list[0].write(max_row + 4, 6, "", bin6_background)
+                    worksheet_list[0].write(max_row + 4, 7, "", bin6_background)
+                    worksheet_list[0].write(max_row + 4, 8, "", bin6_background)
+                    worksheet_list[0].write(max_row + 4, 9, "", bin6_background)
+                    worksheet_list[0].write(max_row + 4, 10, "", bin6_background)
+                    worksheet_list[0].write(max_row + 4, 11, tl_bin2,
                                          bin6_bold_background)
                     
-                worksheet_list[0].write(max_row + 6, 0, "8-Not_Tested-Count", 
+                worksheet_list[0].write(max_row + 5, 0, "8-Not_Tested-Count", 
                                      bin8_bold_background)
-                worksheet_list[0].write(max_row + 6, 1, "", bin8_background)
-                worksheet_list[0].write(max_row + 6, 2, "", bin8_background)
-                worksheet_list[0].write(max_row + 6, 3, "", bin8_background)
-                worksheet_list[0].write(max_row + 6, 4, "", bin8_background)
-                worksheet_list[0].write(max_row + 6, 5, "", bin8_background)
-                worksheet_list[0].write(max_row + 6, 6, "", bin8_background)
-                worksheet_list[0].write(max_row + 6, 7, "", bin8_background)
-                worksheet_list[0].write(max_row + 6, 8, "", bin8_background)
-                worksheet_list[0].write(max_row + 6, 9, "", bin8_background)
-                worksheet_list[0].write(max_row + 6, 10, "", bin8_background)
-                worksheet_list[0].write(max_row + 6, 11, 
+                worksheet_list[0].write(max_row + 5, 1, "", bin8_background)
+                worksheet_list[0].write(max_row + 5, 2, "", bin8_background)
+                worksheet_list[0].write(max_row + 5, 3, "", bin8_background)
+                worksheet_list[0].write(max_row + 5, 4, "", bin8_background)
+                worksheet_list[0].write(max_row + 5, 5, "", bin8_background)
+                worksheet_list[0].write(max_row + 5, 6, "", bin8_background)
+                worksheet_list[0].write(max_row + 5, 7, "", bin8_background)
+                worksheet_list[0].write(max_row + 5, 8, "", bin8_background)
+                worksheet_list[0].write(max_row + 5, 9, "", bin8_background)
+                worksheet_list[0].write(max_row + 5, 10, "", bin8_background)
+                worksheet_list[0].write(max_row + 5, 11, 
                                     "="+str((len(dieNames)-1)/num_excel_sheets)
                                     +"-sum(L{}:L{})".format((max_row + 3 + 1),
                                                             (max_row + 5 + 1)),
@@ -1300,7 +1301,10 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 
                     # worksheet_name.set_column(0, 0, width=len("7-Green_Blue_Only_Present-Count"))
                     worksheet_name.set_column(0, (col_per_sheet-1), width=2)
-                    worksheet_name.set_column(11, 11, width=6)
+                    if sqrt(num_excel_sheets) == 2:
+                        worksheet_name.set_column(11, 11, width=6)
+                    elif sqrt(num_excel_sheets) == 1:
+                        worksheet_name.set_column(11, 11, width=3)
             
             workbook.close()
         # -----------------------------------------------------------------------------
