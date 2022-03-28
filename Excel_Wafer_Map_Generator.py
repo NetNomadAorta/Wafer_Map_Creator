@@ -667,6 +667,10 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[0].write(210, 11, "="+str((len(dieNames)-1)/num_excel_sheets)+"-sum(L203:L210)",
                                      bin8_bold_background)
             elif sqrt(num_excel_sheets) == 1:
+                if waferMapName == "HBCOSA":
+                    tl_bin0 = tl_bin1
+                    tl_bin1 = tl_bin2
+                    tl_bin2 = tl_bin3
                 
                 worksheet_list[0].write(max_row + 2, 0, classes[0], 
                                      bin1_bold_background)
