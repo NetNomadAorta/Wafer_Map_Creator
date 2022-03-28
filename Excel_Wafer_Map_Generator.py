@@ -287,16 +287,16 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             
             # Iterates over each row_per_sheet x col_per_sheet dies 
             #  and defaults bin number to 8 - Untested
-            for row in range(row_per_sheet):
-                for col in range(col_per_sheet):
-                    for worksheet in worksheet_list:
-                        worksheet.write(row, col, 8, bin8_background)
-                    
-                    # SEE IF ABOVE WORKS BEFORE DELETING BELOW
-                    # worksheet_TL.write(row, col, 8, bin8_background)
-                    # worksheet_TR.write(row, col, 8, bin8_background)
-                    # worksheet_BL.write(row, col, 8, bin8_background)
-                    # worksheet_BR.write(row, col, 8, bin8_background)
+            if waferMapName == "HBCOSA":
+                for row in range(row_per_sheet+1):
+                    for col in range(col_per_sheet+1):
+                        for worksheet in worksheet_list:
+                            worksheet.write(row, col, 0, bin8_background)
+            else:
+                for row in range(row_per_sheet):
+                    for col in range(col_per_sheet):
+                        for worksheet in worksheet_list:
+                            worksheet.write(row, col, 8, bin8_background)
             
             
             # Combines all die names and bin numbers
@@ -365,24 +365,29 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     elif all_dieBinNumbers[all_dieName_index] == 2:
                         background = bin6_background
                 
+                if waferMapName == "HBCOSA":
+                    bin_number = all_dieBinNumbers[all_dieName_index] + 1
+                else:
+                    bin_number = all_dieBinNumbers[all_dieName_index]
+                
                 if row <= row_per_sheet:
                     if col <= col_per_sheet:
                         worksheet_TL.write(row-1, col-1, 
-                                           all_dieBinNumbers[all_dieName_index], 
+                                           bin_number, 
                                            background)
                         
                     else:
                         worksheet_TR.write(row-1, col-1-col_per_sheet, 
-                                           all_dieBinNumbers[all_dieName_index],
+                                           bin_number,
                                            background)
                 else:
                     if col <= col_per_sheet:
                         worksheet_BL.write(row-1-row_per_sheet, col-1, 
-                                           all_dieBinNumbers[all_dieName_index],
+                                           bin_number,
                                            background)
                     else:
                         worksheet_BR.write(row-1-row_per_sheet, col-1-col_per_sheet, 
-                                           all_dieBinNumbers[all_dieName_index],
+                                           bin_number,
                                            background)
             
             
@@ -694,8 +699,8 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                                      bin2_bold_background)
                 
                 # worksheet_name.set_column(0, 0, width=len("7-Green_Blue_Only_Present-Count"))
-                worksheet_list[0].set_column(0, (col_per_sheet-1), width=2)
-                worksheet_list[0].set_column(11, 11, width=6)
+                worksheet_list[0].set_column(0, (col_per_sheet), width=2)
+                worksheet_list[0].set_column(11, 11, width=3)
             
                 
                 if len(classes) > 2:
@@ -728,8 +733,8 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[0].write(max_row + 5, 10, "", bin8_background)
                 worksheet_list[0].write(max_row + 5, 11, 
                                     "="+str((len(dieNames)-1)/num_excel_sheets)
-                                    +"-sum(L{}:L{})".format((max_row + 3 + 1),
-                                                            (max_row + 5 + 1)),
+                                    +"-sum(L{}:L{})".format((max_row + 2 + 1),
+                                                            (max_row + 4 + 1)),
                                      bin8_bold_background)
             
             # -----------------------------------------------------------
@@ -1300,11 +1305,8 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 
                 
                     # worksheet_name.set_column(0, 0, width=len("7-Green_Blue_Only_Present-Count"))
-                    worksheet_name.set_column(0, (col_per_sheet-1), width=2)
-                    if sqrt(num_excel_sheets) == 2:
-                        worksheet_name.set_column(11, 11, width=6)
-                    elif sqrt(num_excel_sheets) == 1:
-                        worksheet_name.set_column(11, 11, width=3)
+                    worksheet_name.set_column(0, (col_per_sheet), width=2)
+                    worksheet_name.set_column(11, 11, width=6)
             
             workbook.close()
         # -----------------------------------------------------------------------------
