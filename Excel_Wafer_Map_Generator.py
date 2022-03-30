@@ -105,7 +105,6 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         
         # Making list of bad die names
         badDieNames = []
-        badDieCoordinates = []
         badDieBinNumbers = []
         # For getting ro and col numbers and finding max
         row_list = []
@@ -187,7 +186,6 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 if any(dieName in s for s in list):
                     isBadDie = True
                     badDieNames.append(dieName)
-                    badDieCoordinates.append(dieCoordinates[dieNameIndex])
                     badDieBinNumbers.append(class_index)
                     bad_row_list.append( int( re.findall(r'\d+', dieName)[0] ) )
                     bad_col_list.append( int( re.findall(r'\d+', dieName)[1] ) )
