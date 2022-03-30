@@ -17,7 +17,7 @@ import glob
 import cv2
 import time
 import numpy as np
-import xlsxwriter
+import yaml
 
 # User Parameters/Constants to Set
 PREDICTED_DIR = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/"
@@ -86,7 +86,14 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     len_dieNames = len(dieNames)
     dieCoordinates = np.load(STORED_WAFER_DATA + waferMapName + "/Coordinates.npy")
 
-
+    if not os.path.isfile(STORED_WAFER_DATA + waferMapName + "/config.yaml"):
+        continue
+    settings = yaml.safe_load( open(STORED_WAFER_DATA + waferMapName + "/config.yaml") )
+    # Gets each appropriate settings
+    wafer_map_toggle = settings['wafer_map_toggle']
+    
+    if not wafer_map_toggle:
+        continue
     
     # Removes Thumbs.db in lot path if found
     if os.path.isfile(lotPath + "/Thumbs.db"):
