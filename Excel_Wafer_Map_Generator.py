@@ -530,7 +530,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             # -----------------------------------------------------------
             # Dividing this to LED and non-LED dies
             if sqrt(num_excel_sheets) == 2:
-                worksheet_list[0].write(202, 0, "0-Bad-Count", 
+                worksheet_list[0].write(202, 0, classes[0], 
                                      bin0_bold_background)
                 worksheet_list[0].write(202, 1, "", bin0_background)
                 worksheet_list[0].write(202, 2, "", bin0_background)
@@ -545,7 +545,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[0].write(202, 11, tl_bin0,
                                      bin0_bold_background)
                 
-                worksheet_list[0].write(203, 0, "1-All_Good-Count", 
+                worksheet_list[0].write(203, 0, classes[1], 
                                      bin1_bold_background)
                 worksheet_list[0].write(203, 1, "", bin1_background)
                 worksheet_list[0].write(203, 2, "", bin1_background)
@@ -560,7 +560,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[0].write(203, 11, tl_bin1,
                                      bin1_bold_background)
                 
-                worksheet_list[0].write(204, 0, "2-Red_Only_Present-Count", 
+                worksheet_list[0].write(204, 0, classes[2], 
                                      bin2_bold_background)
                 worksheet_list[0].write(204, 1, "", bin2_background)
                 worksheet_list[0].write(204, 2, "", bin2_background)
@@ -575,7 +575,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[0].write(204, 11, tl_bin2,
                                      bin2_bold_background)
                 
-                worksheet_list[0].write(205, 0, "3-Green_Only_Present-Count", 
+                worksheet_list[0].write(205, 0, classes[3], 
                                      bin3_bold_background)
                 worksheet_list[0].write(205, 1, "", bin3_background)
                 worksheet_list[0].write(205, 2, "", bin3_background)
@@ -590,7 +590,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[0].write(205, 11, tl_bin3,
                                      bin3_bold_background)
                 
-                worksheet_list[0].write(206, 0, "4-Red_Green_Only_Present-Count", 
+                worksheet_list[0].write(206, 0, classes[4], 
                                      bin4_bold_background)
                 worksheet_list[0].write(206, 1, "", bin4_background)
                 worksheet_list[0].write(206, 2, "", bin4_background)
@@ -605,7 +605,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[0].write(206, 11, tl_bin4,
                                      bin4_bold_background)
                 
-                worksheet_list[0].write(207, 0, "5-Blue_Only_Present-Count", 
+                worksheet_list[0].write(207, 0, classes[5], 
                                      bin5_bold_background)
                 worksheet_list[0].write(207, 1, "", bin5_background)
                 worksheet_list[0].write(207, 2, "", bin5_background)
@@ -620,7 +620,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[0].write(207, 11, tl_bin5,
                                      bin5_bold_background)
                 
-                worksheet_list[0].write(208, 0, "6-Red_Blue_Only_Present-Count", 
+                worksheet_list[0].write(208, 0, classes[6], 
                                      bin6_bold_background)
                 worksheet_list[0].write(208, 1, "", bin6_background)
                 worksheet_list[0].write(208, 2, "", bin6_background)
@@ -635,7 +635,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[0].write(208, 11, tl_bin6,
                                      bin6_bold_background)
                 
-                worksheet_list[0].write(209, 0, "7-Green_Blue_Only_Present-Count", 
+                worksheet_list[0].write(209, 0, classes[7], 
                                      bin7_bold_background)
                 worksheet_list[0].write(209, 1, "", bin7_background)
                 worksheet_list[0].write(209, 2, "", bin7_background)
@@ -700,7 +700,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[0].write(max_row + 3, 11, tl_bin1,
                                      bin2_bold_background)
                 
-                # worksheet_name.set_column(0, 0, width=len("7-Green_Blue_Only_Present-Count"))
+                # worksheet_name.set_column(0, 0, width=len(classes[7]))
                 worksheet_list[0].set_column(0, (col_per_sheet), width=2)
                 worksheet_list[0].set_column(11, 11, width=3)
             
@@ -745,7 +745,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             if sqrt(num_excel_sheets) == 2:
                 # TR
                 # -----------------------------------------------------------
-                worksheet_list[1].write(202, 0, "0-Bad-Count", 
+                worksheet_list[1].write(202, 0, classes[0], 
                                      bin0_bold_background)
                 worksheet_list[1].write(202, 1, "", bin0_background)
                 worksheet_list[1].write(202, 2, "", bin0_background)
@@ -760,7 +760,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[1].write(202, 11, tr_bin0,
                                      bin0_bold_background)
                 
-                worksheet_list[1].write(203, 0, "1-All_Good-Count", 
+                worksheet_list[1].write(203, 0, classes[1], 
                                      bin1_bold_background)
                 worksheet_list[1].write(203, 1, "", bin1_background)
                 worksheet_list[1].write(203, 2, "", bin1_background)
@@ -775,7 +775,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[1].write(203, 11, tr_bin1,
                                      bin1_bold_background)
                 
-                worksheet_list[1].write(204, 0, "2-Red_Only_Present-Count", 
+                worksheet_list[1].write(204, 0, classes[2], 
                                      bin2_bold_background)
                 worksheet_list[1].write(204, 1, "", bin2_background)
                 worksheet_list[1].write(204, 2, "", bin2_background)
@@ -790,7 +790,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[1].write(204, 11, tr_bin2,
                                      bin2_bold_background)
                 
-                worksheet_list[1].write(205, 0, "3-Green_Only_Present-Count", 
+                worksheet_list[1].write(205, 0, classes[3], 
                                      bin3_bold_background)
                 worksheet_list[1].write(205, 1, "", bin3_background)
                 worksheet_list[1].write(205, 2, "", bin3_background)
@@ -805,7 +805,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[1].write(205, 11, tr_bin3,
                                      bin3_bold_background)
                 
-                worksheet_list[1].write(206, 0, "4-Red_Green_Only_Present-Count", 
+                worksheet_list[1].write(206, 0, classes[4], 
                                      bin4_bold_background)
                 worksheet_list[1].write(206, 1, "", bin4_background)
                 worksheet_list[1].write(206, 2, "", bin4_background)
@@ -820,7 +820,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[1].write(206, 11, tr_bin4,
                                      bin4_bold_background)
                 
-                worksheet_list[1].write(207, 0, "5-Blue_Only_Present-Count", 
+                worksheet_list[1].write(207, 0, classes[5], 
                                      bin5_bold_background)
                 worksheet_list[1].write(207, 1, "", bin5_background)
                 worksheet_list[1].write(207, 2, "", bin5_background)
@@ -835,7 +835,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[1].write(207, 11, tr_bin5,
                                      bin5_bold_background)
                 
-                worksheet_list[1].write(208, 0, "6-Red_Blue_Only_Present-Count", 
+                worksheet_list[1].write(208, 0, classes[6], 
                                      bin6_bold_background)
                 worksheet_list[1].write(208, 1, "", bin6_background)
                 worksheet_list[1].write(208, 2, "", bin6_background)
@@ -850,7 +850,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[1].write(208, 11, tr_bin6,
                                      bin6_bold_background)
                 
-                worksheet_list[1].write(209, 0, "7-Green_Blue_Only_Present-Count", 
+                worksheet_list[1].write(209, 0, classes[7], 
                                      bin7_bold_background)
                 worksheet_list[1].write(209, 1, "", bin7_background)
                 worksheet_list[1].write(209, 2, "", bin7_background)
@@ -882,7 +882,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 
                 # BL
                 # -----------------------------------------------------------
-                worksheet_list[2].write(202, 0, "0-Bad-Count", 
+                worksheet_list[2].write(202, 0, classes[0], 
                                      bin0_bold_background)
                 worksheet_list[2].write(202, 1, "", bin0_background)
                 worksheet_list[2].write(202, 2, "", bin0_background)
@@ -897,7 +897,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[2].write(202, 11, bl_bin0,
                                      bin0_bold_background)
                 
-                worksheet_list[2].write(203, 0, "1-All_Good-Count", 
+                worksheet_list[2].write(203, 0, classes[1], 
                                      bin1_bold_background)
                 worksheet_list[2].write(203, 1, "", bin1_background)
                 worksheet_list[2].write(203, 2, "", bin1_background)
@@ -912,7 +912,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[2].write(203, 11, bl_bin1,
                                      bin1_bold_background)
                 
-                worksheet_list[2].write(204, 0, "2-Red_Only_Present-Count", 
+                worksheet_list[2].write(204, 0, classes[2], 
                                      bin2_bold_background)
                 worksheet_list[2].write(204, 1, "", bin2_background)
                 worksheet_list[2].write(204, 2, "", bin2_background)
@@ -927,7 +927,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[2].write(204, 11, bl_bin2,
                                      bin2_bold_background)
                 
-                worksheet_list[2].write(205, 0, "3-Green_Only_Present-Count", 
+                worksheet_list[2].write(205, 0, classes[3], 
                                      bin3_bold_background)
                 worksheet_list[2].write(205, 1, "", bin3_background)
                 worksheet_list[2].write(205, 2, "", bin3_background)
@@ -942,7 +942,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[2].write(205, 11, bl_bin3,
                                      bin3_bold_background)
                 
-                worksheet_list[2].write(206, 0, "4-Red_Green_Only_Present-Count", 
+                worksheet_list[2].write(206, 0, classes[4], 
                                      bin4_bold_background)
                 worksheet_list[2].write(206, 1, "", bin4_background)
                 worksheet_list[2].write(206, 2, "", bin4_background)
@@ -957,7 +957,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[2].write(206, 11, bl_bin4,
                                      bin4_bold_background)
                 
-                worksheet_list[2].write(207, 0, "5-Blue_Only_Present-Count", 
+                worksheet_list[2].write(207, 0, classes[5], 
                                      bin5_bold_background)
                 worksheet_list[2].write(207, 1, "", bin5_background)
                 worksheet_list[2].write(207, 2, "", bin5_background)
@@ -972,7 +972,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[2].write(207, 11, bl_bin5,
                                      bin5_bold_background)
                 
-                worksheet_list[2].write(208, 0, "6-Red_Blue_Only_Present-Count", 
+                worksheet_list[2].write(208, 0, classes[6], 
                                      bin6_bold_background)
                 worksheet_list[2].write(208, 1, "", bin6_background)
                 worksheet_list[2].write(208, 2, "", bin6_background)
@@ -987,7 +987,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[2].write(208, 11, bl_bin6,
                                      bin6_bold_background)
                 
-                worksheet_list[2].write(209, 0, "7-Green_Blue_Only_Present-Count", 
+                worksheet_list[2].write(209, 0, classes[7], 
                                      bin7_bold_background)
                 worksheet_list[2].write(209, 1, "", bin7_background)
                 worksheet_list[2].write(209, 2, "", bin7_background)
@@ -1021,7 +1021,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 
                 # BR
                 # -----------------------------------------------------------
-                worksheet_list[3].write(202, 0, "0-Bad-Count", 
+                worksheet_list[3].write(202, 0, classes[0], 
                                      bin0_bold_background)
                 worksheet_list[3].write(202, 1, "", bin0_background)
                 worksheet_list[3].write(202, 2, "", bin0_background)
@@ -1036,7 +1036,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[3].write(202, 11, br_bin0,
                                      bin0_bold_background)
                 
-                worksheet_list[3].write(203, 0, "1-All_Good-Count", 
+                worksheet_list[3].write(203, 0, classes[1], 
                                      bin1_bold_background)
                 worksheet_list[3].write(203, 1, "", bin1_background)
                 worksheet_list[3].write(203, 2, "", bin1_background)
@@ -1051,7 +1051,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[3].write(203, 11, br_bin1,
                                      bin1_bold_background)
                 
-                worksheet_list[3].write(204, 0, "2-Red_Only_Present-Count", 
+                worksheet_list[3].write(204, 0, classes[2], 
                                      bin2_bold_background)
                 worksheet_list[3].write(204, 1, "", bin2_background)
                 worksheet_list[3].write(204, 2, "", bin2_background)
@@ -1066,7 +1066,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[3].write(204, 11, br_bin2,
                                      bin2_bold_background)
                 
-                worksheet_list[3].write(205, 0, "3-Green_Only_Present-Count", 
+                worksheet_list[3].write(205, 0, classes[3], 
                                      bin3_bold_background)
                 worksheet_list[3].write(205, 1, "", bin3_background)
                 worksheet_list[3].write(205, 2, "", bin3_background)
@@ -1081,7 +1081,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[3].write(205, 11, br_bin3,
                                      bin3_bold_background)
                 
-                worksheet_list[3].write(206, 0, "4-Red_Green_Only_Present-Count", 
+                worksheet_list[3].write(206, 0, classes[4], 
                                      bin4_bold_background)
                 worksheet_list[3].write(206, 1, "", bin4_background)
                 worksheet_list[3].write(206, 2, "", bin4_background)
@@ -1096,7 +1096,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[3].write(206, 11, br_bin4,
                                      bin4_bold_background)
                 
-                worksheet_list[3].write(207, 0, "5-Blue_Only_Present-Count", 
+                worksheet_list[3].write(207, 0, classes[5], 
                                      bin5_bold_background)
                 worksheet_list[3].write(207, 1, "", bin5_background)
                 worksheet_list[3].write(207, 2, "", bin5_background)
@@ -1111,7 +1111,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[3].write(207, 11, br_bin5,
                                      bin5_bold_background)
                 
-                worksheet_list[3].write(208, 0, "6-Red_Blue_Only_Present-Count", 
+                worksheet_list[3].write(208, 0, classes[6], 
                                      bin6_bold_background)
                 worksheet_list[3].write(208, 1, "", bin6_background)
                 worksheet_list[3].write(208, 2, "", bin6_background)
@@ -1126,7 +1126,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet_list[3].write(208, 11, br_bin6,
                                      bin6_bold_background)
                 
-                worksheet_list[3].write(209, 0, "7-Green_Blue_Only_Present-Count", 
+                worksheet_list[3].write(209, 0, classes[7], 
                                      bin7_bold_background)
                 worksheet_list[3].write(209, 1, "", bin7_background)
                 worksheet_list[3].write(209, 2, "", bin7_background)
@@ -1162,7 +1162,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             if sqrt(num_excel_sheets) == 2:
                 # Write a count for each bin (all four quadrants) at the bottom
                 for worksheet_name in worksheet_list:
-                    worksheet_name.write(212, 0, "Total-0-Bad-Count", 
+                    worksheet_name.write(212, 0, "Total - " + classes[0], 
                                          bin0_bold_background)
                     worksheet_name.write(212, 1, "", bin0_background)
                     worksheet_name.write(212, 2, "", bin0_background)
@@ -1178,7 +1178,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                                          (tl_bin0 + tr_bin0 + bl_bin0 + br_bin0),
                                          bin0_bold_background)
                     
-                    worksheet_name.write(213, 0, "Total-1-All_Good-Count", 
+                    worksheet_name.write(213, 0, "Total - " + classes[1], 
                                          bin1_bold_background)
                     worksheet_name.write(213, 1, "", bin1_background)
                     worksheet_name.write(213, 2, "", bin1_background)
@@ -1194,7 +1194,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                                          (tl_bin1 + tr_bin1 + bl_bin1 + br_bin1),
                                          bin1_bold_background)
                     
-                    worksheet_name.write(214, 0, "Total-2-Red_Only_Present-Count", 
+                    worksheet_name.write(214, 0, "Total - " + classes[2], 
                                          bin2_bold_background)
                     worksheet_name.write(214, 1, "", bin2_background)
                     worksheet_name.write(214, 2, "", bin2_background)
@@ -1210,7 +1210,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                                          (tl_bin2 + tr_bin2 + bl_bin2 + br_bin2),
                                          bin2_bold_background)
                     
-                    worksheet_name.write(215, 0, "Total-3-Green_Only_Present-Count", 
+                    worksheet_name.write(215, 0, "Total - " + classes[3], 
                                          bin3_bold_background)
                     worksheet_name.write(215, 1, "", bin3_background)
                     worksheet_name.write(215, 2, "", bin3_background)
@@ -1226,7 +1226,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                                          (tl_bin3 + tr_bin3 + bl_bin3 + br_bin3),
                                          bin3_bold_background)
                     
-                    worksheet_name.write(216, 0, "Total-4-Red_Green_Only_Present-Count", 
+                    worksheet_name.write(216, 0, "Total - " + classes[4], 
                                          bin4_bold_background)
                     worksheet_name.write(216, 1, "", bin4_background)
                     worksheet_name.write(216, 2, "", bin4_background)
@@ -1242,7 +1242,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                                          (tl_bin4 + tr_bin4 + bl_bin4 + br_bin4),
                                          bin4_bold_background)
                     
-                    worksheet_name.write(217, 0, "Total-5-Blue_Only_Present-Count", 
+                    worksheet_name.write(217, 0, "Total - " + classes[5], 
                                          bin5_bold_background)
                     worksheet_name.write(217, 1, "", bin5_background)
                     worksheet_name.write(217, 2, "", bin5_background)
@@ -1258,7 +1258,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                                          (tl_bin5 + tr_bin5 + bl_bin5 + br_bin5),
                                          bin5_bold_background)
                     
-                    worksheet_name.write(218, 0, "Total-6-Red_Blue_Only_Present-Count", 
+                    worksheet_name.write(218, 0, "Total - " + classes[6], 
                                          bin6_bold_background)
                     worksheet_name.write(218, 1, "", bin6_background)
                     worksheet_name.write(218, 2, "", bin6_background)
@@ -1274,7 +1274,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                                          (tl_bin6 + tr_bin6 + bl_bin6 + br_bin6),
                                          bin6_bold_background)
                     
-                    worksheet_name.write(219, 0, "Total-7-Green_Blue_Only_Present-Count", 
+                    worksheet_name.write(219, 0, "Total - " + classes[7], 
                                          bin7_bold_background)
                     worksheet_name.write(219, 1, "", bin7_background)
                     worksheet_name.write(219, 2, "", bin7_background)
@@ -1306,7 +1306,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                                          bin8_bold_background)
                 
                 
-                    # worksheet_name.set_column(0, 0, width=len("7-Green_Blue_Only_Present-Count"))
+                    # worksheet_name.set_column(0, 0, width=len(classes[7]))
                     worksheet_name.set_column(0, (col_per_sheet), width=2)
                     worksheet_name.set_column(11, 11, width=6)
             
