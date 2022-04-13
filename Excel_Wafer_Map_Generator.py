@@ -85,6 +85,9 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     num_excel_sheets = settings['num_excel_sheets']
     grayscale_toggle = settings['grayscale_toggle']
     
+    if not excel_toggle:
+        continue
+    
     # Removes Thumbs.db in lot path if found
     if os.path.isfile(lotPath + "/Thumbs.db"):
         os.remove(lotPath + "/Thumbs.db")
@@ -94,12 +97,10 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         slot_path = os.path.join(lotPath, slot_name)
         
         # Checks if Excel sheet already exist, and only skips if selected not to
-        if (os.path.isfile(slot_path + "/" + slot_name+ ".xlsx")
+        if ( (os.path.isfile(slot_path + "/" + slot_name+ ".xlsx") 
+        and os.path.isfile(lotPath + '/ZZZ-Excel_Sheets/' + slot_name + '.xlsx') )
         or slot_name == "ZZZ-Excel_Sheets"):
             continue
-        
-        # Creates wafer map
-        waferMap = cv2.imread(STORED_WAFER_DATA + waferMapName +  "/Wafer_Map.jpg")
         
         # Removes Thumbs.db in slot path if found
         if os.path.isfile(slot_path + "/Thumbs.db"):
@@ -116,9 +117,14 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         
         # Below is needed incase there is no bad dies
         isFirstImageRun = True
-         
+        
+        full_list = os.listdir(slot_path)
+        for list_name_index, list_name in enumerate(full_list):
+            if ".xlsx" in list_name or ".jpg" in list_name:
+                del full_list[list_name_index]
+        
         # Within each slot, cycle through each class
-        for class_index, class_name in enumerate(os.listdir(slot_path) ):
+        for class_index, class_name in enumerate(full_list):
             class_path = os.path.join(slot_path, class_name)
             # Skips directory if first class (non-defect) folder or if it 
             # includes the wafer map with failing dies image (if this program 
@@ -284,7 +290,13 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             all_dieBinNumbers = badDieBinNumbers
             if len_dieNames > 1000:
                 print("   Started making good bins..")
-            list = os.listdir(glob.glob(slot_path + "/*")[good_class_index])
+            
+            full_list = glob.glob(slot_path + "/*")
+            for list_name_index, list_name in enumerate(full_list):
+                if ".xlsx" in list_name or ".jpg" in list_name:
+                    del full_list[list_name_index]
+                    
+            list = os.listdir(full_list[good_class_index])
             
             # Checks to see which are good dies since previous scan in classes skipped good dies
             for dieNameIndex, dieName in enumerate(dieNames):
@@ -312,9 +324,6 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 print("   Started writing Excel sheet bin numbers..")
             # Writes all dies info in Excel
             for all_dieName_index, all_dieName in enumerate(all_dieNames):
-                # row = int(all_dieName[2:5])
-                # col = int(all_dieName[-3:])
-                # Replace EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
                 row = int( re.findall(r'\d+', all_dieName)[0] )
                 col = int( re.findall(r'\d+', all_dieName)[1] )
                 
@@ -379,65 +388,65 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             for worksheet_index, worksheet in enumerate(worksheet_list):
                 for class_index, class_name in enumerate(classes):
                     # Writes in bold and makes color background for each sheet a count of class bins
-                    worksheet.write(int(max_row/len(worksheet_list) ) + 2 + class_index, 0, 
+                    worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 2 + class_index, 0, 
                         class_name, bin_bold_colors_list[class_index]
                         )
-                    worksheet.write(int(max_row/len(worksheet_list) ) + 2 + class_index, 11, 
+                    worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 2 + class_index, 11, 
                         bin_count_dict[worksheet_index]["bin{}".format(class_index)], 
                         bin_bold_colors_list[class_index]
                         )
                     
                     # Not Tested Count Section
-                    worksheet.write(int(max_row/len(worksheet_list) ) + 2 + len(classes), 0, 
+                    worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 2 + len(classes), 0, 
                         not_tested_name, bin_bold_colors_list[-1]
                         )
-                    worksheet.write(int(max_row/len(worksheet_list) ) + 2 + len(classes), 11, 
+                    worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 2 + len(classes), 11, 
                         "="+str((len(dieNames)-1)/num_excel_sheets)
-                        +"-sum(L{}:L{})".format((int(max_row/len(worksheet_list) ) + 3),
-                                                (int(max_row/len(worksheet_list) ) + 2 + len(classes))), 
+                        +"-sum(L{}:L{})".format((int(max_row/sqrt(len(worksheet_list) ) ) + 3),
+                                                (int(max_row/sqrt(len(worksheet_list) ) ) + 2 + len(classes))), 
                         bin_bold_colors_list[-1]
                         )
                     
                     for index in range(10):
-                        worksheet.write(int(max_row/len(worksheet_list) ) + 2 + class_index, (index+1), 
+                        worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 2 + class_index, (index+1), 
                             "", bin_colors_list[class_index]
                             )
-                        worksheet.write(int(max_row/len(worksheet_list) ) + 2 + len(classes), (index+1), 
+                        worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 2 + len(classes), (index+1), 
                             "", bin_colors_list[-1]
                             )
                     
                     # Writes an additional total count in case more than one sheet with total of sum of each sheet
                     if len(worksheet_list) > 1:
                         # Writes in bold and makes color background for each sheet a count of class bins
-                        worksheet.write(int(max_row/len(worksheet_list) ) + 4 + len(classes) + class_index, 0, 
+                        worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 4 + len(classes) + class_index, 0, 
                             "Total - " + class_name, 
                             bin_bold_colors_list[class_index]
                             )
                         tot_count = 0
                         for worksheet_index_v2 in range(len(worksheet_list)):
                             tot_count += bin_count_dict[worksheet_index_v2]["bin{}".format(class_index)]
-                        worksheet.write(int(max_row/len(worksheet_list) ) + 4 + len(classes) + class_index, 11, 
+                        worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 4 + len(classes) + class_index, 11, 
                             tot_count, 
                             bin_bold_colors_list[class_index]
                             )
                         
                         # Not Tested Count Section
-                        worksheet.write(int(max_row/len(worksheet_list) ) + 4 + len(classes) + len(classes), 0, 
+                        worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 4 + len(classes) + len(classes), 0, 
                             "Total - " + not_tested_name, 
                             bin_bold_colors_list[-1]
                             )
-                        worksheet.write(int(max_row/len(worksheet_list) ) + 4 + len(classes) + len(classes), 11, 
+                        worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 4 + len(classes) + len(classes), 11, 
                             "="+str((len(dieNames)-1)/num_excel_sheets)
-                            +"-sum(L{}:L{})".format((int(max_row/len(worksheet_list) ) + 5 + len(classes)),
-                                                    (int(max_row/len(worksheet_list) ) + 4 + len(classes) + len(classes))), 
+                            +"-sum(L{}:L{})".format((int(max_row/sqrt(len(worksheet_list) ) ) + 5 + len(classes)),
+                                                    (int(max_row/sqrt(len(worksheet_list) ) ) + 4 + len(classes) + len(classes))), 
                             bin_bold_colors_list[-1]
                             )
                         
                         for index in range(10):
-                            worksheet.write(int(max_row/len(worksheet_list) ) + 4 + len(classes) + class_index, (index+1), 
+                            worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 4 + len(classes) + class_index, (index+1), 
                                 "", bin_colors_list[class_index]
                                 )
-                            worksheet.write(int(max_row/len(worksheet_list) ) + 4 + len(classes) + len(classes), (index+1), 
+                            worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 4 + len(classes) + len(classes), (index+1), 
                                 "", bin_colors_list[-1]
                                 )
                 

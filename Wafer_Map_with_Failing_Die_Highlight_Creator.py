@@ -101,13 +101,13 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     
     # Cycles through each slot folder within the lot folder
     for slotPath in glob.glob(lotPath + "/*"):
-        # Creates wafer map
-        waferMap = cv2.imread(STORED_WAFER_DATA + waferMapName +  "/Wafer_Map.jpg")
-        
         # Checks if wafer map already exist, and only skips if selected not to
         if os.path.isfile(slotPath + "/Wafer_Map_with_Failing_Dies.jpg") \
         and SHOULD_REPLACE_ALL_MAPS == False:
             continue
+        
+        # Creates wafer map
+        waferMap = cv2.imread(STORED_WAFER_DATA + waferMapName +  "/Wafer_Map.jpg")
         
         isUsingOriginalMap = False
         if isInletLot:
