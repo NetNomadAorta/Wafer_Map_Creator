@@ -216,7 +216,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             max_row = max(row_list)
             max_col = max(col_list)
             
-            print("   Starting Excel sheet results..")
+            print("   Starting", slot_name, "Excel sheet results..")
             # Create a workbook and add a worksheet.
             workbook = xlsxwriter.Workbook(slot_path + '/' + slot_name + '.xlsx')
             
@@ -406,7 +406,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                             "", bin_colors_list[-1]
                             )
                     
-                    # Writes total count in case more than one sheet
+                    # Writes an additional total count in case more than one sheet with total of sum of each sheet
                     if len(worksheet_list) > 1:
                         # Writes in bold and makes color background for each sheet a count of class bins
                         worksheet.write(int(max_row/len(worksheet_list) ) + 4 + len(classes) + class_index, 0, 
@@ -440,9 +440,11 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                             worksheet.write(int(max_row/len(worksheet_list) ) + 4 + len(classes) + len(classes), (index+1), 
                                 "", bin_colors_list[-1]
                                 )
+                
+                # Sets the appropriate width for each column
                 worksheet.set_column(0, (col_per_sheet), width=2)
                 if len(worksheet_list) > 1: 
-                    worksheet.set_column(11, 11, width=6)
+                    worksheet.set_column(11, 11, width=7)
                 else:
                     worksheet.set_column(11, 11, width=3)
             
