@@ -436,7 +436,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                             bin_bold_colors_list[-1]
                             )
                         worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 4 + len(classes) + len(classes), 11, 
-                            "="+str((len(dieNames)-1)/num_excel_sheets)
+                            "="+str(len(dieNames)-1)
                             +"-sum(L{}:L{})".format((int(max_row/sqrt(len(worksheet_list) ) ) + 5 + len(classes)),
                                                     (int(max_row/sqrt(len(worksheet_list) ) ) + 4 + len(classes) + len(classes))), 
                             bin_bold_colors_list[-1]
