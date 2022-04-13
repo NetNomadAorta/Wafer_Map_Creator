@@ -1311,6 +1311,9 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     worksheet_name.set_column(11, 11, width=6)
             
             workbook.close()
+            
+            os.makedirs(lotPath + '/ZZZ-Excel_Sheets/', exist_ok=True)
+            shutil.copy( (slot_path + '/' + slot_name + '.xlsx'), (lotPath + '/ZZZ-Excel_Sheets/') )
         # -----------------------------------------------------------------------------
 
 print("Done!")

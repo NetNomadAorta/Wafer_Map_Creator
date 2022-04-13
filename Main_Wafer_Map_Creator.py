@@ -8,7 +8,7 @@ import numpy as np
 import math
 
 # User Parameters/Constants to Set
-MATCH_CL = 0.50 # Minimum confidence level (CL) required to match golden-image to scanned image
+MATCH_CL = 0.85 # Minimum confidence level (CL) required to match golden-image to scanned image
 STICHED_IMAGES_DIRECTORY = "./Images/000-Stitched_Images/"
 GOLDEN_IMAGES_DIRECTORY = "./Images/001-Golden_Images/"
 WAFER_MAP_DIRECTORY = "./Images/002-Wafer_Map/"
@@ -20,7 +20,7 @@ DIE_SPACING_SCALE = 0.00
 
 # Usually puts "0" in "Row_01". If 3 digits necessary, such as "Col_007", or
 #  "Row_255", then toggle below "True"
-THREE_DIGITS_TOGGLE = False 
+THREE_DIGITS_TOGGLE = True 
 PRINT_INFO = True
 
 def time_convert(sec):
