@@ -453,8 +453,14 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 worksheet.set_column(0, (col_per_sheet), width=2)
                 if len(worksheet_list) > 1: 
                     worksheet.set_column(11, 11, width=7)
+                    
                 else:
-                    worksheet.set_column(11, 11, width=3)
+                    worksheet.set_column(11, 11, width=4)
+                
+                # Sets zoom
+                worksheet.set_zoom( max( int(-7.6351*(max_row/sqrt(len(worksheet_list)))+310.91) , 20 ) )
+                
+                
             
             workbook.close()
             
