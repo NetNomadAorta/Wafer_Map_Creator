@@ -348,7 +348,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     if col <= col_per_sheet:
                         worksheet_list[2].write(row-1-row_per_sheet, col-1, 
                                            bin_number,
-                                           background)\; dfvb
+                                           background)
                     else:
                         worksheet_list[3].write(row-1-row_per_sheet, col-1-col_per_sheet, 
                                            bin_number,
