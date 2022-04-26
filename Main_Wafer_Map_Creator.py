@@ -20,7 +20,7 @@ DIE_SPACING_SCALE = 0.00
 
 # Usually puts "0" in "Row_01". If 3 digits necessary, such as "Col_007", or
 #  "Row_255", then toggle below "True"
-THREE_DIGITS_TOGGLE = True 
+THREE_DIGITS_TOGGLE = False 
 PRINT_INFO = True
 
 def time_convert(sec):
