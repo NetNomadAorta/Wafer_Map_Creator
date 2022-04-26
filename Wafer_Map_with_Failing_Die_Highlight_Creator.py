@@ -102,8 +102,9 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
     # Cycles through each slot folder within the lot folder
     for slotPath in glob.glob(lotPath + "/*"):
         # Checks if wafer map already exist, and only skips if selected not to
-        if os.path.isfile(slotPath + "/Wafer_Map_with_Failing_Dies.jpg") \
-        and SHOULD_REPLACE_ALL_MAPS == False:
+        if (os.path.isfile(slotPath + "/Wafer_Map_with_Failing_Dies.jpg") 
+        and SHOULD_REPLACE_ALL_MAPS == False
+        or "ZZZ-Excel_Sheets" in slotPath):
             continue
         
         # Creates wafer map
