@@ -18,8 +18,17 @@ def time_convert(sec):
 
 
 
+# Main
+# =============================================================================
+# Starting stopwatch to see how long process takes
+overall_start_time = time.time()
+
+# Clears some of the screen for asthetics
+print("\n\n\n\n\n\n\n")
+
+
 # Imports Excel report template to use
-report_to_export = pd.read_excel(EXCEL_TEMPLATE_PATH, 
+excel_report_template = pd.read_excel(EXCEL_TEMPLATE_PATH, 
                                  "Report",
                                  header=None)
 
@@ -33,6 +42,9 @@ for project_file_name in os.listdir(AOI_PUBLIC_PATH):
     
     # Creates file name
     project_file_path = os.path.join(AOI_PUBLIC_PATH, project_file_name)
+    
+    # Creates an excel sheet used from template to save/export as final report
+    excel_final_report = excel_report_template.copy()
     
     # Runs through each slot file
     for slot_file_name in os.listdir(project_file_path):
@@ -49,7 +61,7 @@ for project_file_name in os.listdir(AOI_PUBLIC_PATH):
             break
         
         # Runs through each Excel sheet
-        for excel_file_name in os.listdir(slot_file_path):
+        for excel_file_name_index, excel_file_name in enumerate(os.listdir(slot_file_path) ):
             
             # Skips report excel sheet
             if "Report" in excel_file_name:
@@ -58,9 +70,40 @@ for project_file_name in os.listdir(AOI_PUBLIC_PATH):
             # Creates Excel file path
             excel_file_path = os.path.join(slot_file_path, excel_file_name)
             
+            # IF REPORT EXIST, SKIP. CAN DELETE AFTER TESTING
+            if os.path.isfile(slot_file_path + "/" + project_file_name + "-Report.xlsx"):
+                break
+            
             # imports excel sheet data
-            report_to_import = pd.read_excel(excel_file_path, 
+            excel_import_data = pd.read_excel(excel_file_path, 
                                              sheet_name=excel_file_name.replace(".xlsx",""),
                                              header=None)
             
+            # Copys wafer data
+            wafer_data = excel_import_data.iloc[:16, 1:].copy()
+            wafer_bin_count = excel_import_data.iloc[18:20, 11].copy()
             
+            # Copying wafer data to final report
+            excel_final_report.iloc[(0+17*excel_file_name_index):(16+17*excel_file_name_index), :16] = wafer_data
+            # Excel slot name
+            excel_final_report.iloc[(1+17*excel_file_name_index), 18] = excel_file_name.replace(".xlsx","")
+            # Excel bin count
+            excel_final_report.iloc[(4+17*excel_file_name_index):(6+17*excel_file_name_index), 18] = wafer_bin_count
+        
+        # Saves Excel final report
+        if not os.path.isfile(slot_file_path + "/" + project_file_name + "-Report.xlsx"):
+            print("Saving", slot_file_path + "/" + project_file_name + "-Report.xlsx")
+            excel_final_report.to_excel(slot_file_path + "/" + project_file_name + "-Report_To_Copy.xlsx",
+                                        header=None,
+                                        index=None)
+
+
+
+print("\nThis program is done!")
+
+# Starting stopwatch to see how long process takes
+print("Total Time: ")
+overall_end_time = time.time()
+time_lapsed = overall_end_time - overall_start_time
+time_convert(time_lapsed)
+
