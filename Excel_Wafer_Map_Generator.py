@@ -213,7 +213,7 @@ def main():
                         worksheet_list.append(workbook.add_worksheet(str(sheet_index)))
                 
                 # Chooses each font and background color for the Excel sheet
-                if waferMapName == "SMiPE4":
+                if waferMapName == "SMiPE4" or waferMapName == "TPv2":
                     font_color_list = ['white', 'black', 'white', 'white', 'black', 
                                        'white', 'black', 'black', 'white']
                     bg_color_list = ['black', 'lime', 'red', 'green', 'yellow', 
