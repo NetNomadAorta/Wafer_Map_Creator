@@ -8,19 +8,18 @@ import numpy as np
 import math
 
 # User Parameters/Constants to Set
-MATCH_CL = 0.70 # Minimum confidence level (CL) required to match golden-image to scanned image
+MATCH_CL = 0.95 # Minimum confidence level (CL) required to match golden-image to scanned image
 STICHED_IMAGES_DIRECTORY = "./Images/000-Stitched_Images/"
 GOLDEN_IMAGES_DIRECTORY = "./Images/001-Golden_Images/"
 WAFER_MAP_DIRECTORY = "./Images/002-Wafer_Map/"
 SLEEP_TIME = 0.0 # Time to sleep in seconds between each window step
-TOGGLE_DELETE_WAFER_MAP = False
 TOGGLE_SHOW_WINDOW_IMAGE = False # Set equal to "True" and it will show a graphical image of where it's at
 TOGGLE_STITCHED_OVERLAY = True # Will use original stitched image in final wafer map
-DIE_SPACING_SCALE = 0.70
+DIE_SPACING_SCALE = 0.499
 
 # Usually puts "0" in "Row_01". If 3 digits necessary, such as "Col_007", or
 #  "Row_255", then toggle below "True"
-THREE_DIGITS_TOGGLE = False 
+THREE_DIGITS_TOGGLE = True 
 PRINT_INFO = True
 
 def time_convert(sec):
@@ -97,10 +96,6 @@ start_time = time.time()
 print("\n\n\n\n\n\n\n\n\n\n\n\n\n")
 
 cv2.destroyAllWindows()
-
-# Deletes contents in cropped- and split-image folders
-if TOGGLE_DELETE_WAFER_MAP == True:
-    deleteDirContents(WAFER_MAP_DIRECTORY)
 
 lenStitchDir = len(STICHED_IMAGES_DIRECTORY)
 
@@ -277,7 +272,7 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
             die_spacing_list.append(die_spacing_temp)
 
     die_spacing_max = max(die_spacing_list)
-    die_spacing = 1 + round( (die_spacing_max/goldenImage.shape[1])*DIE_SPACING_SCALE, 3)
+    die_spacing = 1 + DIE_SPACING_SCALE
     
     # Grabbing max and min x and y coordinate values
     maxX = np.amax(dieCoordinates[:, 2] )
@@ -314,10 +309,11 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
         
         # Replaces dieNames list column number with correct value
         colNumber = str(math.floor((x1-minX)/(goldenImage.shape[1]*die_spacing)+1) )
+        
 
         if THREE_DIGITS_TOGGLE:
             # THIS PART IS FOR LED 160,000 WAFER!
-            if int(colNumber)>200:
+            if int(colNumber)>200 and "SMiPE4" in stitchFolderPath:
                 colNumber = str(int(colNumber)-1)
             
             if int(colNumber) < 10:
