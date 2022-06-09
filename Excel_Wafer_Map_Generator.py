@@ -84,6 +84,8 @@ def main():
             or slot_name == "ZZZ-Excel_Sheets"):
                 continue
             
+            print("   Starting", slot_name)
+            
             # Removes Thumbs.db in slot path if found
             if os.path.isfile(slot_path + "/Thumbs.db"):
                 os.remove(slot_path + "/Thumbs.db")
@@ -199,7 +201,7 @@ def main():
                 max_row = max(row_list)
                 max_col = max(col_list)
                 
-                print("   Starting", slot_name, "Excel sheet results..")
+                # print("   Starting", slot_name, "Excel sheet results..")
                 # Create a workbook and add a worksheet.
                 workbook = xlsxwriter.Workbook(slot_path + '/' + slot_name + '.xlsx')
                 
