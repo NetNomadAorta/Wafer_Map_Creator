@@ -432,10 +432,10 @@ def main():
                     # Sets the appropriate width for each column
                     worksheet.set_column(0, (col_per_sheet), width=2)
                     if len(worksheet_list) > 1: 
-                        worksheet.set_column(11, 11, width=7)
+                        worksheet.set_column(11, 11, width=8)
                         
                     else:
-                        worksheet.set_column(11, 11, width=4)
+                        worksheet.set_column(11, 11, width=5)
                     
                     # Sets zoom
                     worksheet.set_zoom( max( int(-7.6351*(max_row/sqrt(len(worksheet_list)))+310.91) , 20 ) )
