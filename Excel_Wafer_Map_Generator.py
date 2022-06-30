@@ -438,7 +438,7 @@ def main():
                         worksheet.set_column(11, 11, width=5)
                     
                     # Sets zoom
-                    worksheet.set_zoom( max( int(-7.6351*(max_row/sqrt(len(worksheet_list)))+310.91) , 20 ) )
+                    worksheet.set_zoom( max( int(2080.6*(max_row/sqrt(len(worksheet_list)))**-0.867 ) , 20 ) )
                     
                     
                 

@@ -132,8 +132,8 @@ for stitchFolderPath in glob.glob(STICHED_IMAGES_DIRECTORY + "*"):
     stepSizeY = round(winH / 2.95)
     
     # Predefine next for loop's parameters 
-    prev_y1 = stepSizeY * 9 # Number that prevents y = 0 = prev_y1
-    prev_x1 = stepSizeX * 9
+    prev_y1 = stepSizeY * 19 # Number that prevents y = 0 = prev_y1
+    prev_x1 = stepSizeX * 19
     rowNum = 0
     colNum = 0
     prev_matchedCL = 0
