@@ -217,7 +217,7 @@ def main():
                 # Chooses each font and background color for the Excel sheet
                 if waferMapName == "SMiPE4" or waferMapName == "TPv2":
                     font_color_list = ['white', 'black', 'white', 'white', 'black', 
-                                       'white', 'black', 'black', 'white']
+                                       'white', 'white', 'black', 'white']
                     bg_color_list = ['black', 'lime', 'red', 'green', 'yellow', 
                                      'blue', 'magenta', 'cyan', 'gray']
                 else:
@@ -430,12 +430,13 @@ def main():
                                     )
                     
                     # Sets the appropriate width for each column
-                    worksheet.set_column(0, (col_per_sheet), width=2)
+                    worksheet.set_column(0, (col_per_sheet), width=round((20*max_row/max_col)*.12, 2) )
+                    
                     if len(worksheet_list) > 1: 
                         worksheet.set_column(11, 11, width=8)
                         
                     else:
-                        worksheet.set_column(11, 11, width=5)
+                        worksheet.set_column(11, 11, width=7)
                     
                     # Sets zoom
                     worksheet.set_zoom( max( int(2080.6*(max_row/sqrt(len(worksheet_list)))**-0.867 ) , 20 ) )
