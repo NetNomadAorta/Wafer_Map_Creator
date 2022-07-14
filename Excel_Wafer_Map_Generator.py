@@ -32,13 +32,11 @@ def main():
     start_time = time.time()
     
     # Clears some of the screen for asthetics
-    print("\n\n\n\n\n\n")
+    print("\n\n\n")
     
     # Cycles through each lot folder
     for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         lotPathName = os.listdir(PREDICTED_DIR)[lotPathIndex]
-        
-        print("Starting", lotPathName)
         
         # Removes Thumbs.db in wafer map path if found
         if os.path.isfile(STORED_WAFER_DATA + "Thumbs.db"):
@@ -84,7 +82,7 @@ def main():
             or slot_name == "ZZZ-Excel_Sheets"):
                 continue
             
-            print("   Starting", slot_name)
+            print("Starting", slot_path)
             
             # Removes Thumbs.db in slot path if found
             if os.path.isfile(slot_path + "/Thumbs.db"):
@@ -221,8 +219,8 @@ def main():
                     bg_color_list = ['black', 'lime', 'red', 'green', 'yellow', 
                                      'blue', 'magenta', 'cyan', 'gray']
                 else:
-                    font_color_list = ['black', 'white', 'black', 'white', 'white']
-                    bg_color_list = ['lime', 'red', 'magenta', 'orange', 'gray']
+                    font_color_list = ['black', 'white', 'white', 'white', 'white']
+                    bg_color_list = ['lime', 'red', 'blue', 'magenta', 'gray']
                 
                 
                 # Chooses which font and background associated with each class
@@ -434,7 +432,8 @@ def main():
                     
                     if len(worksheet_list) > 1: 
                         worksheet.set_column(11, 11, width=8)
-                        
+                    elif len(all_dieNames) < 1000:
+                        worksheet.set_column(11, 11, width=3.5)
                     else:
                         worksheet.set_column(11, 11, width=7)
                     
