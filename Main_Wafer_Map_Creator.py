@@ -15,7 +15,7 @@ WAFER_MAP_DIRECTORY = "./Images/002-Wafer_Map/"
 SLEEP_TIME = 0.0 # Time to sleep in seconds between each window step
 TOGGLE_SHOW_WINDOW_IMAGE = False # Set equal to "True" and it will show a graphical image of where it's at
 TOGGLE_STITCHED_OVERLAY = True # Will use original stitched image in final wafer map
-DIE_SPACING_SCALE = 0.01
+DIE_SPACING_SCALE = 0.005
 
 # Usually puts "0" in "Row_01". If 3 digits necessary, such as "Col_007", or
 #  "Row_255", then toggle below "True"
