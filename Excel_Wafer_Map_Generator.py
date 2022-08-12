@@ -124,7 +124,7 @@ def main():
                 #  if this slot has the same die names within its defect folders.
                 # If so, then create the new wafer map with red ovals in die 
                 #  location within the wafer map image, and save this image.
-                list = os.listdir(class_path)
+                class_dies_list = os.listdir(class_path)
                 (shown_progress_25, shown_progress_50, 
                  shown_progress_75, shown_progress_100) = False, False, False, False
                 for dieNameIndex, dieName in enumerate(dieNames):
@@ -171,7 +171,7 @@ def main():
                     # Checks to see if current die name from general wafer 
                     #  map die names is in any of the image names from current
                     #  class folder
-                    if any(dieName in s for s in list):
+                    if any(dieName in s for s in class_dies_list):
                         isBadDie = True
                         badDieNames.append(dieName)
                         badDieBinNumbers.append(class_index)
@@ -183,9 +183,9 @@ def main():
                     
                     if isBadDie:
                         if len(dieNames) > 1000 and dieNameIndex % 1000 == 0:
-                            for list_index, image_name in enumerate(list):
+                            for list_index, image_name in enumerate(class_dies_list):
                                 if dieName in image_name:
-                                    del list[:list_index]
+                                    del class_dies_list[:list_index]
                                     break
                         
                         continue
@@ -314,20 +314,44 @@ def main():
                     
                     if row <= row_per_sheet:
                         if col <= col_per_sheet:
+                            # Hyperlink
+                            if bin_number != good_class_index_2:
+                                worksheet_list[0].write_url(row-1, col-1,
+                                    slot_path + '/' + classes_2[bin_number] + '/Row_{}.Col_{}.jpg'.format(str(row), str(col))
+                                                            )
+                            # Non Hyperlink - Just writes bins
                             worksheet_list[0].write(row-1, col-1, 
-                                               bin_number, 
-                                               background)
+                                                bin_number, 
+                                                background)
                             
                         else:
+                            # Hyperlink
+                            if bin_number != good_class_index_2:
+                                worksheet_list[1].write_url(row-1, col-1,
+                                    slot_path + '/' + classes_2[bin_number] + '/Row_{}.Col_{}.jpg'.format(str(row), str(col))
+                                                            )
+                            # Non Hyperlink - Just writes bins
                             worksheet_list[1].write(row-1, col-1-col_per_sheet, 
                                                bin_number,
                                                background)
                     else:
                         if col <= col_per_sheet:
+                            # Hyperlink
+                            if bin_number != good_class_index_2:
+                                worksheet_list[2].write_url(row-1, col-1,
+                                    slot_path + '/' + classes_2[bin_number] + '/Row_{}.Col_{}.jpg'.format(str(row), str(col))
+                                                            )
+                            # Non Hyperlink - Just writes bins
                             worksheet_list[2].write(row-1-row_per_sheet, col-1, 
                                                bin_number,
                                                background)
                         else:
+                            # Hyperlink
+                            if bin_number != good_class_index_2:
+                                worksheet_list[3].write_url(row-1, col-1,
+                                    slot_path + '/' + classes_2[bin_number] + '/Row_{}.Col_{}.jpg'.format(str(row), str(col))
+                                                            )
+                            # Non Hyperlink - Just writes bins
                             worksheet_list[3].write(row-1-row_per_sheet, col-1-col_per_sheet, 
                                                bin_number,
                                                background)
