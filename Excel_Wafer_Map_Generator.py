@@ -218,6 +218,9 @@ def main():
                                        'white', 'white', 'black', 'white']
                     bg_color_list = ['black', 'lime', 'red', 'green', 'yellow', 
                                      'blue', 'magenta', 'cyan', 'gray']
+                elif waferMapName == "HBCOSA":
+                    font_color_list = ['black', 'white', 'white', 'white', 'white']
+                    bg_color_list = ['lime', 'red', 'magenta', 'blue', 'gray']
                 else:
                     font_color_list = ['black', 'white', 'white', 'white', 'white']
                     bg_color_list = ['lime', 'red', 'blue', 'magenta', 'gray']
@@ -292,7 +295,7 @@ def main():
                         all_dieBinNumbers.append(good_class_index_2)
                 
                     if len(dieNames) > 1000 and dieNameIndex % 1000 == 0:
-                        for list_index, image_name in enumerate(list):
+                        for list_index, image_name in enumerate(class_dies_list):
                             if dieName in image_name:
                                 del list[:list_index]
                                 break
@@ -308,16 +311,53 @@ def main():
                     background = bin_colors_list[all_dieBinNumbers[all_dieName_index]]
                     
                     if waferMapName == "HBCOSA":
+                        class_bin_number = all_dieBinNumbers[all_dieName_index]
                         bin_number = all_dieBinNumbers[all_dieName_index] + 1
                     else:
                         bin_number = all_dieBinNumbers[all_dieName_index]
+                        class_bin_number = bin_number
+                    
+                    # If row or col is below 10 (or 100 for SMiPE4 and similar) adds "0"s
+                    # SMIPE col-1 SECTION MAY NEED REEEEEEEEEEDDDDDDDDDDDDDDOOOOOOOOOOOOOOOOOOOOOOOOOOOOONNNNNNNNNNNEEEEEEE
+                    # --------------------------------------------------------------------
+                    
+                    # Row Section
+                    if waferMapName == "SMiPE4":
+                        # THIS PART IS FOR LED 160,000 WAFER!
+                        row_string = str(row)
+                    else:
+                        if row < 10:
+                            row_string = "0" + str(row)
+                        else:
+                            row_string = str(row)
+                    
+                    # Col Section
+                    if waferMapName == "SMiPE4":
+                        # THIS PART IS FOR LED 160,000 WAFER!
+                        col_string = str(col)
+                    else:
+                        if col < 10:
+                            col_string = "0" + str(col)
+                        else:
+                            col_string = str(col)
+                    
+                    # TEST SECTION
+                    # DELETE BELOW UNTIL ---- line
+                    os.listdir(slot_path + '/' + classes_2[class_bin_number])
+                    for image_name_jpg in os.listdir(slot_path + '/' + classes_2[class_bin_number]):
+                        if 'Row_{}.Col_{}'.format(row_string, col_string) in image_name_jpg and waferMapName != "SMiPE4":
+                            break
+                        elif waferMapName == "SMiPE4":
+                            break
+                            
+                    # --------------------------------------------------------------------
                     
                     if row <= row_per_sheet:
                         if col <= col_per_sheet:
                             # Hyperlink
                             if bin_number != good_class_index_2:
                                 worksheet_list[0].write_url(row-1, col-1,
-                                    slot_path + '/' + classes_2[bin_number] + '/Row_{}.Col_{}.jpg'.format(str(row), str(col))
+                                    slot_path + '/' + classes_2[class_bin_number] + '/' + image_name_jpg
                                                             )
                             # Non Hyperlink - Just writes bins
                             worksheet_list[0].write(row-1, col-1, 
@@ -328,7 +368,7 @@ def main():
                             # Hyperlink
                             if bin_number != good_class_index_2:
                                 worksheet_list[1].write_url(row-1, col-1,
-                                    slot_path + '/' + classes_2[bin_number] + '/Row_{}.Col_{}.jpg'.format(str(row), str(col))
+                                    slot_path + '/' + classes_2[class_bin_number] + '/' + image_name_jpg
                                                             )
                             # Non Hyperlink - Just writes bins
                             worksheet_list[1].write(row-1, col-1-col_per_sheet, 
@@ -339,7 +379,7 @@ def main():
                             # Hyperlink
                             if bin_number != good_class_index_2:
                                 worksheet_list[2].write_url(row-1, col-1,
-                                    slot_path + '/' + classes_2[bin_number] + '/Row_{}.Col_{}.jpg'.format(str(row), str(col))
+                                    slot_path + '/' + classes_2[class_bin_number] + '/' + image_name_jpg
                                                             )
                             # Non Hyperlink - Just writes bins
                             worksheet_list[2].write(row-1-row_per_sheet, col-1, 
@@ -349,7 +389,7 @@ def main():
                             # Hyperlink
                             if bin_number != good_class_index_2:
                                 worksheet_list[3].write_url(row-1, col-1,
-                                    slot_path + '/' + classes_2[bin_number] + '/Row_{}.Col_{}.jpg'.format(str(row), str(col))
+                                    slot_path + '/' + classes_2[class_bin_number] + '/' + image_name_jpg
                                                             )
                             # Non Hyperlink - Just writes bins
                             worksheet_list[3].write(row-1-row_per_sheet, col-1-col_per_sheet, 
