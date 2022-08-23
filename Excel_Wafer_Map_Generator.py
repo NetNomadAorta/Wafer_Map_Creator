@@ -1,5 +1,6 @@
 # Import the necessary packages
 import os
+import sys
 import shutil
 import glob
 import time
@@ -127,6 +128,7 @@ def main():
                 class_dies_list = os.listdir(class_path)
                 (shown_progress_25, shown_progress_50, 
                  shown_progress_75, shown_progress_100) = False, False, False, False
+                previous_percent_index = 0
                 for dieNameIndex, dieName in enumerate(dieNames):
                     isBadDie = False
                     
@@ -134,35 +136,53 @@ def main():
                         continue
                     
                     # Writes row and col numbers to find max
-                    # map(int, re.findall(r'\d+', string1))
-                    # import re ??? EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
                     row_list.append( int( re.findall(r'\d+', dieName)[0] ) )
                     col_list.append( int( re.findall(r'\d+', dieName)[1] ) )
-                    # row_list.append( int(dieName[2:5]) )
-                    # col_list.append( int(dieName[-3:]) )
                     
                     # Shows progress in current slot
                     if len_dieNames > 1000:
-                        if (round(dieNameIndex/len_dieNames, 2) == 0.25
-                        and shown_progress_25 == False):
+                        percent_index = round(dieNameIndex/len_dieNames*100)
+                        
+                        if percent_index != previous_percent_index:
+                            sys.stdout.write('\033[2K\033[1G')
                             print("  ", class_name, "Progress:", 
-                                  str(round(dieNameIndex/len_dieNames*100) ) + "%")
-                            shown_progress_25 = True
-                        if (round(dieNameIndex/len_dieNames, 2) == 0.50
-                        and shown_progress_50 == False):
-                            print("  ", class_name, "Progress:", 
-                                  str(round(dieNameIndex/len_dieNames*100) ) + "%")
-                            shown_progress_50 = True
-                        if (round(dieNameIndex/len_dieNames, 2) == 0.75
-                        and shown_progress_75 == False):
-                            print("  ", class_name, "Progress:", 
-                                  str(round(dieNameIndex/len_dieNames*100) ) + "%")
-                            shown_progress_75 = True
-                        if (round(dieNameIndex/len_dieNames, 2) == 1.00
-                        and shown_progress_100 == False):
-                            print("  ", class_name, "Progress:", 
-                                  str(round(dieNameIndex/len_dieNames*100) ) + "%")
-                            shown_progress_100 = True
+                                  str(round(dieNameIndex/len_dieNames*100) ) + "%",
+                                  end="\r"
+                                  )
+                        
+                        previous_percent_index = percent_index
+                        
+                        # if (round(dieNameIndex/len_dieNames, 2) == 0.25
+                        # and shown_progress_25 == False):
+                        #     sys.stdout.write('\033[2K\033[1G')
+                        #     print("  ", class_name, "Progress:", 
+                        #           str(round(dieNameIndex/len_dieNames*100) ) + "%",
+                        #           end="\r"
+                        #           )
+                        #     shown_progress_25 = True
+                        # if (round(dieNameIndex/len_dieNames, 2) == 0.50
+                        # and shown_progress_50 == False):
+                        #     sys.stdout.write('\033[2K\033[1G')
+                        #     print("  ", class_name, "Progress:", 
+                        #           str(round(dieNameIndex/len_dieNames*100) ) + "%",
+                        #           end="\r"
+                        #           )
+                        #     shown_progress_50 = True
+                        # if (round(dieNameIndex/len_dieNames, 2) == 0.75
+                        # and shown_progress_75 == False):
+                        #     sys.stdout.write('\033[2K\033[1G')
+                        #     print("  ", class_name, "Progress:", 
+                        #           str(round(dieNameIndex/len_dieNames*100) ) + "%",
+                        #           end="\r"
+                        #           )
+                        #     shown_progress_75 = True
+                        # if (round(dieNameIndex/len_dieNames, 2) == 1.00
+                        # and shown_progress_100 == False):
+                        #     sys.stdout.write('\033[2K\033[1G')
+                        #     print("  ", class_name, "Progress:", 
+                        #           str(round(dieNameIndex/len_dieNames*100) ) + "%"
+                        #           )
+                        #     shown_progress_100 = True
                     
                     # Checks if same die name already claimed as bad in previous class folder
                     if dieName in badDieNames:
