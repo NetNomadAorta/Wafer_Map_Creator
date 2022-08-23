@@ -209,6 +209,9 @@ def main():
                                     break
                         
                         continue
+                
+                # Makes new line so that next class progress status can show in terminal/shell
+                print("")
                     
     
     
