@@ -241,9 +241,9 @@ def main():
                                        'white', 'white', 'black', 'white']
                     bg_color_list = ['black', 'lime', 'red', 'green', 'yellow', 
                                      'blue', 'magenta', 'cyan', 'gray']
-                elif waferMapName == "HBCOSA":
-                    font_color_list = ['black', 'white', 'white', 'white', 'white']
-                    bg_color_list = ['lime', 'red', 'magenta', 'blue', 'gray']
+                # elif waferMapName == "HBCOSA":
+                #     font_color_list = ['black', 'white', 'white', 'white', 'white']
+                #     bg_color_list = ['lime', 'red', 'magenta', 'blue', 'gray']
                 else:
                     font_color_list = ['black', 'white', 'white', 'white', 'white']
                     bg_color_list = ['lime', 'red', 'blue', 'magenta', 'gray']
