@@ -42,6 +42,9 @@ def main():
         # Removes Thumbs.db in wafer map path if found
         if os.path.isfile(STORED_WAFER_DATA + "Thumbs.db"):
             os.remove(STORED_WAFER_DATA + "Thumbs.db")
+            
+        if "SMiPE" in lotPathName:
+            continue
         
         # Checks to see if lot existing wafer map found in wafer map generator
         #  area for the current lotPath location
