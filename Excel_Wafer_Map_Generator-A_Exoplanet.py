@@ -365,6 +365,9 @@ def main():
                 
                 # Selects appropriate "Not Tested Count" name
                 not_tested_name = "8-Not_Tested-Count"
+                
+                # For each sheet, sets column width and zoom
+                for worksheet_index, worksheet in enumerate(worksheet_list):
                     
                     # Sets the appropriate width for each column
                     worksheet.set_column(0, (col_per_sheet), width=round((20*max_row/max_col)*.12, 2) )
