@@ -347,6 +347,15 @@ def main():
                     os.listdir(slot_path + '/' + classes_2[class_bin_number])
                     for image_name_jpg in os.listdir(slot_path + '/' + classes_2[class_bin_number]):
                         if "Thumbs" in image_name_jpg:
+                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
                             continue
                         
                         if 'Row_{}.Col_{}'.format(row_string, col_string) in image_name_jpg and waferMapName != "SMiPE4":
