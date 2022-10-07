@@ -214,17 +214,8 @@ def main():
                         worksheet_list.append(workbook.add_worksheet(str(sheet_index)))
                 
                 # Chooses each font and background color for the Excel sheet
-                if waferMapName == "SMiPE4" or waferMapName == "TPv2":
-                    font_color_list = ['white', 'black', 'white', 'white', 'black', 
-                                       'white', 'white', 'black', 'white']
-                    bg_color_list = ['black', 'lime', 'red', 'green', 'yellow', 
-                                     'blue', 'magenta', 'cyan', 'gray']
-                # elif waferMapName == "HBCOSA":
-                #     font_color_list = ['black', 'white', 'white', 'white', 'white']
-                #     bg_color_list = ['lime', 'red', 'magenta', 'blue', 'gray']
-                else:
-                    font_color_list = ['black', 'white', 'white', 'white', 'white']
-                    bg_color_list = ['lime', 'red', 'blue', 'magenta', 'gray']
+                font_color_list = ['black', 'black', 'white', 'white', 'white']
+                bg_color_list = ['lime', 'lime', 'red', 'red', 'gray']
                 
                 
                 # Chooses which font and background associated with each class
@@ -254,21 +245,15 @@ def main():
                 
                 # Iterates over each row_per_sheet x col_per_sheet dies 
                 #  and defaults bin number to 8 - Untested
-                if waferMapName == "HBCOSA":
-                    for row in range(row_per_sheet+1):
-                        for col in range(col_per_sheet+1):
-                            for worksheet in worksheet_list:
-                                worksheet.write(row, col, 0, bin_colors_list[-1])
-                else:
-                    for row in range(row_per_sheet):
-                        for col in range(col_per_sheet):
-                            for worksheet in worksheet_list:
-                                worksheet.write(row, col, 8, bin_colors_list[-1])
+                for row in range(row_per_sheet):
+                    for col in range(col_per_sheet):
+                        for worksheet in worksheet_list:
+                            worksheet.write(row, col, 8, bin_colors_list[-1])
                 
                 
                 # Combines all die names and bin numbers
                 all_dieNames = badDieNames
-                all_dieBinNumbers = bad_die_defect_count
+                all_dieBinNumbers = badDieBinNumbers
                 if len_dieNames > 1000:
                     print("   Started making good bins..")
                 
@@ -311,36 +296,23 @@ def main():
                     # Checks to see which background bin number to use
                     background = bin_colors_list[all_dieBinNumbers[all_dieName_index]]
                     
-                    if waferMapName == "HBCOSA":
-                        class_bin_number = all_dieBinNumbers[all_dieName_index]
-                        bin_number = all_dieBinNumbers[all_dieName_index] + 1
-                    else:
-                        bin_number = all_dieBinNumbers[all_dieName_index]
-                        class_bin_number = bin_number
+                    bin_number = all_dieBinNumbers[all_dieName_index]
+                    class_bin_number = bin_number
                     
-                    # If row or col is below 10 (or 100 for SMiPE4 and similar) adds "0"s
-                    # SMIPE col-1 SECTION MAY NEED REEEEEEEEEEDDDDDDDDDDDDDDOOOOOOOOOOOOOOOOOOOOOOOOOOOOONNNNNNNNNNNEEEEEEE
+                    # If row or col is below 10 adds "0"s
                     # --------------------------------------------------------------------
                     
                     # Row Section
-                    if waferMapName == "SMiPE4":
-                        # THIS PART IS FOR LED 160,000 WAFER!
-                        row_string = str(row)
+                    if row < 10:
+                        row_string = "0" + str(row)
                     else:
-                        if row < 10:
-                            row_string = "0" + str(row)
-                        else:
-                            row_string = str(row)
+                        row_string = str(row)
                     
                     # Col Section
-                    if waferMapName == "SMiPE4":
-                        # THIS PART IS FOR LED 160,000 WAFER!
-                        col_string = str(col)
+                    if col < 10:
+                        col_string = "0" + str(col)
                     else:
-                        if col < 10:
-                            col_string = "0" + str(col)
-                        else:
-                            col_string = str(col)
+                        col_string = str(col)
                     
                     # TEST SECTION
                     # DELETE BELOW UNTIL ---- line
@@ -352,9 +324,7 @@ def main():
                                   + classes_2[class_bin_number] + "Thumbs.db")
                         
                     for image_name_jpg in os.listdir(slot_path + '/' + classes_2[class_bin_number]):
-                        if 'Row_{}.Col_{}'.format(row_string, col_string) in image_name_jpg and waferMapName != "SMiPE4":
-                            break
-                        elif waferMapName == "SMiPE4":
+                        if 'Row_{}.Col_{}'.format(row_string, col_string) in image_name_jpg:
                             break
                             
                     # --------------------------------------------------------------------
@@ -415,22 +385,13 @@ def main():
                     for row in range(row_per_sheet):
                         for col in range(col_per_sheet):
                             bin_num = worksheet.table[row][col].number
-                            if waferMapName == "HBCOSA":
-                                if bin_num == 0:
-                                    continue
-                                bin_num -= 1
                             if bin_num == 8:
                                 continue
                             bin_count_dict[worksheet_index]["bin{}".format(bin_num)] += 1
                 
                 
                 # Selects appropriate "Not Tested Count" name
-                if waferMapName == "SMiPE4":
-                    not_tested_name = "8 - Not_Tested-Count"
-                elif waferMapName == "HBCOSA":
-                    not_tested_name = "0-Not_Tested-Count"
-                else:
-                    not_tested_name = "8-Not_Tested-Count"
+                not_tested_name = "8-Not_Tested-Count"
                 
                 # For each sheet, writes bin class count and colors background
                 for worksheet_index, worksheet in enumerate(worksheet_list):
