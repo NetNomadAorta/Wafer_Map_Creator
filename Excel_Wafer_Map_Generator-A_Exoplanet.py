@@ -167,7 +167,7 @@ def main():
                     #  class folder
                     if any(dieName in s for s in class_dies_list):
                         isBadDie = True
-                        if any(dieName in q for q in badDieNames):
+                        if dieName in badDieNames:
                             bad_die_defect_count[-1] += 1
                             print(bad_die_defect_count[-1])
                         else:
@@ -186,8 +186,6 @@ def main():
                                 if dieName in image_name:
                                     del class_dies_list[:list_index]
                                     break
-                        
-                        continue
                 
                 # Makes new line so that next class progress status can show in terminal/shell
                 print("")
