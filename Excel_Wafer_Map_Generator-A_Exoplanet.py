@@ -95,6 +95,7 @@ def main():
             # Making list of bad die names
             badDieNames = []
             badDieBinNumbers = []
+            bad_die_defect_count = []
             # For getting ro and col numbers and finding max
             row_list = []
             col_list = []
@@ -167,10 +168,11 @@ def main():
                     if any(dieName in s for s in class_dies_list):
                         isBadDie = True
                         if dieName in badDieNames:
-                            badDieBinNumbers[-1] += 1
+                            bad_die_defect_count[-1] += 1
                         else:
                             badDieNames.append(dieName)
                             badDieBinNumbers.append(class_index)
+                            bad_die_defect_count.append(1)
                             bad_row_list.append( int( re.findall(r'\d+', dieName)[0] ) )
                             bad_col_list.append( int( re.findall(r'\d+', dieName)[1] ) )
                     else:
@@ -266,7 +268,7 @@ def main():
                 
                 # Combines all die names and bin numbers
                 all_dieNames = badDieNames
-                all_dieBinNumbers = badDieBinNumbers
+                all_dieBinNumbers = bad_die_defect_count
                 if len_dieNames > 1000:
                     print("   Started making good bins..")
                 
@@ -291,7 +293,7 @@ def main():
                         if should_skip:
                             continue
                         all_dieNames.append(dieName)
-                        all_dieBinNumbers.append(good_class_index_2)
+                        all_dieBinNumbers.append(1) # USED TO BE good_class_index_2
                 
                     if len(dieNames) > 1000 and dieNameIndex % 1000 == 0:
                         for list_index, image_name in enumerate(class_dies_list):
