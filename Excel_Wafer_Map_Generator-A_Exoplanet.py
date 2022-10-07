@@ -172,7 +172,7 @@ def main():
                         else:
                             badDieNames.append(dieName)
                             badDieBinNumbers.append(class_index)
-                            bad_die_defect_count.append(1)
+                            bad_die_defect_count.append(0)
                             bad_row_list.append( int( re.findall(r'\d+', dieName)[0] ) )
                             bad_col_list.append( int( re.findall(r'\d+', dieName)[1] ) )
                     else:
@@ -336,42 +336,15 @@ def main():
                                 worksheet_list[0].write_url(row-1, col-1,
                                     slot_path + '/' + classes_2[class_bin_number] + '/' + image_name_jpg
                                                             )
-                            # Non Hyperlink - Just writes bins
-                            worksheet_list[0].write(row-1, col-1, 
-                                                bin_number, 
-                                                background)
-                            
-                        else:
-                            # Hyperlink
-                            if bin_number != good_class_index_2:
-                                worksheet_list[1].write_url(row-1, col-1,
-                                    slot_path + '/' + classes_2[class_bin_number] + '/' + image_name_jpg
-                                                            )
-                            # Non Hyperlink - Just writes bins
-                            worksheet_list[1].write(row-1, col-1-col_per_sheet, 
-                                               bin_number,
-                                               background)
-                    else:
-                        if col <= col_per_sheet:
-                            # Hyperlink
-                            if bin_number != good_class_index_2:
-                                worksheet_list[2].write_url(row-1, col-1,
-                                    slot_path + '/' + classes_2[class_bin_number] + '/' + image_name_jpg
-                                                            )
-                            # Non Hyperlink - Just writes bins
-                            worksheet_list[2].write(row-1-row_per_sheet, col-1, 
-                                               bin_number,
-                                               background)
-                        else:
-                            # Hyperlink
-                            if bin_number != good_class_index_2:
-                                worksheet_list[3].write_url(row-1, col-1,
-                                    slot_path + '/' + classes_2[class_bin_number] + '/' + image_name_jpg
-                                                            )
-                            # Non Hyperlink - Just writes bins
-                            worksheet_list[3].write(row-1-row_per_sheet, col-1-col_per_sheet, 
-                                               bin_number,
-                                               background)
+                                # Non Hyperlink - Just writes bins
+                                worksheet_list[0].write(row-1, col-1, 
+                                                    bad_die_defect_count[all_dieName_index], 
+                                                    background)
+                            else:
+                                # Non Hyperlink - Just writes bins
+                                worksheet_list[0].write(row-1, col-1, 
+                                                    1, 
+                                                    background)
                 
                 
                 bin_count_dict = {}
