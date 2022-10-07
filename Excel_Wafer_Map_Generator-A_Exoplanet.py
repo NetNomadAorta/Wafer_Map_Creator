@@ -339,15 +339,6 @@ def main():
                             col_string = "0" + str(col)
                         else:
                             col_string = str(col)
-                    
-                    # TEST SECTION
-                    # DELETE BELOW UNTIL ---- line
-                    os.listdir(slot_path + '/' + classes_2[class_bin_number])
-                    for image_name_jpg in os.listdir(slot_path + '/' + classes_2[class_bin_number]):
-                        if 'Row_{}.Col_{}'.format(row_string, col_string) in image_name_jpg and waferMapName != "SMiPE4":
-                            break
-                        elif waferMapName == "SMiPE4":
-                            break
                             
                     # --------------------------------------------------------------------
                     
