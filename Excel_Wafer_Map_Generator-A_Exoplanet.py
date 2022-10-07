@@ -345,19 +345,13 @@ def main():
                     # TEST SECTION
                     # DELETE BELOW UNTIL ---- line
                     os.listdir(slot_path + '/' + classes_2[class_bin_number])
-                    for image_name_jpg in os.listdir(slot_path + '/' + classes_2[class_bin_number]):
-                        if "Thumbs" in image_name_jpg:
-                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-                            print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-                            continue
+                    
+                    if os.path.isfile(slot_path + '/' 
+                                      + classes_2[class_bin_number] + "Thumbs.db"):
+                        os.remove(slot_path + '/' 
+                                  + classes_2[class_bin_number] + "Thumbs.db")
                         
+                    for image_name_jpg in os.listdir(slot_path + '/' + classes_2[class_bin_number]):
                         if 'Row_{}.Col_{}'.format(row_string, col_string) in image_name_jpg and waferMapName != "SMiPE4":
                             break
                         elif waferMapName == "SMiPE4":
