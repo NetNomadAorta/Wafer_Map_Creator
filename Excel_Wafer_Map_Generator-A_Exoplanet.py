@@ -346,7 +346,7 @@ def main():
                     # DELETE BELOW UNTIL ---- line
                     os.listdir(slot_path + '/' + classes_2[class_bin_number])
                     for image_name_jpg in os.listdir(slot_path + '/' + classes_2[class_bin_number]):
-                        if "thumbs" in image_name_jpg:
+                        if "Thumbs" in image_name_jpg:
                             continue
                         
                         if 'Row_{}.Col_{}'.format(row_string, col_string) in image_name_jpg and waferMapName != "SMiPE4":
