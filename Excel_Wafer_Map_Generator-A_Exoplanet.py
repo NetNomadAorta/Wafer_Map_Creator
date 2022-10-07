@@ -248,7 +248,7 @@ def main():
                 for row in range(row_per_sheet):
                     for col in range(col_per_sheet):
                         for worksheet in worksheet_list:
-                            worksheet.write(row, col, 8, bin_colors_list[-1])
+                            worksheet.write(row, col, bin_colors_list[-1])
                 
                 
                 # Combines all die names and bin numbers
