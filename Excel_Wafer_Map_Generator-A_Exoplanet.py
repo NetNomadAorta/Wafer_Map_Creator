@@ -167,7 +167,7 @@ def main():
                     #  class folder
                     if any(dieName in s for s in class_dies_list):
                         isBadDie = True
-                        if dieName in badDieNames:
+                        if any(dieName in s for s in in badDieNames):
                             bad_die_defect_count[-1] += 1
                             print(bad_die_defect_count[-1])
                         else:
