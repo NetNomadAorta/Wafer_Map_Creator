@@ -43,7 +43,7 @@ def main():
         if os.path.isfile(STORED_WAFER_DATA + "Thumbs.db"):
             os.remove(STORED_WAFER_DATA + "Thumbs.db")
             
-        if "SMiPE" in lotPathName:
+        if "Exoplanet" not in lotPathName:
             continue
         
         # Checks to see if lot existing wafer map found in wafer map generator
@@ -54,11 +54,6 @@ def main():
                 shouldContinue = False
                 break
         if shouldContinue:
-            continue
-        
-        # Skips Exoplanet wafers as you should run A_Exoplanet.py instead
-        if "Exoplanet" in lotPathName:
-            exec( open("C:/Users/ait.lab/.spyder-py3/Wafer_Map_Creator/Excel_Wafer_Map_Generator-A_Exoplanet.py").read() )
             continue
         
         # Imports correct dieNames and dieCoordinates data
@@ -105,6 +100,8 @@ def main():
             col_list = []
             bad_row_list = []
             bad_col_list = []
+            bad_die_defect_num = []
+            bad_defect_microns = []
             
             
             full_list = os.listdir(slot_path)
@@ -123,7 +120,9 @@ def main():
                 if (class_index == good_class_index_2 
                 or "ZZ-" in class_name 
                 or ".jpg" in class_name 
-                or ".xlsx" in class_name):
+                or ".xlsx" in class_name
+                or "Small" not in class_name
+                ):
                     continue
                 # Removes Thumbs.db in class path if found
                 if os.path.isfile(class_path + "/Thumbs.db"):
@@ -158,19 +157,22 @@ def main():
                         
                         previous_percent_index = percent_index
                     
-                    # Checks if same die name already claimed as bad in previous class folder
-                    if dieName in badDieNames:
-                        continue
+                    # # Checks if same die name already claimed as bad in previous class folder
+                    # if dieName in badDieNames:
+                    #     continue
                     
                     # Checks to see if current die name from general wafer 
                     #  map die names is in any of the image names from current
                     #  class folder
                     if any(dieName in s for s in class_dies_list):
                         isBadDie = True
-                        badDieNames.append(dieName)
-                        badDieBinNumbers.append(class_index)
-                        bad_row_list.append( int( re.findall(r'\d+', dieName)[0] ) )
-                        bad_col_list.append( int( re.findall(r'\d+', dieName)[1] ) )
+                        if dieName in badDieNames:
+                            badDieBinNumbers[-1] += 1
+                        else:
+                            badDieNames.append(dieName)
+                            badDieBinNumbers.append(class_index)
+                            bad_row_list.append( int( re.findall(r'\d+', dieName)[0] ) )
+                            bad_col_list.append( int( re.findall(r'\d+', dieName)[1] ) )
                     else:
                         isBadDie = False
     
