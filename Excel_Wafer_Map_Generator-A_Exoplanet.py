@@ -165,8 +165,23 @@ def main():
                     # Checks to see if current die name from general wafer 
                     #  map die names is in any of the image names from current
                     #  class folder
+                    called_bad_die = False
                     for bad_die_name in class_dies_list:
                         if dieName in bad_die_name:
+                            if called_bad_die:
+                                bad_die_defect_count[-1] += 1
+                                print(bad_die_defect_count[-1])
+                            else:
+                                badDieNames.append(dieName)
+                                badDieBinNumbers.append(class_index)
+                                bad_die_defect_count.append(1)
+                                bad_row_list.append( int( re.findall(r'\d+', dieName)[0] ) )
+                                bad_col_list.append( int( re.findall(r'\d+', dieName)[1] ) )
+                                called_bad_die = True
+                            
+                    if any(dieName in s for s in class_dies_list):
+                        isBadDie = True
+                        if dieName in badDieNames:
                             bad_die_defect_count[-1] += 1
                             print(bad_die_defect_count[-1])
                         else:
@@ -175,6 +190,18 @@ def main():
                             bad_die_defect_count.append(1)
                             bad_row_list.append( int( re.findall(r'\d+', dieName)[0] ) )
                             bad_col_list.append( int( re.findall(r'\d+', dieName)[1] ) )
+                    else:
+                        isBadDie = False
+    
+                    
+                    # if isBadDie:
+                    #     if len(dieNames) > 1000 and dieNameIndex % 1000 == 0:
+                    #         for list_index, image_name in enumerate(class_dies_list):
+                    #             if dieName in image_name:
+                    #                 del class_dies_list[:list_index]
+                    #                 break
+                        
+                    #     continue
                 
                 # Makes new line so that next class progress status can show in terminal/shell
                 print("")
