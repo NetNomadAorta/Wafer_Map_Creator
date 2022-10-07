@@ -180,12 +180,14 @@ def main():
                         isBadDie = False
     
                     
-                    if isBadDie:
-                        if len(dieNames) > 1000 and dieNameIndex % 1000 == 0:
-                            for list_index, image_name in enumerate(class_dies_list):
-                                if dieName in image_name:
-                                    del class_dies_list[:list_index]
-                                    break
+                    # if isBadDie:
+                    #     if len(dieNames) > 1000 and dieNameIndex % 1000 == 0:
+                    #         for list_index, image_name in enumerate(class_dies_list):
+                    #             if dieName in image_name:
+                    #                 del class_dies_list[:list_index]
+                    #                 break
+                        
+                    #     continue
                 
                 # Makes new line so that next class progress status can show in terminal/shell
                 print("")
