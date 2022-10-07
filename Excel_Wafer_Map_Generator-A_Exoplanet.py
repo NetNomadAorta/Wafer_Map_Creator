@@ -170,7 +170,6 @@ def main():
                         if dieName in bad_die_name:
                             if called_bad_die:
                                 bad_die_defect_count[-1] += 1
-                                print(bad_die_defect_count[-1])
                             else:
                                 badDieNames.append(dieName)
                                 badDieBinNumbers.append(class_index)
@@ -370,11 +369,11 @@ def main():
                     
                     # Sets the appropriate width for each column
                     for row_index in range(6):
-                        worksheet.set_row(row_index, height=20)
-                    worksheet.set_column(0, (col_per_sheet), width=round((3*max_row/max_col), 2) )
+                        worksheet.set_row(row_index, height=23)
+                    worksheet.set_column(0, (col_per_sheet), width=round((3.3*max_row/max_col), 2) )
                     
                     # Sets zoom
-                    worksheet.set_zoom( 250 )
+                    worksheet.set_zoom( 230 )
                     
                     
                 
