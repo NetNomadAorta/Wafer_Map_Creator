@@ -172,7 +172,7 @@ def main():
                         else:
                             badDieNames.append(dieName)
                             badDieBinNumbers.append(class_index)
-                            bad_die_defect_count.append(0)
+                            bad_die_defect_count.append(1)
                             bad_row_list.append( int( re.findall(r'\d+', dieName)[0] ) )
                             bad_col_list.append( int( re.findall(r'\d+', dieName)[1] ) )
                     else:
@@ -278,7 +278,7 @@ def main():
                         if should_skip:
                             continue
                         all_dieNames.append(dieName)
-                        all_dieBinNumbers.append(1) # USED TO BE good_class_index_2
+                        all_dieBinNumbers.append(0) # USED TO BE good_class_index_2
                 
                     if len(dieNames) > 1000 and dieNameIndex % 1000 == 0:
                         for list_index, image_name in enumerate(class_dies_list):
@@ -338,12 +338,12 @@ def main():
                                                             )
                                 # Non Hyperlink - Just writes bins
                                 worksheet_list[0].write(row-1, col-1, 
-                                                    bad_die_defect_count[all_dieName_index], 
+                                                    1, 
                                                     background)
                             else:
                                 # Non Hyperlink - Just writes bins
                                 worksheet_list[0].write(row-1, col-1, 
-                                                    1, 
+                                                    bad_die_defect_count[all_dieName_index], 
                                                     background)
                 
                 
