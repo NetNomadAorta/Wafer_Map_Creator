@@ -343,7 +343,7 @@ def main():
                             else:
                                 # Non Hyperlink - Just writes bins
                                 worksheet_list[0].write(row-1, col-1, 
-                                                    1, 
+                                                    0, 
                                                     background)
                 
                 
@@ -365,82 +365,9 @@ def main():
                 
                 # Selects appropriate "Not Tested Count" name
                 not_tested_name = "8-Not_Tested-Count"
-                
-                # For each sheet, writes bin class count and colors background
-                for worksheet_index, worksheet in enumerate(worksheet_list):
-                    for class_index, class_name in enumerate(classes_2):
-                        # Writes in bold and makes color background for each sheet a count of class bins
-                        worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 2 + class_index, 0, 
-                            class_name, bin_bold_colors_list[class_index]
-                            )
-                        worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 2 + class_index, 11, 
-                            bin_count_dict[worksheet_index]["bin{}".format(class_index)], 
-                            bin_bold_colors_list[class_index]
-                            )
-                        
-                        # Not Tested Count Section
-                        worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 2 + len(classes_2), 0, 
-                            not_tested_name, bin_bold_colors_list[-1]
-                            )
-                        worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 2 + len(classes_2), 11, 
-                            "="+str((len(dieNames)-1)/num_excel_sheets_2)
-                            +"-sum(L{}:L{})".format((int(max_row/sqrt(len(worksheet_list) ) ) + 3),
-                                                    (int(max_row/sqrt(len(worksheet_list) ) ) + 2 + len(classes_2))), 
-                            bin_bold_colors_list[-1]
-                            )
-                        
-                        for index in range(10):
-                            worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 2 + class_index, (index+1), 
-                                "", bin_colors_list[class_index]
-                                )
-                            worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 2 + len(classes_2), (index+1), 
-                                "", bin_colors_list[-1]
-                                )
-                        
-                        # Writes an additional total count in case more than one sheet with total of sum of each sheet
-                        if len(worksheet_list) > 1:
-                            # Writes in bold and makes color background for each sheet a count of class bins
-                            worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 4 + len(classes_2) + class_index, 0, 
-                                "Total - " + class_name, 
-                                bin_bold_colors_list[class_index]
-                                )
-                            tot_count = 0
-                            for worksheet_index_v2 in range(len(worksheet_list)):
-                                tot_count += bin_count_dict[worksheet_index_v2]["bin{}".format(class_index)]
-                            worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 4 + len(classes_2) + class_index, 11, 
-                                tot_count, 
-                                bin_bold_colors_list[class_index]
-                                )
-                            
-                            # Not Tested Count Section
-                            worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 4 + len(classes_2) + len(classes_2), 0, 
-                                "Total - " + not_tested_name, 
-                                bin_bold_colors_list[-1]
-                                )
-                            worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 4 + len(classes_2) + len(classes_2), 11, 
-                                "="+str(len(dieNames)-1)
-                                +"-sum(L{}:L{})".format((int(max_row/sqrt(len(worksheet_list) ) ) + 5 + len(classes_2)),
-                                                        (int(max_row/sqrt(len(worksheet_list) ) ) + 4 + len(classes_2) + len(classes_2))), 
-                                bin_bold_colors_list[-1]
-                                )
-                            
-                            for index in range(10):
-                                worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 4 + len(classes_2) + class_index, (index+1), 
-                                    "", bin_colors_list[class_index]
-                                    )
-                                worksheet.write(int(max_row/sqrt(len(worksheet_list) ) ) + 4 + len(classes_2) + len(classes_2), (index+1), 
-                                    "", bin_colors_list[-1]
-                                    )
                     
                     # Sets the appropriate width for each column
                     worksheet.set_column(0, (col_per_sheet), width=round((20*max_row/max_col)*.12, 2) )
-                    
-                    if len(worksheet_list) > 1: 
-                        worksheet.set_column(11, 11, width=8)
-                    elif len(all_dieNames) < 1000:
-                        worksheet.set_column(11, 11, width=3.5)
-                    else:
-                        worksheet.set_column(11, 11, width=7)
                     
                     # Sets zoom
                     worksheet.set_zoom( max( int(2080.6*(max_row/sqrt(len(worksheet_list)))**-0.867 ) , 20 ) )
