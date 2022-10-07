@@ -177,20 +177,6 @@ def main():
                                 bad_row_list.append( int( re.findall(r'\d+', dieName)[0] ) )
                                 bad_col_list.append( int( re.findall(r'\d+', dieName)[1] ) )
                                 called_bad_die = True
-                            
-                    if any(dieName in s for s in class_dies_list):
-                        isBadDie = True
-                        if dieName in badDieNames:
-                            bad_die_defect_count[-1] += 1
-                            print(bad_die_defect_count[-1])
-                        else:
-                            badDieNames.append(dieName)
-                            badDieBinNumbers.append(class_index)
-                            bad_die_defect_count.append(1)
-                            bad_row_list.append( int( re.findall(r'\d+', dieName)[0] ) )
-                            bad_col_list.append( int( re.findall(r'\d+', dieName)[1] ) )
-                    else:
-                        isBadDie = False
     
                     
                     # if isBadDie:
