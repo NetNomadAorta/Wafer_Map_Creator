@@ -169,6 +169,7 @@ def main():
                         isBadDie = True
                         if dieName in badDieNames:
                             bad_die_defect_count[-1] += 1
+                            print(bad_die_defect_count[-1])
                         else:
                             badDieNames.append(dieName)
                             badDieBinNumbers.append(class_index)
@@ -347,22 +348,6 @@ def main():
                                                     background)
                 
                 
-                bin_count_dict = {}
-                for worksheet_index in range(len(worksheet_list)):
-                    bin_count_dict[worksheet_index] = {}
-                    for bin_index in range(len(classes_2)):
-                        bin_count_dict[worksheet_index]["bin{}".format(bin_index)] = 0
-                
-                # Counts how many bins in each worksheet
-                for worksheet_index, worksheet in enumerate(worksheet_list):
-                    for row in range(row_per_sheet):
-                        for col in range(col_per_sheet):
-                            bin_num = worksheet.table[row][col].number
-                            if bin_num == 8:
-                                continue
-                            bin_count_dict[worksheet_index]["bin{}".format(bin_num)] += 1
-                
-                
                 # Selects appropriate "Not Tested Count" name
                 not_tested_name = "8-Not_Tested-Count"
                 
@@ -373,7 +358,7 @@ def main():
                     worksheet.set_column(0, (col_per_sheet), width=round((20*max_row/max_col)*.12, 2) )
                     
                     # Sets zoom
-                    worksheet.set_zoom( max( int(2080.6*(max_row/sqrt(len(worksheet_list)))**-0.867 ) , 20 ) )
+                    worksheet.set_zoom( 250 )
                     
                     
                 
