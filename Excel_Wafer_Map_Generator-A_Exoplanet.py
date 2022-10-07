@@ -369,7 +369,8 @@ def main():
                 for worksheet_index, worksheet in enumerate(worksheet_list):
                     
                     # Sets the appropriate width for each column
-                    worksheet.set_row(0, (row_per_sheet), height=2)
+                    for row_index in range(6):
+                        worksheet.set_row(row_index, height=20)
                     worksheet.set_column(0, (col_per_sheet), width=round((20*max_row/max_col)*.12, 2) )
                     
                     # Sets zoom
