@@ -338,12 +338,12 @@ def main():
                                                             )
                                 # Non Hyperlink - Just writes bins
                                 worksheet_list[0].write(row-1, col-1, 
-                                                    1, 
+                                                    bad_die_defect_count[all_dieName_index], 
                                                     background)
                             else:
                                 # Non Hyperlink - Just writes bins
                                 worksheet_list[0].write(row-1, col-1, 
-                                                    bad_die_defect_count[all_dieName_index], 
+                                                    1, 
                                                     background)
                 
                 
