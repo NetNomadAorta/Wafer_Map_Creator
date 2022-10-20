@@ -257,7 +257,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             # Merges below wafer to say notch
             merge_format = workbook.add_format(
                 {'align': 'center',
-                 'bold': True,
+                 # 'bold': True,
                  'font_color': 'orange',
                  # 'border': 1,
                  'bg_color': bg_color_list[-1]
