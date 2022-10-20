@@ -219,13 +219,16 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             bg_color_list = ['lime', 'lime', 'red', 'red', 'gray']
             
             
+            
             # Chooses which font and background associated with each class
             bin_colors_list = []
             bin_bold_colors_list = []
             for class_index in range(len(classes_2)):
                 bin_colors_list.append(workbook.add_format(
                     {'font_color': font_color_list[class_index],
-                     'bg_color': bg_color_list[class_index]}))
+                     'bg_color': bg_color_list[class_index],
+                     'border': 8
+                     }))
                 bin_bold_colors_list.append(workbook.add_format(
                     {'bold': True,
                      'font_color': font_color_list[class_index],
@@ -250,6 +253,19 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 for col in range(col_per_sheet):
                     for worksheet in worksheet_list:
                         worksheet.write(row, col, "", bin_colors_list[-1])
+            
+            # Merges below wafer to say notch
+            merge_format = workbook.add_format(
+                {'align': 'center',
+                 'bold': True,
+                 'font_color': 'orange',
+                 # 'border': 1,
+                 'bg_color': bg_color_list[-1]
+                 }
+                )
+            worksheet.merge_range(row_per_sheet, 0, row_per_sheet, 
+                                  col_per_sheet-1, 'Notch', merge_format
+                                  )
             
             
             # Combines all die names and bin numbers
@@ -340,9 +356,9 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     if col <= col_per_sheet:
                         # Hyperlink
                         if bin_number != good_class_index_2:
-                            worksheet_list[0].write_url(row-1, col-1,
-                                slot_path + '/' + classes_2[class_bin_number] + '/' + image_name_jpg
-                                                        )
+                            # worksheet_list[0].write_url(row-1, col-1,
+                            #     slot_path + '/' + classes_2[class_bin_number] + '/' + image_name_jpg
+                            #                             )
                             # Non Hyperlink - Just writes bins
                             worksheet_list[0].write(row-1, col-1, 
                                                 bad_die_defect_count[all_dieName_index], 

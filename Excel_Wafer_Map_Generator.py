@@ -227,13 +227,22 @@ def main():
                 bin_colors_list = []
                 bin_bold_colors_list = []
                 for class_index in range(len(classes_2)):
-                    bin_colors_list.append(workbook.add_format(
-                        {'font_color': font_color_list[class_index],
-                         'bg_color': bg_color_list[class_index]}))
+                    if max_row > 20:
+                        bin_colors_list.append(workbook.add_format(
+                            {'font_color': font_color_list[class_index],
+                             'bg_color': bg_color_list[class_index]
+                             }))
+                    else:
+                        bin_colors_list.append(workbook.add_format(
+                            {'font_color': font_color_list[class_index],
+                             'bg_color': bg_color_list[class_index],
+                             'border': 8
+                             }))
                     bin_bold_colors_list.append(workbook.add_format(
                         {'bold': True,
                          'font_color': font_color_list[class_index],
-                         'bg_color': bg_color_list[class_index]}))
+                         'bg_color': bg_color_list[class_index]
+                         }))
                     
                 # For the "Not Tested Count" gray class
                 bin_colors_list.append(workbook.add_format(
