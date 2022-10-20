@@ -246,7 +246,9 @@ def main():
                     
                 # For the "Not Tested Count" gray class
                 bin_colors_list.append(workbook.add_format(
-                    {'font_color': font_color_list[-1],
+                    {
+                    # 'font_color': font_color_list[-1],
+                    'font_color': 'gray',
                      'bg_color': bg_color_list[-1]}))
                 bin_bold_colors_list.append(workbook.add_format(
                     {'bold': True,
