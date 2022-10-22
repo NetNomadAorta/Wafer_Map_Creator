@@ -81,7 +81,7 @@ for project_file_name in os.listdir(AOI_PUBLIC_PATH):
             
             # Copys wafer data
             wafer_data = excel_import_data.iloc[:16, 1:].copy()
-            wafer_bin_count = excel_import_data.iloc[18:20, 11].copy()
+            wafer_bin_count = excel_import_data.iloc[17:19, 11].copy()
             
             # Copying wafer data to final report
             excel_final_report.iloc[(0+17*excel_file_name_index):(16+17*excel_file_name_index), :16] = wafer_data

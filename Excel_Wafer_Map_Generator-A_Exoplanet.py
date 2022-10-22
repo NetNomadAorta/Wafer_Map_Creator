@@ -279,12 +279,12 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 if ".xlsx" in list_name or ".jpg" in list_name:
                     del full_list[list_name_index]
                     
-            list = os.listdir(full_list[good_class_index_2])
+            list_items = os.listdir(full_list[good_class_index_2])
             
             # Checks to see which are good dies since previous scan in classes skipped good dies
             for dieNameIndex, dieName in enumerate(dieNames):
                 should_skip = False
-                if any(dieName in s for s in list):
+                if any(dieName in s for s in list_items):
                     row = int( re.findall(r'\d+', dieName)[0] )
                     col = int( re.findall(r'\d+', dieName)[1] )
                     
@@ -300,7 +300,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 if len(dieNames) > 1000 and dieNameIndex % 1000 == 0:
                     for list_index, image_name in enumerate(class_dies_list):
                         if dieName in image_name:
-                            del list[:list_index]
+                            del list_items[:list_index]
                             break
             
             if len_dieNames > 1000:
