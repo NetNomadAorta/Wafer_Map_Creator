@@ -55,7 +55,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
         continue
     
     # Checks to see if lot existing wafer map found in wafer map generator
-    #  area for the current lotPath location
+    #  area for the current lot_path location
     shouldContinue = True
     for waferMapName in os.listdir(STORED_WAFER_DATA):
         if waferMapName in lot_path:
@@ -68,33 +68,35 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
     die_names = np.load(STORED_WAFER_DATA + waferMapName + "/die_names.npy")
     len_die_names = len(die_names)
     
+    # Skips if config settings not found
     if not os.path.isfile(STORED_WAFER_DATA + waferMapName + "/config.yaml"):
         continue
+    
     settings = yaml.safe_load( open(STORED_WAFER_DATA + waferMapName + "/config.yaml") )
     # Gets each appropriate settings
-    classes_2 = settings['classes']
-    good_class_index_2 = settings['good_class_index']
-    excel_toggle_2 = settings['excel_toggle']
-    num_excel_sheets_2 = settings['num_excel_sheets']
+    classes = settings['classes']
+    good_class_index = settings['good_class_index']
+    excel_toggle = settings['excel_toggle']
+    num_excel_sheets = settings['num_excel_sheets']
     
-    if not excel_toggle_2:
+    if not excel_toggle:
         continue
     
     # Removes Thumbs.db in lot path if found
-    if os.path.isfile(lotPath + "/Thumbs.db"):
-        os.remove(lotPath + "/Thumbs.db")
+    if os.path.isfile(lot_path + "/Thumbs.db"):
+        os.remove(lot_path + "/Thumbs.db")
     
     # Cycles through each slot folder within the lot folder
-    for slot_name in os.listdir(lotPath):
-        slot_path = os.path.join(lotPath, slot_name)
+    for slot_name in os.listdir(lot_path):
+        slot_path = os.path.join(lot_path, slot_name)
         
         # Checks if Excel sheet already exist, and only skips if selected not to
         if ( (os.path.isfile(slot_path + "/" + slot_name+ ".xlsx") 
-        and os.path.isfile(lotPath + '/ZZZ-Excel_Sheets/' + slot_name + '.xlsx') )
+        and os.path.isfile(lot_path + '/ZZZ-Excel_Sheets/' + slot_name + '.xlsx') )
         or slot_name == "ZZZ-Excel_Sheets"):
             continue
         
-        print("Starting", slot_path)
+        print("Starting", lot_name, "-", slot_name)
         
         # Removes Thumbs.db in slot path if found
         if os.path.isfile(slot_path + "/Thumbs.db"):
@@ -129,7 +131,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             # already created one from a previous run)
             
             # WAS class_index == 0 NOW 1 FOR X-Display!! CHANGGGEE BACCKKKKK
-            if (class_index == good_class_index_2 
+            if (class_index == good_class_index 
             or "ZZ-" in class_name 
             or ".jpg" in class_name 
             or ".xlsx" in class_name
@@ -250,7 +252,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             # Chooses which font and background associated with each class
             bin_colors_list = []
             bin_bold_colors_list = []
-            for class_index in range(len(classes_2)):
+            for class_index in range(len(classes)):
                 bin_colors_list.append(workbook.add_format(
                     {'font_color': font_color_list[class_index],
                      'bg_color': bg_color_list[class_index],
@@ -306,7 +308,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                 if ".xlsx" in list_name or ".jpg" in list_name:
                     del full_list[list_name_index]
                     
-            list_items = os.listdir(full_list[good_class_index_2])
+            list_items = os.listdir(full_list[good_class_index])
             
             # Checks to see which are good dies since previous scan in classes skipped good dies
             for dieNameIndex, dieName in enumerate(die_names):
@@ -322,7 +324,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                     if should_skip:
                         continue
                     all_dieNames.append(dieName)
-                    all_dieBinNumbers.append(0) # USED TO BE good_class_index_2
+                    all_dieBinNumbers.append(0) # USED TO BE good_class_index
             
                 if len(die_names) > 1000 and dieNameIndex % 1000 == 0:
                     for list_index, image_name in enumerate(class_dies_list):
@@ -371,7 +373,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                 
                 # Incase number of defects is below a desired threshold, 
                 #  make it green - INEFFICIENT, PLEASE CHANGE IN FUTURE
-                if (bin_number != good_class_index_2 
+                if (bin_number != good_class_index 
                     and bad_die_classes_defect_count_index <= 2
                     ):
                     if (bad_die_classes_defect_count[bad_die_classes_defect_count_index][class_index_to_use] 
@@ -396,14 +398,14 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                 
                 # TEST SECTION
                 # DELETE BELOW UNTIL ---- line
-                os.listdir(slot_path + '/' + classes_2[class_bin_number])
+                os.listdir(slot_path + '/' + classes[class_bin_number])
                 
                 if os.path.isfile(slot_path + '/' 
-                                  + classes_2[class_bin_number] + "Thumbs.db"):
+                                  + classes[class_bin_number] + "Thumbs.db"):
                     os.remove(slot_path + '/' 
-                              + classes_2[class_bin_number] + "Thumbs.db")
+                              + classes[class_bin_number] + "Thumbs.db")
                     
-                for image_name_jpg in os.listdir(slot_path + '/' + classes_2[class_bin_number]):
+                for image_name_jpg in os.listdir(slot_path + '/' + classes[class_bin_number]):
                     if 'Row_{}.Col_{}'.format(row_string, col_string) in image_name_jpg:
                         break
                         
@@ -427,7 +429,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                 if row <= row_per_sheet:
                     if col <= col_per_sheet:
                         # Hyperlink
-                        if bin_number != good_class_index_2:
+                        if bin_number != good_class_index:
                             # Non Hyperlink - Just writes bins
                             if bad_die_classes_defect_count_index <= 2:
                                 worksheet_list[0].write(row_to_use, col_to_use, 
@@ -463,8 +465,8 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             
             workbook.close()
             
-            os.makedirs(lotPath + '/ZZZ-Excel_Sheets/', exist_ok=True)
-            shutil.copy( (slot_path + '/' + slot_name + '.xlsx'), (lotPath + '/ZZZ-Excel_Sheets/') )
+            os.makedirs(lot_path + '/ZZZ-Excel_Sheets/', exist_ok=True)
+            shutil.copy( (slot_path + '/' + slot_name + '.xlsx'), (lot_path + '/ZZZ-Excel_Sheets/') )
         # -----------------------------------------------------------------------------
 
 print("Done!")
