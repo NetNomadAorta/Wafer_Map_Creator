@@ -338,9 +338,9 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 col = int( re.findall(r'\d+', all_dieName)[1] )
                 
                 # Checks to see which background bin number to use
-                background = bin_colors_list[all_dieBinNumbers[all_dieName_index]]
-                
                 bin_number = all_dieBinNumbers[all_dieName_index]
+                background = bin_colors_list[bin_number]
+                
                 class_bin_number = bin_number
                 
                 # Runs through each class/cell
@@ -350,6 +350,11 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     #  make it green - INEFFICIENT, PLEASE CHANGE IN FUTURE
                     if len(bad_die_defect_count_list) == 0:
                         continue
+                    
+                    class_index_to_use = all_dieName_index
+                    for index in range(class_index):
+                        class_index_to_use -= len(bad_die_classes_defect_count[index])
+                    
                     if bin_number != good_class_index_2:
                         if (bad_die_defect_count_list[all_dieName_index] 
                             <= max_defects_to_pass_class_list[class_index]
