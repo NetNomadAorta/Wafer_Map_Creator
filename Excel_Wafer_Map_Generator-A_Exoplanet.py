@@ -416,6 +416,9 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 elif class_index == 3-1:
                     row_to_use = (row-1)*2+1
                     col_to_use = (col-1)*2+0
+                else:
+                    row_to_use = (row-1)*2+1
+                    col_to_use = (col-1)*2+1
                 
                 blank_row = (row-1)*2+1
                 blank_col = (col-1)*2+1
@@ -426,7 +429,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         if bin_number != good_class_index_2:
                             # Non Hyperlink - Just writes bins
                             worksheet_list[0].write(row_to_use, col_to_use, 
-                                                bad_die_defect_count_list[class_index_to_use], 
+                                                bad_die_classes_defect_count[bad_die_classes_defect_count_index][class_index_to_use], 
                                                 background)
                         else:
                             # Non Hyperlink - Just writes bins
