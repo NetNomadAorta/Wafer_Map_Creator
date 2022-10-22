@@ -15,8 +15,8 @@ from math import sqrt
 PREDICTED_DIR = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/"
 STORED_WAFER_DATA = "C:/Users/ait.lab/.spyder-py3/Automated_AOI/Lot_Data/"
 EXCEL_GENERATOR_TOGGLE = True
-MAXIMUM_DEFECTS_TO_PASS_CLASS_1 = 1
-MAXIMUM_DEFECTS_TO_PASS_CLASS_2 = 1
+MAXIMUM_DEFECTS_TO_PASS_CLASS_1 = 0
+MAXIMUM_DEFECTS_TO_PASS_CLASS_2 = 0
 MAXIMUM_DEFECTS_TO_PASS_CLASS_3 = 1
 
 
@@ -367,6 +367,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     
                 else:
                     class_index_to_use = all_dieName_index
+                    bad_die_classes_defect_count_index = 99
                 
                 # Incase number of defects is below a desired threshold, 
                 #  make it green - INEFFICIENT, PLEASE CHANGE IN FUTURE
@@ -428,9 +429,10 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         # Hyperlink
                         if bin_number != good_class_index_2:
                             # Non Hyperlink - Just writes bins
-                            worksheet_list[0].write(row_to_use, col_to_use, 
-                                                bad_die_classes_defect_count[bad_die_classes_defect_count_index][class_index_to_use], 
-                                                background)
+                            if bad_die_classes_defect_count_index <= 2:
+                                worksheet_list[0].write(row_to_use, col_to_use, 
+                                                    bad_die_classes_defect_count[bad_die_classes_defect_count_index][class_index_to_use], 
+                                                    background)
                         else:
                             # Non Hyperlink - Just writes bins
                             worksheet_list[0].write(row_to_use, col_to_use, 
