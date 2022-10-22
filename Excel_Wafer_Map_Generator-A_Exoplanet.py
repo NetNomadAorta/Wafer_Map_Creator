@@ -15,7 +15,9 @@ from math import sqrt
 PREDICTED_DIR = "//mcrtp-file-01.mcusa.local/public/000-AOI_Tool_Output/"
 STORED_WAFER_DATA = "C:/Users/ait.lab/.spyder-py3/Automated_AOI/Lot_Data/"
 EXCEL_GENERATOR_TOGGLE = True
-MAXIMUM_DEFECTS_TO_PASS = 1
+MAXIMUM_DEFECTS_TO_PASS_CLASS_1 = 1
+MAXIMUM_DEFECTS_TO_PASS_CLASS_2 = 1
+MAXIMUM_DEFECTS_TO_PASS_CLASS_3 = 1
 
 
 def time_convert(sec):
@@ -35,6 +37,11 @@ start_time = time.time()
 
 # Clears some of the screen for asthetics
 print("\n\n\n")
+
+max_defects_to_pass_class_list = []
+max_defects_to_pass_class_list.append(MAXIMUM_DEFECTS_TO_PASS_CLASS_1)
+max_defects_to_pass_class_list.append(MAXIMUM_DEFECTS_TO_PASS_CLASS_2)
+max_defects_to_pass_class_list.append(MAXIMUM_DEFECTS_TO_PASS_CLASS_3)
 
 # Cycles through each lot folder
 for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
@@ -96,7 +103,10 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
         # Making list of bad die names
         badDieNames = []
         badDieBinNumbers = []
-        bad_die_defect_count = []
+        bad_die_class_1_defect_count = []
+        bad_die_class_2_defect_count = []
+        bad_die_class_3_defect_count = []
+        bad_die_classes_defect_count = []
         # For getting ro and col numbers and finding max
         row_list = []
         col_list = []
@@ -123,7 +133,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             or "ZZ-" in class_name 
             or ".jpg" in class_name 
             or ".xlsx" in class_name
-            or "Small" not in class_name
+            or "Cropped" not in class_name
             ):
                 continue
             # Removes Thumbs.db in class path if found
@@ -171,10 +181,24 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     if dieName in bad_die_name:
                         if called_bad_die:
                             bad_die_defect_count[-1] += 1
+                            if "1" in class_name:
+                                bad_die_class_1_defect_count[-1] += 1
+                            elif "2" in class_name:
+                                bad_die_class_2_defect_count[-1] += 1
+                            elif "3" in class_name:
+                                bad_die_class_3_defect_count[-1] += 1
                         else:
                             badDieNames.append(dieName)
                             badDieBinNumbers.append(class_index)
                             bad_die_defect_count.append(1)
+                            
+                            if "1" in class_name:
+                                bad_die_class_1_defect_count.append(1)
+                            elif "2" in class_name:
+                                bad_die_class_2_defect_count.append(1)
+                            elif "3" in class_name:
+                                bad_die_class_3_defect_count.append(1)
+                                
                             bad_row_list.append( int( re.findall(r'\d+', dieName)[0] ) )
                             bad_col_list.append( int( re.findall(r'\d+', dieName)[1] ) )
                             called_bad_die = True
@@ -192,7 +216,13 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             # Makes new line so that next class progress status can show in terminal/shell
             print("")
                 
-
+        # Creates defect count for each class per each die
+        bad_die_class_1_defect_count = []
+        bad_die_class_2_defect_count = []
+        bad_die_class_3_defect_count = []
+        bad_die_classes_defect_count.append(bad_die_class_1_defect_count)
+        bad_die_classes_defect_count.append(bad_die_class_2_defect_count)
+        bad_die_classes_defect_count.append(bad_die_class_3_defect_count)
 
         # XLS Section
         # -----------------------------------------------------------------------------
@@ -215,8 +245,10 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     worksheet_list.append(workbook.add_worksheet(str(sheet_index)))
             
             # Chooses each font and background color for the Excel sheet
-            font_color_list = ['black', 'black', 'white', 'white', 'white']
-            bg_color_list = ['lime', 'lime', 'red', 'red', 'gray']
+            font_color_list = ['black', 'black', 'black', 'white', 
+                               'white', 'black', 'black', 'gray']
+            bg_color_list = ['lime', 'magenta', 'magenta', 'red', 
+                             'red', 'yellow', 'yellow', 'gray']
             
             
             
@@ -227,7 +259,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 bin_colors_list.append(workbook.add_format(
                     {'font_color': font_color_list[class_index],
                      'bg_color': bg_color_list[class_index],
-                     'border': 8
+                     'border': 4
                      }))
                 bin_bold_colors_list.append(workbook.add_format(
                     {'bold': True,
@@ -249,8 +281,8 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             
             # Iterates over each row_per_sheet x col_per_sheet dies 
             #  and defaults bin number to 8 - Untested
-            for row in range(row_per_sheet):
-                for col in range(col_per_sheet):
+            for row in range(row_per_sheet*2):
+                for col in range(col_per_sheet*2):
                     for worksheet in worksheet_list:
                         worksheet.write(row, col, "", bin_colors_list[-1])
             
@@ -263,8 +295,8 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                  'bg_color': bg_color_list[-1]
                  }
                 )
-            worksheet.merge_range(row_per_sheet, 0, row_per_sheet, 
-                                  col_per_sheet-1, 'Notch', merge_format
+            worksheet.merge_range(row_per_sheet*2, 0, row_per_sheet*2, 
+                                  col_per_sheet*2-1, 'Notch', merge_format
                                   )
             
             
@@ -316,58 +348,77 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 bin_number = all_dieBinNumbers[all_dieName_index]
                 class_bin_number = bin_number
                 
-                # Incase number of defects is below a desired threshold, 
-                #  make it green - INEFFICIENT, PLEASE CHANGE IN FUTURE
-                if bin_number != good_class_index_2:
-                    if bad_die_defect_count[all_dieName_index] <= MAXIMUM_DEFECTS_TO_PASS:
-                        background = bin_colors_list[0]
+                # Runs through each class/cell
+                for class_index, bad_die_defect_count_list in bad_die_classes_defect_count:
                 
-                # If row or col is below 10 adds "0"s
-                # --------------------------------------------------------------------
-                
-                # Row Section
-                if row < 10:
-                    row_string = "0" + str(row)
-                else:
-                    row_string = str(row)
-                
-                # Col Section
-                if col < 10:
-                    col_string = "0" + str(col)
-                else:
-                    col_string = str(col)
-                
-                # TEST SECTION
-                # DELETE BELOW UNTIL ---- line
-                os.listdir(slot_path + '/' + classes_2[class_bin_number])
-                
-                if os.path.isfile(slot_path + '/' 
-                                  + classes_2[class_bin_number] + "Thumbs.db"):
-                    os.remove(slot_path + '/' 
-                              + classes_2[class_bin_number] + "Thumbs.db")
+                    # Incase number of defects is below a desired threshold, 
+                    #  make it green - INEFFICIENT, PLEASE CHANGE IN FUTURE
+                    if bin_number != good_class_index_2:
+                        if (bad_die_defect_count_list[all_dieName_index] 
+                            <= max_defects_to_pass_class_list[all_dieName_index]
+                            ):
+                            background = bin_colors_list[0]
                     
-                for image_name_jpg in os.listdir(slot_path + '/' + classes_2[class_bin_number]):
-                    if 'Row_{}.Col_{}'.format(row_string, col_string) in image_name_jpg:
-                        break
+                    # If row or col is below 10 adds "0"s
+                    # --------------------------------------------------------------------
+                    
+                    # Row Section
+                    if row < 10:
+                        row_string = "0" + str(row)
+                    else:
+                        row_string = str(row)
+                    
+                    # Col Section
+                    if col < 10:
+                        col_string = "0" + str(col)
+                    else:
+                        col_string = str(col)
+                    
+                    # TEST SECTION
+                    # DELETE BELOW UNTIL ---- line
+                    os.listdir(slot_path + '/' + classes_2[class_bin_number])
+                    
+                    if os.path.isfile(slot_path + '/' 
+                                      + classes_2[class_bin_number] + "Thumbs.db"):
+                        os.remove(slot_path + '/' 
+                                  + classes_2[class_bin_number] + "Thumbs.db")
                         
-                # --------------------------------------------------------------------
-                
-                if row <= row_per_sheet:
-                    if col <= col_per_sheet:
-                        # Hyperlink
-                        if bin_number != good_class_index_2:
-                            # worksheet_list[0].write_url(row-1, col-1,
-                            #     slot_path + '/' + classes_2[class_bin_number] + '/' + image_name_jpg
-                            #                             )
-                            # Non Hyperlink - Just writes bins
-                            worksheet_list[0].write(row-1, col-1, 
-                                                bad_die_defect_count[all_dieName_index], 
-                                                background)
-                        else:
-                            # Non Hyperlink - Just writes bins
-                            worksheet_list[0].write(row-1, col-1, 
-                                                0, 
-                                                background)
+                    for image_name_jpg in os.listdir(slot_path + '/' + classes_2[class_bin_number]):
+                        if 'Row_{}.Col_{}'.format(row_string, col_string) in image_name_jpg:
+                            break
+                            
+                    # --------------------------------------------------------------------
+                    if class_index == 1:
+                        row_to_use = (row-1)*2+0
+                        col_to_use = (col-1)*2+1
+                    elif class_index == 2:
+                        row_to_use = (row-1)*2+0
+                        col_to_use = (col-1)*2+0
+                    elif class_index == 3:
+                        row_to_use = (row-1)*2+1
+                        col_to_use = (col-1)*2+0
+                    
+                    blank_row = (row-1)*2+1
+                    blank_col = (col-1)*2+1
+                    
+                    if row <= row_per_sheet:
+                        if col <= col_per_sheet:
+                            # Hyperlink
+                            if bin_number != good_class_index_2:
+                                # Non Hyperlink - Just writes bins
+                                worksheet_list[0].write(row_to_use, col_to_use, 
+                                                    bad_die_defect_count_list[all_dieName_index], 
+                                                    background)
+                            else:
+                                # Non Hyperlink - Just writes bins
+                                worksheet_list[0].write(row_to_use, col_to_use, 
+                                                    0, 
+                                                    background)
+                            # Blank cell
+                            worksheet_list[0].write(blank_row, blank_col, 
+                                                "", 
+                                                bin_colors_list[0])
+                            
             
             
             # Selects appropriate "Not Tested Count" name
@@ -377,12 +428,12 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             for worksheet_index, worksheet in enumerate(worksheet_list):
                 
                 # Sets the appropriate width for each column
-                for row_index in range(6):
+                for row_index in range(12):
                     worksheet.set_row(row_index, height=23)
                 worksheet.set_column(0, (col_per_sheet), width=round((3.3*max_row/max_col), 2) )
                 
                 # Sets zoom
-                worksheet.set_zoom( 230 )
+                worksheet.set_zoom( 120 )
                 
                 
             
