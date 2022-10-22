@@ -351,12 +351,18 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                     if len(bad_die_defect_count_list) == 0:
                         continue
                     
+                    # all_dieName_index iterates each class so correct 
+                    #  index per class needed
                     class_index_to_use = all_dieName_index
                     for index in range(class_index):
                         class_index_to_use -= len(bad_die_classes_defect_count[index])
                     
+                    # Needs to skip over to next class if index in class exhausted
+                    if class_index_to_use >= len(bad_die_defect_count_list):
+                        continue
+                    
                     if bin_number != good_class_index_2:
-                        if (bad_die_defect_count_list[all_dieName_index] 
+                        if (bad_die_defect_count_list[class_index_to_use] 
                             <= max_defects_to_pass_class_list[class_index]
                             ):
                             background = bin_colors_list[0]
@@ -409,7 +415,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                             if bin_number != good_class_index_2:
                                 # Non Hyperlink - Just writes bins
                                 worksheet_list[0].write(row_to_use, col_to_use, 
-                                                    bad_die_defect_count_list[all_dieName_index], 
+                                                    bad_die_defect_count_list[class_index_to_use], 
                                                     background)
                             else:
                                 # Non Hyperlink - Just writes bins
@@ -432,7 +438,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 # Sets the appropriate width for each column
                 for row_index in range(12):
                     worksheet.set_row(row_index, height=23)
-                worksheet.set_column(0, (col_per_sheet), width=round((3.3*max_row/max_col), 2) )
+                worksheet.set_column(0, (col_per_sheet*2), width=round((3.3*max_row/max_col), 2) )
                 
                 # Sets zoom
                 worksheet.set_zoom( 120 )
