@@ -332,6 +332,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             
             if len_dieNames > 1000:
                 print("   Started writing Excel sheet bin numbers..")
+            
             # Writes all dies info in Excel
             for all_dieName_index, all_dieName in enumerate(all_dieNames):
                 row = int( re.findall(r'\d+', all_dieName)[0] )
@@ -343,88 +344,99 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 
                 class_bin_number = bin_number
                 
-                # Figures out which class to be in ass all_dieName_index 
+                # Figures out which class to be in as all_dieName_index 
                 #  iterates through bad die names starting with classes in order
-                length_bad_dies_classes = []
-                for class_index, bad_die_defect_count_list in enumerate(bad_die_classes_defect_count):
-                    length_bad_dies_classes.append( len(bad_die_defect_count_list) )
+                if all_dieName_index < len(bad_die_classes_defect_count[0]):
+                    class_index_to_use = all_dieName_index
+                    bad_die_classes_defect_count_index = 0
                     
-                    if all_dieName_index >= sum(length_bad_dies_classes):
-                        continue
-                    else:
-                        # all_dieName_index iterates each class so correct 
-                        #  index per class needed
-                        class_index_to_use = all_dieName_index
-                        for index in range(class_index):
-                            class_index_to_use -= len(bad_die_classes_defect_count[index])
+                elif (all_dieName_index >= len(bad_die_classes_defect_count[0])
+                      and all_dieName_index < len(bad_die_classes_defect_count[1])
+                      ):
+                    class_index_to_use = all_dieName_index
+                    class_index_to_use -= len(bad_die_classes_defect_count[0])
+                    bad_die_classes_defect_count_index = 1
+                    
+                elif (all_dieName_index >= len(bad_die_classes_defect_count[1])
+                      and all_dieName_index < len(bad_die_classes_defect_count[2])
+                      ):
+                    class_index_to_use = all_dieName_index
+                    class_index_to_use -= len(bad_die_classes_defect_count[0])
+                    class_index_to_use -= len(bad_die_classes_defect_count[1])
+                    bad_die_classes_defect_count_index = 2
+                    
+                else:
+                    class_index_to_use = all_dieName_index
+                
+                # Incase number of defects is below a desired threshold, 
+                #  make it green - INEFFICIENT, PLEASE CHANGE IN FUTURE
+                if (bin_number != good_class_index_2 
+                    and bad_die_classes_defect_count_index <= 2
+                    ):
+                    if (bad_die_classes_defect_count[bad_die_classes_defect_count_index][class_index_to_use] 
+                        <= max_defects_to_pass_class_list[bad_die_classes_defect_count_index]
+                        ):
+                        background = bin_colors_list[0]
+                
+                # If row or col is below 10 adds "0"s
+                # --------------------------------------------------------------------
+                
+                # Row Section
+                if row < 10:
+                    row_string = "0" + str(row)
+                else:
+                    row_string = str(row)
+                
+                # Col Section
+                if col < 10:
+                    col_string = "0" + str(col)
+                else:
+                    col_string = str(col)
+                
+                # TEST SECTION
+                # DELETE BELOW UNTIL ---- line
+                os.listdir(slot_path + '/' + classes_2[class_bin_number])
+                
+                if os.path.isfile(slot_path + '/' 
+                                  + classes_2[class_bin_number] + "Thumbs.db"):
+                    os.remove(slot_path + '/' 
+                              + classes_2[class_bin_number] + "Thumbs.db")
+                    
+                for image_name_jpg in os.listdir(slot_path + '/' + classes_2[class_bin_number]):
+                    if 'Row_{}.Col_{}'.format(row_string, col_string) in image_name_jpg:
+                        break
                         
-                        # Incase number of defects is below a desired threshold, 
-                        #  make it green - INEFFICIENT, PLEASE CHANGE IN FUTURE
+                # --------------------------------------------------------------------
+                if class_index == 1-1:
+                    row_to_use = (row-1)*2+0
+                    col_to_use = (col-1)*2+1
+                elif class_index == 2-1:
+                    row_to_use = (row-1)*2+0
+                    col_to_use = (col-1)*2+0
+                elif class_index == 3-1:
+                    row_to_use = (row-1)*2+1
+                    col_to_use = (col-1)*2+0
+                
+                blank_row = (row-1)*2+1
+                blank_col = (col-1)*2+1
+                
+                if row <= row_per_sheet:
+                    if col <= col_per_sheet:
+                        # Hyperlink
                         if bin_number != good_class_index_2:
-                            if (bad_die_defect_count_list[class_index_to_use] 
-                                <= max_defects_to_pass_class_list[class_index]
-                                ):
-                                background = bin_colors_list[0]
-                    
-                    # If row or col is below 10 adds "0"s
-                    # --------------------------------------------------------------------
-                    
-                    # Row Section
-                    if row < 10:
-                        row_string = "0" + str(row)
-                    else:
-                        row_string = str(row)
-                    
-                    # Col Section
-                    if col < 10:
-                        col_string = "0" + str(col)
-                    else:
-                        col_string = str(col)
-                    
-                    # TEST SECTION
-                    # DELETE BELOW UNTIL ---- line
-                    os.listdir(slot_path + '/' + classes_2[class_bin_number])
-                    
-                    if os.path.isfile(slot_path + '/' 
-                                      + classes_2[class_bin_number] + "Thumbs.db"):
-                        os.remove(slot_path + '/' 
-                                  + classes_2[class_bin_number] + "Thumbs.db")
-                        
-                    for image_name_jpg in os.listdir(slot_path + '/' + classes_2[class_bin_number]):
-                        if 'Row_{}.Col_{}'.format(row_string, col_string) in image_name_jpg:
-                            break
-                            
-                    # --------------------------------------------------------------------
-                    if class_index == 1-1:
-                        row_to_use = (row-1)*2+0
-                        col_to_use = (col-1)*2+1
-                    elif class_index == 2-1:
-                        row_to_use = (row-1)*2+0
-                        col_to_use = (col-1)*2+0
-                    elif class_index == 3-1:
-                        row_to_use = (row-1)*2+1
-                        col_to_use = (col-1)*2+0
-                    
-                    blank_row = (row-1)*2+1
-                    blank_col = (col-1)*2+1
-                    
-                    if row <= row_per_sheet:
-                        if col <= col_per_sheet:
-                            # Hyperlink
-                            if bin_number != good_class_index_2:
-                                # Non Hyperlink - Just writes bins
-                                worksheet_list[0].write(row_to_use, col_to_use, 
-                                                    bad_die_defect_count_list[class_index_to_use], 
-                                                    background)
-                            else:
-                                # Non Hyperlink - Just writes bins
-                                worksheet_list[0].write(row_to_use, col_to_use, 
-                                                    0, 
-                                                    background)
-                            # Blank cell
-                            worksheet_list[0].write(blank_row, blank_col, 
-                                                "", 
-                                                bin_colors_list[0])
+                            # Non Hyperlink - Just writes bins
+                            worksheet_list[0].write(row_to_use, col_to_use, 
+                                                bad_die_defect_count_list[class_index_to_use], 
+                                                background)
+                        else:
+                            # Non Hyperlink - Just writes bins
+                            worksheet_list[0].write(row_to_use, col_to_use, 
+                                                0, 
+                                                background)
+                        # Blank cell
+                        worksheet_list[0].write(blank_row, blank_col, 
+                                            "", 
+                                            bin_colors_list[0])
                             
             
             
