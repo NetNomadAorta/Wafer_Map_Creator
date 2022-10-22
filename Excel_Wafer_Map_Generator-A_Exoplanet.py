@@ -215,9 +215,6 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
             print("")
                 
         # Creates defect count for each class per each die
-        bad_die_class_1_defect_count = []
-        bad_die_class_2_defect_count = []
-        bad_die_class_3_defect_count = []
         bad_die_classes_defect_count.append(bad_die_class_1_defect_count)
         bad_die_classes_defect_count.append(bad_die_class_2_defect_count)
         bad_die_classes_defect_count.append(bad_die_class_3_defect_count)
@@ -347,7 +344,7 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 class_bin_number = bin_number
                 
                 # Runs through each class/cell
-                for class_index, bad_die_defect_count_list in bad_die_classes_defect_count:
+                for class_index, bad_die_defect_count_list in enumerate(bad_die_classes_defect_count):
                 
                     # Incase number of defects is below a desired threshold, 
                     #  make it green - INEFFICIENT, PLEASE CHANGE IN FUTURE
