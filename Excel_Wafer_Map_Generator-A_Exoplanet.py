@@ -349,7 +349,9 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 for class_index, bad_die_defect_count_list in enumerate(bad_die_classes_defect_count):
                     length_bad_dies_classes.append( len(bad_die_defect_count_list) )
                     
-                    if all_dieName_index < sum(length_bad_dies_classes):
+                    if all_dieName_index >= sum(length_bad_dies_classes):
+                        continue
+                    else:
                         # all_dieName_index iterates each class so correct 
                         #  index per class needed
                         class_index_to_use = all_dieName_index
