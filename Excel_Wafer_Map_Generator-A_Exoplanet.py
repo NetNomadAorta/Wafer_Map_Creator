@@ -343,29 +343,26 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 
                 class_bin_number = bin_number
                 
-                # Runs through each class/cell
+                # Figures out which class to be in ass all_dieName_index 
+                #  iterates through bad die names starting with classes in order
+                length_bad_dies_classes = []
                 for class_index, bad_die_defect_count_list in enumerate(bad_die_classes_defect_count):
-                
-                    # Incase number of defects is below a desired threshold, 
-                    #  make it green - INEFFICIENT, PLEASE CHANGE IN FUTURE
-                    if len(bad_die_defect_count_list) == 0:
-                        continue
+                    length_bad_dies_classes.append( len(bad_die_defect_count_list) )
                     
-                    # all_dieName_index iterates each class so correct 
-                    #  index per class needed
-                    class_index_to_use = all_dieName_index
-                    for index in range(class_index):
-                        class_index_to_use -= len(bad_die_classes_defect_count[index])
-                    
-                    # Needs to skip over to next class if index in class exhausted
-                    if class_index_to_use >= len(bad_die_defect_count_list):
-                        continue
-                    
-                    if bin_number != good_class_index_2:
-                        if (bad_die_defect_count_list[class_index_to_use] 
-                            <= max_defects_to_pass_class_list[class_index]
-                            ):
-                            background = bin_colors_list[0]
+                    if all_dieName_index < sum(length_bad_dies_classes):
+                        # all_dieName_index iterates each class so correct 
+                        #  index per class needed
+                        class_index_to_use = all_dieName_index
+                        for index in range(class_index):
+                            class_index_to_use -= len(bad_die_classes_defect_count[index])
+                        
+                        # Incase number of defects is below a desired threshold, 
+                        #  make it green - INEFFICIENT, PLEASE CHANGE IN FUTURE
+                        if bin_number != good_class_index_2:
+                            if (bad_die_defect_count_list[class_index_to_use] 
+                                <= max_defects_to_pass_class_list[class_index]
+                                ):
+                                background = bin_colors_list[0]
                     
                     # If row or col is below 10 adds "0"s
                     # --------------------------------------------------------------------
