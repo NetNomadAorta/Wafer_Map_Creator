@@ -348,9 +348,11 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 
                     # Incase number of defects is below a desired threshold, 
                     #  make it green - INEFFICIENT, PLEASE CHANGE IN FUTURE
+                    if len(bad_die_defect_count_list) == 0:
+                        continue
                     if bin_number != good_class_index_2:
                         if (bad_die_defect_count_list[all_dieName_index] 
-                            <= max_defects_to_pass_class_list[all_dieName_index]
+                            <= max_defects_to_pass_class_list[class_index]
                             ):
                             background = bin_colors_list[0]
                     
@@ -383,13 +385,13 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                             break
                             
                     # --------------------------------------------------------------------
-                    if class_index == 1:
+                    if class_index == 1-1:
                         row_to_use = (row-1)*2+0
                         col_to_use = (col-1)*2+1
-                    elif class_index == 2:
+                    elif class_index == 2-1:
                         row_to_use = (row-1)*2+0
                         col_to_use = (col-1)*2+0
-                    elif class_index == 3:
+                    elif class_index == 3-1:
                         row_to_use = (row-1)*2+1
                         col_to_use = (col-1)*2+0
                     
