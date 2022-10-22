@@ -180,7 +180,6 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                 for bad_die_name in class_dies_list:
                     if dieName in bad_die_name:
                         if called_bad_die:
-                            bad_die_defect_count[-1] += 1
                             if "1" in class_name:
                                 bad_die_class_1_defect_count[-1] += 1
                             elif "2" in class_name:
@@ -190,7 +189,6 @@ for lotPathIndex, lotPath in enumerate(glob.glob(PREDICTED_DIR + "*") ):
                         else:
                             badDieNames.append(dieName)
                             badDieBinNumbers.append(class_index)
-                            bad_die_defect_count.append(1)
                             
                             if "1" in class_name:
                                 bad_die_class_1_defect_count.append(1)
