@@ -321,7 +321,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             temp_background.set_text_wrap()
             temp_background.set_align()()
             worksheet.write(5, (max_col*2-1)+3, 
-                            "test", 
+                            "", 
                             temp_background
                             )
             
