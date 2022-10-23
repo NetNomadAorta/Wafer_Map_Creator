@@ -345,10 +345,9 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         else:
                             background = bin_colors_list[0]
                         
+                        background.set_border(4)
                         background.set_top(5)
-                        background.set_left(4)
                         background.set_right(5)
-                        background.set_bottom(4)
                     # Top Left Cell
                     elif class_number == 2:
                         row_to_use = (row-1)*2+0
@@ -359,10 +358,9 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         else:
                             background = bin_colors_list[0]
                         
+                        background.set_border(4)
                         background.set_top(5)
                         background.set_left(5)
-                        background.set_right(4)
-                        background.set_bottom(4)
                     # Bottom Left Cell
                     elif class_number == 3:
                         row_to_use = (row-1)*2+1
@@ -373,9 +371,8 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         else:
                             background = bin_colors_list[0]
                         
-                        background.set_top(4)
+                        background.set_border(4)
                         background.set_left(5)
-                        background.set_right(4)
                         background.set_bottom(5)
                     
                     
