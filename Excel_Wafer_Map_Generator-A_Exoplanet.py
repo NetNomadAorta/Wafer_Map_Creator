@@ -304,6 +304,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                             )
             # Bottom Left Cell
             temp_background = bin_colors_list[3*2]
+            temp_background.set_border(4)
             temp_background.set_bottom(5)
             temp_background.set_left(5)
             temp_background.set_font_size(5)
@@ -316,8 +317,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                             )
             # Bottom Right Cell
             temp_background = bin_colors_list[0]
-            temp_background.set_top(4)
-            temp_background.set_left(4)
+            temp_background.set_border(4)
             temp_background.set_bottom(5)
             temp_background.set_right(5)
             temp_background.set_font_size(5)
@@ -325,7 +325,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             temp_background.set_align("center")
             temp_background.set_align("vcenter")
             worksheet.write(5, (max_col*2-1)+3, 
-                            "test", 
+                            "", 
                             temp_background
                             )
             
