@@ -101,11 +101,11 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
         col_list = []
         
         
-        full_list = os.listdir(slot_path)
-        # Removes Excel or jpg files from "full_list" variable
-        for list_name_index, list_name in enumerate(full_list):
+        slot_contents = os.listdir(slot_path)
+        # Removes Excel or jpg files from "slot_contents" variable
+        for list_name_index, list_name in enumerate(slot_contents):
             if ".xlsx" in list_name or ".jpg" in list_name:
-                del full_list[list_name_index]
+                del slot_contents[list_name_index]
         
         
         # Creates dictionary of die names with defect counts per class
@@ -137,7 +137,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
         
         
         # Within each slot, cycle through each class
-        for class_index, class_name in enumerate(full_list):
+        for class_index, class_name in enumerate(slot_contents):
             class_path = os.path.join(slot_path, class_name)
             
             # Skips directory if first class (non-defect) folder or if it 
@@ -159,9 +159,9 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             previous_percent_index = 0
             # Iterates through each class folder's die images
             for class_die_name in os.listdir(class_path):
-                
+                class_name_number = int( re.findall(r'\d+', class_name)[0] )
                 # Adds defect count of die image files in class folders for respected class count
-                die_dictionary[class_die_name.split(".P")[0]]['class_{}_count'.format(class_index+1)] += 1
+                die_dictionary[class_die_name.split(".P")[0]]['class_{}_count'.format(class_name_number)] += 1
                 
                 
                 # Shows progress in current slot
