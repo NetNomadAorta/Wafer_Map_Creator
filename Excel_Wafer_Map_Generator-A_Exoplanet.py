@@ -279,41 +279,47 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                                       )
                                   )
             # Top Left Cell
-            temp_background = bin_colors_list[2]
+            temp_background = bin_colors_list[2*2]
             temp_background.set_top(5)
             temp_background.set_left(5)
             temp_background.set_font_size(5)
             temp_background.set_text_wrap()
+            temp_background.set_center_across()
             worksheet.write(4, (max_col*2-1)+2, 
-                            "≥\n(Missing or Misshapen Bumps)", 
+                            "≥ {}\n(Missing or Misshapen Bumps)".format(MAXIMUM_DEFECTS_TO_PASS_CLASS_2), 
                             temp_background
                             )
             # Top Right Cell
-            temp_background = bin_colors_list[1]
+            temp_background = bin_colors_list[1*2]
             temp_background.set_top(5)
             temp_background.set_right(5)
             temp_background.set_font_size(5)
             temp_background.set_text_wrap()
+            temp_background.set_center_across()
             worksheet.write(4, (max_col*2-1)+3, 
-                            "≥\n(Oversized Bumps)", 
+                            "≥ {}\n(Oversized Bumps)".format(MAXIMUM_DEFECTS_TO_PASS_CLASS_1), 
                             temp_background
                             )
             # Bottom Left Cell
-            temp_background = bin_colors_list[3]
+            temp_background = bin_colors_list[3*2]
             temp_background.set_bottom(5)
             temp_background.set_left(5)
             temp_background.set_font_size(5)
             temp_background.set_text_wrap()
+            temp_background.set_center_across()
             worksheet.write(5, (max_col*2-1)+2, 
-                            "≥\n(Contamination)", 
+                            "≥ {}\n(Contamination)".format(MAXIMUM_DEFECTS_TO_PASS_CLASS_3), 
                             temp_background
                             )
             # Bottom Right Cell
             temp_background = bin_colors_list[0]
+            temp_background.set_top(4)
+            temp_background.set_left(4)
             temp_background.set_bottom(5)
             temp_background.set_right(5)
             temp_background.set_font_size(5)
             temp_background.set_text_wrap()
+            temp_background.set_center_across()
             worksheet.write(5, (max_col*2-1)+3, 
                             "", 
                             temp_background
@@ -340,7 +346,9 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                             background = bin_colors_list[0]
                         
                         background.set_top(5)
+                        background.set_left(4)
                         background.set_right(5)
+                        background.set_bottom(4)
                     # Top Left Cell
                     elif class_number == 2:
                         row_to_use = (row-1)*2+0
@@ -353,6 +361,8 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         
                         background.set_top(5)
                         background.set_left(5)
+                        background.set_right(4)
+                        background.set_bottom(4)
                     # Bottom Left Cell
                     elif class_number == 3:
                         row_to_use = (row-1)*2+1
@@ -363,8 +373,10 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         else:
                             background = bin_colors_list[0]
                         
-                        background.set_bottom(5)
+                        background.set_top(4)
                         background.set_left(5)
+                        background.set_right(4)
+                        background.set_bottom(5)
                     
                     
                     # Writes in Excel sheet each cell appropriate info
