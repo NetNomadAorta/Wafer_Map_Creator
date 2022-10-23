@@ -210,8 +210,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                 
                 bin_colors_list.append(workbook.add_format(
                     {'font_color': font_color_list[class_index],
-                     'bg_color': bg_color_list[class_index],
-                     'border': 4
+                     'bg_color': bg_color_list[class_index]
                      }
                     ))
                 bin_bold_colors_list.append(workbook.add_format(
@@ -257,7 +256,8 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             worksheet.write(1, (max_col*2-1)+2, 
                             "Slot:", 
                             workbook.add_format(
-                                {'bold': True
+                                {'bold': True,
+                                 'align': 'right'
                                  }
                                 )
                             )
@@ -274,7 +274,8 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                                   3, (max_col*2-1)+3, 
                                   'Die Legend:', 
                                   workbook.add_format(
-                                      {'bold': True
+                                      {'bold': True,
+                                       'align': 'center',
                                        }
                                       )
                                   )
