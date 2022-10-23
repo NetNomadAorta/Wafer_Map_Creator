@@ -348,40 +348,40 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         col_to_use = (col-1)*2+1
                         
                         if defect_count > MAXIMUM_DEFECTS_TO_PASS_CLASS_1:
-                            background1 = bin_colors_list[class_number*2]
+                            background = bin_colors_list[class_number*2]
                         else:
-                            background1 = bin_colors_list[0]
+                            background = bin_colors_list[0]
                         
-                        background1.set_top(5)
-                        background1.set_left(4)
-                        background1.set_right(5)
-                        background1.set_bottom(4)
+                        background.set_top(5)
+                        background.set_left(4)
+                        background.set_right(5)
+                        background.set_bottom(4)
                     # Top Left Cell
                     elif class_number == 2:
                         row_to_use = (row-1)*2+0
                         col_to_use = (col-1)*2+0
                         
                         if defect_count > MAXIMUM_DEFECTS_TO_PASS_CLASS_2:
-                            background2 = bin_colors_list[class_number*2]
+                            background = bin_colors_list[class_number*2]
                         else:
-                            background2 = bin_colors_list[0]
+                            background = bin_colors_list[0]
                         
-                        background2.set_top(5)
-                        background2.set_left(5)
-                        background2.set_bottom(4)
+                        background.set_top(5)
+                        background.set_left(5)
+                        background.set_bottom(4)
                     # Bottom Left Cell
                     elif class_number == 3:
                         row_to_use = (row-1)*2+1
                         col_to_use = (col-1)*2+0
                         
                         if defect_count > MAXIMUM_DEFECTS_TO_PASS_CLASS_3:
-                            background3 = bin_colors_list[class_number*2]
+                            background = bin_colors_list[class_number*2]
                         else:
-                            background3 = bin_colors_list[0]
+                            background = bin_colors_list[0]
                         
-                        background3.set_left(5)
-                        background3.set_bottom(5)
-                        background3.set_right(4)
+                        background.set_left(5)
+                        background.set_bottom(5)
+                        background.set_right(4)
                     
                     
                     # Writes in Excel sheet each cell appropriate info
