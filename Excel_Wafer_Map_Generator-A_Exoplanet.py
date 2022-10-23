@@ -290,8 +290,8 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             temp_background = copy_format(workbook, bin_colors_list[2*2])
             temp_background.set_top(5)
             temp_background.set_left(5)
-            temp_background.set_right(4)
-            temp_background.set_bottom(4)
+            temp_background.set_right(3)
+            temp_background.set_bottom(3)
             temp_background.set_font_size(5)
             temp_background.set_text_wrap()
             temp_background.set_align("center")
@@ -304,7 +304,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             temp_background = copy_format(workbook, bin_colors_list[1*2])
             temp_background.set_top(5)
             temp_background.set_right(5)
-            temp_background.set_bottom(4)
+            temp_background.set_bottom(3)
             temp_background.set_font_size(5)
             temp_background.set_text_wrap()
             temp_background.set_align("center")
@@ -315,7 +315,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                             )
             # Bottom Left Cell
             temp_background = copy_format(workbook, bin_colors_list[3*2])
-            temp_background.set_right(4)
+            temp_background.set_right(3)
             temp_background.set_bottom(5)
             temp_background.set_left(5)
             temp_background.set_font_size(5)
@@ -360,9 +360,9 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                             background = copy_format(workbook, bin_colors_list[0])
                         
                         background.set_top(5)
-                        background.set_left(4)
+                        background.set_left(3)
                         background.set_right(5)
-                        background.set_bottom(4)
+                        background.set_bottom(3)
                     # Top Left Cell
                     elif class_number == 2:
                         row_to_use = (row-1)*2+0
@@ -375,7 +375,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         
                         background.set_top(5)
                         background.set_left(5)
-                        background.set_bottom(4)
+                        background.set_bottom(3)
                     # Bottom Left Cell
                     elif class_number == 3:
                         row_to_use = (row-1)*2+1
@@ -388,7 +388,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         
                         background.set_left(5)
                         background.set_bottom(5)
-                        background.set_right(4)
+                        background.set_right(3)
                     
                     
                     # Writes in Excel sheet each cell appropriate info
