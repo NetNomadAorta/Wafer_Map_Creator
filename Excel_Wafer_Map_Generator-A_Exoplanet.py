@@ -341,7 +341,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         col_to_use = (col-1)*2+1
                         
                         if defect_count > MAXIMUM_DEFECTS_TO_PASS_CLASS_1:
-                            background = bin_colors_list[class_number]
+                            background = bin_colors_list[class_number*2]
                         else:
                             background = bin_colors_list[0]
                         
@@ -353,7 +353,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         col_to_use = (col-1)*2+0
                         
                         if defect_count > MAXIMUM_DEFECTS_TO_PASS_CLASS_2:
-                            background = bin_colors_list[class_number]
+                            background = bin_colors_list[class_number*2]
                         else:
                             background = bin_colors_list[0]
                         
@@ -365,7 +365,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         col_to_use = (col-1)*2+0
                         
                         if defect_count > MAXIMUM_DEFECTS_TO_PASS_CLASS_3:
-                            background = bin_colors_list[class_number]
+                            background = bin_colors_list[class_number*2]
                         else:
                             background = bin_colors_list[0]
                         
