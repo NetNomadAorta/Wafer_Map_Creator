@@ -253,6 +253,72 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                                   max_col*2-1, 'Notch', merge_format
                                   )
             
+            # Writes Slot Name and Info
+            worksheet.write(1, (max_col*2-1)+2, 
+                            "Slot:", 
+                            workbook.add_format(
+                                {'bold': True
+                                 }
+                                )
+                            )
+            worksheet.write(1, (max_col*2-1)+3, 
+                            slot_name, 
+                            workbook.add_format(
+                                {'bold': True
+                                 }
+                                )
+                            )
+            
+            # Writes Die Legend Info
+            worksheet.merge_range(3, (max_col*2-1)+2, 
+                                  3, (max_col*2-1)+3, 
+                                  'Die Legend:', 
+                                  workbook.add_format(
+                                      {'bold': True
+                                       }
+                                      )
+                                  )
+            # Top Left Cell
+            temp_background = bin_colors_list[2]
+            temp_background.set_top(5)
+            temp_background.set_left(5)
+            temp_background.set_font_size(5)
+            temp_background.set_text_wrap()
+            worksheet.write(4, (max_col*2-1)+2, 
+                            "≥\n(Missing or Misshapen Bumps)", 
+                            temp_background
+                            )
+            # Top Right Cell
+            temp_background = bin_colors_list[1]
+            temp_background.set_top(5)
+            temp_background.set_right(5)
+            temp_background.set_font_size(5)
+            temp_background.set_text_wrap()
+            worksheet.write(4, (max_col*2-1)+3, 
+                            "≥\n(Oversized Bumps)", 
+                            temp_background
+                            )
+            # Bottom Left Cell
+            temp_background = bin_colors_list[3]
+            temp_background.set_bottom(5)
+            temp_background.set_left(5)
+            temp_background.set_font_size(5)
+            temp_background.set_text_wrap()
+            worksheet.write(5, (max_col*2-1)+2, 
+                            "≥\n(Contamination)", 
+                            temp_background
+                            )
+            # Bottom Right Cell
+            temp_background = bin_colors_list[0]
+            temp_background.set_bottom(5)
+            temp_background.set_right(5)
+            temp_background.set_font_size(5)
+            temp_background.set_text_wrap()
+            worksheet.write(5, (max_col*2-1)+3, 
+                            "", 
+                            temp_background
+                            )
+            
             
             # Iterates through die dictionary names and info
             for die_name, class_count_names in die_dictionary.items():
@@ -263,6 +329,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                 for class_count_name, defect_count in class_count_names.items():
                     class_number = int( re.findall(r'\d+', class_count_name)[0] )
                     
+                    # Top Right Cell
                     if class_number == 1:
                         row_to_use = (row-1)*2+0
                         col_to_use = (col-1)*2+1
@@ -272,6 +339,9 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         else:
                             background = bin_colors_list[0]
                         
+                        background.set_top(5)
+                        background.set_right(5)
+                    # Top Left Cell
                     elif class_number == 2:
                         row_to_use = (row-1)*2+0
                         col_to_use = (col-1)*2+0
@@ -281,6 +351,9 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         else:
                             background = bin_colors_list[0]
                         
+                        background.set_top(5)
+                        background.set_left(5)
+                    # Bottom Left Cell
                     elif class_number == 3:
                         row_to_use = (row-1)*2+1
                         col_to_use = (col-1)*2+0
@@ -289,15 +362,23 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                             background = bin_colors_list[class_number]
                         else:
                             background = bin_colors_list[0]
+                        
+                        background.set_bottom(5)
+                        background.set_left(5)
                     
                     
                     # Writes in Excel sheet each cell appropriate info
                     worksheet.write(row_to_use, col_to_use, 
                                     defect_count, background)
                     
+                    # For bottom right blank cell
+                    blank_background = bin_colors_list[0]
+                    blank_background.set_bottom(5)
+                    blank_background.set_right(5)
+                    
                     # Writes in blank Excel sheet's cell
                     worksheet.write((row-1)*2+1, (col-1)*2+1, 
-                                    "", bin_colors_list[0])
+                                    "", blank_background)
             
             
             # Sets the appropriate width for each column
