@@ -284,7 +284,8 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             temp_background.set_left(5)
             temp_background.set_font_size(5)
             temp_background.set_text_wrap()
-            temp_background.set_align()()
+            temp_background.set_align("center")
+            temp_background.set_align("vcenter")
             worksheet.write(4, (max_col*2-1)+2, 
                             "≥ {}\n(Missing or Misshapen Bumps)".format(MAXIMUM_DEFECTS_TO_PASS_CLASS_2), 
                             temp_background
@@ -295,7 +296,8 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             temp_background.set_right(5)
             temp_background.set_font_size(5)
             temp_background.set_text_wrap()
-            temp_background.set_align()()
+            temp_background.set_align("center")
+            temp_background.set_align("vcenter")
             worksheet.write(4, (max_col*2-1)+3, 
                             "≥ {}\n(Oversized Bumps)".format(MAXIMUM_DEFECTS_TO_PASS_CLASS_1), 
                             temp_background
@@ -306,7 +308,8 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             temp_background.set_left(5)
             temp_background.set_font_size(5)
             temp_background.set_text_wrap()
-            temp_background.set_align()()
+            temp_background.set_align("center")
+            temp_background.set_align("vcenter")
             worksheet.write(5, (max_col*2-1)+2, 
                             "≥ {}\n(Contamination)".format(MAXIMUM_DEFECTS_TO_PASS_CLASS_3), 
                             temp_background
@@ -319,9 +322,10 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             temp_background.set_right(5)
             temp_background.set_font_size(5)
             temp_background.set_text_wrap()
-            temp_background.set_align()()
+            temp_background.set_align("center")
+            temp_background.set_align("vcenter")
             worksheet.write(5, (max_col*2-1)+3, 
-                            "", 
+                            "test", 
                             temp_background
                             )
             
