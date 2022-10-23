@@ -28,6 +28,12 @@ def time_convert(sec):
     print("Time Lapsed = {0}h:{1}m:{2}s".format(int(hours), int(mins), round(sec) ) )
 
 
+def copy_format(book, fmt):
+    properties = [f[4:] for f in dir(fmt) if f[0:4] == 'set_']
+    dft_fmt = book.add_format()
+    return book.add_format({k : v for k, v in fmt.__dict__.items() if k in properties and dft_fmt.__dict__[k] != v})
+
+
 
 # MAIN():
 # =============================================================================
@@ -280,7 +286,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                                       )
                                   )
             # Top Left Cell
-            temp_background = bin_colors_list[2*2]
+            temp_background = copy_format(workbook, bin_colors_list[2*2])
             temp_background.set_top(5)
             temp_background.set_left(5)
             temp_background.set_right(4)
@@ -294,7 +300,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                             temp_background
                             )
             # Top Right Cell
-            temp_background = bin_colors_list[1*2]
+            temp_background = copy_format(workbook, bin_colors_list[1*2])
             temp_background.set_top(5)
             temp_background.set_right(5)
             temp_background.set_bottom(4)
@@ -307,7 +313,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                             temp_background
                             )
             # Bottom Left Cell
-            temp_background = bin_colors_list[3*2]
+            temp_background = copy_format(workbook, bin_colors_list[3*2])
             temp_background.set_right(4)
             temp_background.set_bottom(5)
             temp_background.set_left(5)
@@ -320,7 +326,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                             temp_background
                             )
             # Bottom Right Cell
-            temp_background = bin_colors_list[0]
+            temp_background = copy_format(workbook, bin_colors_list[0])
             temp_background.set_bottom(5)
             temp_background.set_right(5)
             temp_background.set_font_size(5)
