@@ -28,6 +28,7 @@ def time_convert(sec):
     print("Time Lapsed = {0}h:{1}m:{2}s".format(int(hours), int(mins), round(sec) ) )
 
 
+# Have to make this bullshit copy format to prevent original formatting in Xlsxwriter changing
 def copy_format(book, fmt):
     properties = [f[4:] for f in dir(fmt) if f[0:4] == 'set_']
     dft_fmt = book.add_format()
@@ -354,9 +355,9 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         col_to_use = (col-1)*2+1
                         
                         if defect_count > MAXIMUM_DEFECTS_TO_PASS_CLASS_1:
-                            background = bin_colors_list[class_number*2]
+                            background = copy_format(workbook, bin_colors_list[class_number*2])
                         else:
-                            background = bin_colors_list[0]
+                            background = copy_format(workbook, bin_colors_list[0])
                         
                         background.set_top(5)
                         background.set_left(4)
@@ -368,9 +369,9 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         col_to_use = (col-1)*2+0
                         
                         if defect_count > MAXIMUM_DEFECTS_TO_PASS_CLASS_2:
-                            background = bin_colors_list[class_number*2]
+                            background = copy_format(workbook, bin_colors_list[class_number*2])
                         else:
-                            background = bin_colors_list[0]
+                            background = copy_format(workbook, bin_colors_list[0])
                         
                         background.set_top(5)
                         background.set_left(5)
@@ -381,9 +382,9 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         col_to_use = (col-1)*2+0
                         
                         if defect_count > MAXIMUM_DEFECTS_TO_PASS_CLASS_3:
-                            background = bin_colors_list[class_number*2]
+                            background = copy_format(workbook, bin_colors_list[class_number*2])
                         else:
-                            background = bin_colors_list[0]
+                            background = copy_format(workbook, bin_colors_list[0])
                         
                         background.set_left(5)
                         background.set_bottom(5)
@@ -395,7 +396,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                                     defect_count, background)
                     
                     # For bottom right blank cell
-                    blank_background = bin_colors_list[0]
+                    blank_background = copy_format(workbook, bin_colors_list[0])
                     blank_background.set_bottom(5)
                     blank_background.set_right(5)
                     
