@@ -60,7 +60,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
         continue
     
     # Imports correct die_names and die_coordinates data
-    die_names = np.load(STORED_WAFER_DATA + waferMapName + "/die_names.npy")
+    die_names = np.load(STORED_WAFER_DATA + waferMapName + "/dieNames.npy")
     len_die_names = len(die_names)
     
     # Skips if config settings not found
