@@ -345,7 +345,6 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         else:
                             background = bin_colors_list[0]
                         
-                        background.set_border(4)
                         background.set_top(5)
                         background.set_right(5)
                     # Top Left Cell
@@ -358,7 +357,6 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         else:
                             background = bin_colors_list[0]
                         
-                        background.set_border(4)
                         background.set_top(5)
                         background.set_left(5)
                     # Bottom Left Cell
@@ -371,7 +369,6 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         else:
                             background = bin_colors_list[0]
                         
-                        background.set_border(4)
                         background.set_left(5)
                         background.set_bottom(5)
                     
