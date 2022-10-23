@@ -243,7 +243,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             # Merges below wafer to say notch
             merge_format = workbook.add_format(
                 {'align': 'center',
-                 # 'bold': True,
+                 'bold': True,
                  'font_color': 'orange',
                  # 'border': 1,
                  'bg_color': bg_color_list[-1]
@@ -321,7 +321,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             temp_background.set_text_wrap()
             temp_background.set_center_across()
             worksheet.write(5, (max_col*2-1)+3, 
-                            "", 
+                            "test", 
                             temp_background
                             )
             
