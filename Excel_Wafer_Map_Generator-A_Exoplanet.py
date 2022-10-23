@@ -368,6 +368,8 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         background.set_left(3)
                         background.set_right(5)
                         background.set_bottom(3)
+                        background.set_align("center")
+                        background.set_align("vcenter")
                     # Top Left Cell
                     elif class_number == 2:
                         row_to_use = (row-1)*2+0
@@ -381,6 +383,8 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         background.set_top(5)
                         background.set_left(5)
                         background.set_bottom(3)
+                        background.set_align("center")
+                        background.set_align("vcenter")
                     # Bottom Left Cell
                     elif class_number == 3:
                         row_to_use = (row-1)*2+1
@@ -394,6 +398,8 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                         background.set_left(5)
                         background.set_bottom(5)
                         background.set_right(3)
+                        background.set_align("center")
+                        background.set_align("vcenter")
                     
                     
                     # Writes in Excel sheet each cell appropriate info
@@ -404,6 +410,8 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
                     blank_background = copy_format(workbook, bin_colors_list[0])
                     blank_background.set_bottom(5)
                     blank_background.set_right(5)
+                    background.set_align("center")
+                    background.set_align("vcenter")
                     
                     # Writes in blank Excel sheet's cell
                     worksheet.write((row-1)*2+1, (col-1)*2+1, 
