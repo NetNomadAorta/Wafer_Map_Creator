@@ -249,8 +249,9 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             # Merges below wafer to say notch
             merge_format = workbook.add_format(
                 {'align': 'center',
-                 'bold': True,
+                 # 'bold': True,
                  'font_color': 'orange',
+                 'font_name': 'Arial',
                  # 'border': 1,
                  'bg_color': bg_color_list[-1]
                  }
