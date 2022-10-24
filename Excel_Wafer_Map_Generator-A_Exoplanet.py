@@ -299,7 +299,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             temp_background.set_align("center")
             temp_background.set_align("vcenter")
             worksheet.write(4, (max_col*2-1)+2, 
-                            "≥ {}\n(Missing or Misshapen Bumps)".format(MAXIMUM_DEFECTS_TO_PASS_CLASS_2), 
+                            "≥ {}\n(Missing or Misshapen Bumps)".format(MAXIMUM_DEFECTS_TO_PASS_CLASS_2+1), 
                             temp_background
                             )
             # Top Right Cell
@@ -313,7 +313,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             temp_background.set_align("center")
             temp_background.set_align("vcenter")
             worksheet.write(4, (max_col*2-1)+3, 
-                            "≥ {}\n(Oversized Bumps)".format(MAXIMUM_DEFECTS_TO_PASS_CLASS_1), 
+                            "≥ {}\n(Oversized Bumps)".format(MAXIMUM_DEFECTS_TO_PASS_CLASS_1+1), 
                             temp_background
                             )
             # Bottom Left Cell
@@ -327,7 +327,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             temp_background.set_align("center")
             temp_background.set_align("vcenter")
             worksheet.write(5, (max_col*2-1)+2, 
-                            "≥ {}\n(Contamination)".format(MAXIMUM_DEFECTS_TO_PASS_CLASS_3), 
+                            "≥ {}\n(Contamination)".format(MAXIMUM_DEFECTS_TO_PASS_CLASS_3+1), 
                             temp_background
                             )
             # Bottom Right Cell
@@ -420,7 +420,7 @@ for lot_name_index, lot_name in enumerate(os.listdir(PREDICTED_DIR)):
             worksheet.set_column(0, (max_col*2), width=round((3.3*max_row/max_col), 2) )
             
             # Sets zoom
-            worksheet.set_zoom( 120 )
+            worksheet.set_zoom( 170 )
                 
                 
             
